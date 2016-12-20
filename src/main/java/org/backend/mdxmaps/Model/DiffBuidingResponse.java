@@ -1,0 +1,7 @@
+package org.backend.mdxmaps.Model;
+
+/**
+ * Created by Emmanuel Keboh on 18/12/2016.
+ */
+public class DiffBuidingResponse {
+}
