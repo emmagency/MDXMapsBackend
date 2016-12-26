@@ -5,6 +5,8 @@ import org.backend.mdxmaps.Model.RoutingObjects;
 
 import java.util.ArrayList;
 
+import static org.backend.mdxmaps.Services.UtilService.calculateDistance;
+
 /**
  * Created by Emmanuel Keboh on 27/11/2016.
  */
@@ -32,8 +34,8 @@ public class OutdoorAlgorithm {
         this.startConnector = startConnector;
         this.destinationConnector = destinationConnector;
 
-        startPoint = getConnectorObjectFromName(startConnector).getLocation();
-        destinationPoint = getConnectorObjectFromName(destinationConnector).getLocation();
+        startPoint = getConnectorObjectFromName(startConnector).getLatLng();
+        destinationPoint = getConnectorObjectFromName(destinationConnector).getLatLng();
 
         CAQ.add(startConnector);
 //        int restart = 0;
@@ -105,7 +107,7 @@ public class OutdoorAlgorithm {
                 }
 
                 for (int k = 0; k < allAdjacents.size(); k++) {
-                    if (calculateDistanceFromLine(allAdjacents.get(k).getLocation(), startPoint, destinationPoint) > acceptedDistanceFromLine) {
+                    if (calculateDistanceFromLine(allAdjacents.get(k).getLatLng(), startPoint, destinationPoint) > acceptedDistanceFromLine) {
                         if (CAQ.size() == visited.size()) {
                             visited.get(CAQ.size() - 1).add(allAdjacents.get(k).getName());
                         } else {
@@ -234,7 +236,7 @@ public class OutdoorAlgorithm {
         ArrayList<Double> allDistances = new ArrayList<>();
 
         for (int i = 0; i < allAdjacents.size(); i++) {
-            allDistances.add(calculateDistance(allAdjacents.get(i).getLocation().latitude, allAdjacents.get(i).getLocation().longitude,
+            allDistances.add(calculateDistance(allAdjacents.get(i).getLatLng().latitude, allAdjacents.get(i).getLatLng().longitude,
                     destinationPoint.latitude, destinationPoint.longitude));
         }
 
@@ -255,22 +257,6 @@ public class OutdoorAlgorithm {
                 }
             }
         }
-    }
-
-    private double calculateDistance(double startLat, double startLng,
-                                     double endLat, double endLng) {
-
-        double latDistance = Math.toRadians(startLat - endLat);
-        double lngDistance = Math.toRadians(startLng - endLng);
-
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(startLat)) * Math.cos(Math.toRadians(endLat))
-                * Math.sin(lngDistance / 2) * Math.sin(lngDistance / 2);
-
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        //AVERAGE_RADIUS_OF_EARTH = 6371km
-        return (double) (Math.round(6371000 * c));
-
     }
 
     private double calculateDistanceFromLine(LatLng point, LatLng startPoint, LatLng destinationPoint) {

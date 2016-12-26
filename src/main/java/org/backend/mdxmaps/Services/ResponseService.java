@@ -8,8 +8,21 @@ public class ResponseService {
 
     private Object entity;
     private Status status;
-    private String infoMessage;
-    private String errorMessage;
+    private String message;
+
+    //ToDo set to private
+    public ResponseService() {
+    }
+
+    private ResponseService(Status status, Object entity) {
+        this.status = status;
+        this.entity = entity;
+    }
+
+    private ResponseService(Status status, String message) {
+        this.status = status;
+        this.message = message;
+    }
 
     public void setStatus(Status status) {
         this.status = status;
@@ -27,20 +40,20 @@ public class ResponseService {
         return entity;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setInfoMessage(String infoMessage) {
-        this.infoMessage = infoMessage;
+    public static ResponseService create(Status status, Object entity) {
+        return new ResponseService(status, entity);
     }
 
-    public String getInfoMessage() {
-        return infoMessage;
+    public static ResponseService create(Status status, String message) {
+        return new ResponseService(status, message);
     }
 
     public enum Status {

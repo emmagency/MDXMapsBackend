@@ -17,7 +17,7 @@ public class RoutingObjects {
     //Connectors and Room Attributes
     int gMapLevel;
     int actualLevel;
-    LatLng location;
+    LatLng latLng;
 
     //Connectors-Only Attributes
     int[] primeLanes;
@@ -39,48 +39,48 @@ public class RoutingObjects {
     public int actualLevelWhenProbingForConnectors;
 
     /*Buildings*/
-    private final String COLLEGE = "College Building";
-    private final String HATHCROFT = "Hathcroft Building";
-    private final String WILLIAMS = "Williams Building";
-    private final String SHEPPARDLIBRARY = "Sheppard Library";
-    private final String CIRCLE_CAFE = "Circle Cafe";
-    private final String BARN = "Barn";
-    private final String PORTACABIN_A = "Portacabin A";
-    private final String PORTACABIN_B = "Portacabin B";
-    private final String PORTACABIN_A_EXT = "Portacabin A.";
-    private final String PORTACABIN_67 = "Portacabin 6 & 7";
-    private final String MDXHOUSE = "MDX House";
-    private final String BUILDING9 = "Building 9";
-    private final String BUILDING10 = "Building 10";
-    private final String GROVE_BLOCK_A = "Grove Block A";
-    private final String GROVE_BLOCK_B = "Grove Block B";
-    private final String GROVE_BLOCK_C = "Grove Block C";
-    private final String VINE = "The Vine";
-    private final String OUTSIDE = "Outside";
+    private final static String COLLEGE = "College Building";
+    private final static String HATHCROFT = "Hathcroft Building";
+    private final static String WILLIAMS = "Williams Building";
+    private final static String SHEPPARDLIBRARY = "Sheppard Library";
+    private final static String CIRCLE_CAFE = "Circle Cafe";
+    private final static String BARN = "Barn";
+    private final static String PORTACABIN_A = "Portacabin A";
+    private final static String PORTACABIN_B = "Portacabin B";
+    private final static String PORTACABIN_A_EXT = "Portacabin A.";
+    private final static String PORTACABIN_67 = "Portacabin 6 & 7";
+    private final static String MDXHOUSE = "MDX House";
+    private final static String BUILDING9 = "Building 9";
+    private final static String BUILDING10 = "Building 10";
+    private final static String GROVE_BLOCK_A = "Grove Block A";
+    private final static String GROVE_BLOCK_B = "Grove Block B";
+    private final static String GROVE_BLOCK_C = "Grove Block C";
+    private final static String VINE = "The Vine";
+    private final static String OUTSIDE = "Outside";
 
     //TODO Create constructor for outside connectors removing primeLanes, gMap and actual levels
 
     //Constructor for connectors & doors
     public RoutingObjects(String name, String type, int[] primeLanes, int gMapgMapLevel,
-                          int actualLevel, LatLng location, String[] adjacentConnectors, String isWheelChairAccessible) {
+                          int actualLevel, LatLng latLng, String[] adjacentConnectors, String isWheelChairAccessible) {
         this.name = name;
         this.type = type;
         this.primeLanes = primeLanes;
         this.gMapLevel = gMapgMapLevel;
         this.actualLevel = actualLevel;
-        this.location = location;
+        this.latLng = latLng;
         this.adjacentConnectors = adjacentConnectors;
         this.isWheelChairAccessible = isWheelChairAccessible;
     }
 
     //Constructor for Rooms
-    public RoutingObjects(String name, int lane, String building, int gMapLevel, int actualLevel, LatLng location, String[] laneConnectors) {
+    public RoutingObjects(String name, int lane, String building, int gMapLevel, int actualLevel, LatLng latLng, String[] laneConnectors) {
         this.name = name;
         this.lane = lane;
         this.building = building;
         this.gMapLevel = gMapLevel;
         this.actualLevel = actualLevel;
-        this.location = location;
+        this.latLng = latLng;
         this.laneConnectors = laneConnectors;
     }
 
@@ -105,8 +105,8 @@ public class RoutingObjects {
         return gMapLevel;
     }
 
-    public LatLng getLocation() {
-        return location;
+    public LatLng getLatLng() {
+        return latLng;
     }
 
     public int getActualLevel() {
@@ -157,7 +157,7 @@ public class RoutingObjects {
     }
 
     public void setRoomLatLng(LatLng latLng) {
-        location = latLng;
+        this.latLng = latLng;
     }
 
     public ArrayList<RoutingObjects> getConnectors(String building, int actualLevel) {
@@ -935,7 +935,7 @@ public class RoutingObjects {
         return list;
     }
 
-    public ArrayList<RoutingObjects> getRooms() {
+    public static ArrayList<RoutingObjects> getRooms() {
         ArrayList<RoutingObjects> list = new ArrayList<>();
 
         //College Ground Floor

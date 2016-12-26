@@ -19,8 +19,8 @@ public class IndoorAlgorithm {
     ArrayList<RoutingObjects> allLevelConnectors;
     ArrayList<RoutingObjects> previouslyUsedConnectors;
 
-    public ArrayList<ArrayList<String>> sameLevelOp(ArrayList<RoutingObjects> primes, int destinationLane, String location, int actualLevel) {
-        allLevelConnectors = new RoutingObjects().getConnectors(location, actualLevel);
+    public ArrayList<ArrayList<String>> sameLevelOp(ArrayList<RoutingObjects> primes, int destinationLane, String building, int actualLevel) {
+        allLevelConnectors = new RoutingObjects().getConnectors(building, actualLevel);
         previouslyUsedConnectors = new ArrayList<>();
         //Add all primes object names(String) to allPrimeNames array
         for (int i = 0; i < primes.size(); i++) {

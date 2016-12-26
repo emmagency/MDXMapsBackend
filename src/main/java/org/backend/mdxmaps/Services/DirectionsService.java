@@ -5,26 +5,30 @@ import org.backend.mdxmaps.Model.RoutingObjects;
 
 import java.util.concurrent.Callable;
 
+import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getRoomObjectFromName;
+
 /**
  * Created by Emmanuel Keboh on 27/11/2016.
  */
 public class DirectionsService implements Callable {
 
-    private RoutingObjects start, end;
+    private String start, end;
     private String mot;
+    private RoutingObjects startRoom;
+    private RoutingObjects destinationRoom;
 
-    public DirectionsService(RoutingObjects start, RoutingObjects end, String mot) {
+    public DirectionsService(String start, String end, String mot) {
         this.start = start;
         this.end = end;
         this.mot = mot;
     }
 
-    private RoutingObjects getStart() {
+    private String getStart() {
         return start;
     }
 
 
-    private RoutingObjects getEnd() {
+    private String getEnd() {
         return end;
     }
 
@@ -33,47 +37,36 @@ public class DirectionsService implements Callable {
         return mot;
     }
 
-//    public SBSLResponse getRoute(){
-//        ArrayList<ArrayList<LatLng>> list = new ArrayList<>();
-//        ArrayList<LatLng> list1 = new ArrayList<>();
-//        list1.add(new LatLng(1234.11, 9876.34));
-//        list1.add(new LatLng(1234.11, 9876.34));
-//        list.add(list1);
-//
-//        ArrayList<LatLng> list2 = new ArrayList<>();
-//        list2.add(new LatLng(1234.11, 9876.34));
-//        list2.add(new LatLng(1234.11, 9876.34));
-//        list.add(list2);
-//
-//        ArrayList<LatLng> list3 = new ArrayList<>();
-//        list3.add(new LatLng(1234.11, 9876.34));
-//        list3.add(new LatLng(1234.11, 9876.34));
-//        list.add(list3);
-//
-//        ArrayList<String> routeDescription = new ArrayList<>();
-//        routeDescription.add("Hello");
-//        routeDescription.add("Are");
-//        routeDescription.add("You?");
-//
-//        return new SBSLResponse(list, routeDescription);
-//    }
-
     @Override
     public Object call() throws Exception {
 
-        //Perform logic to ensure user sends a valid mot to guard against console editing in browsers.
+        startRoom = getRoomObjectFromName(start);
+        destinationRoom = getRoomObjectFromName(end);
 
-        ResponseService motCheck = new MOTCheckService(start, end, mot).doMOTCheck();
+        //Thread.sleep(10000);
 
-        if (motCheck.getStatus() == ResponseService.Status.ERROR) {
-            //Return motCheck entity here
+        if (startRoom == null || destinationRoom == null) {
+            //return error
         }
 
-        RouteCalculation operation = (RouteCalculation) motCheck.getEntity();
+        //Logic to ensure user sends a valid mot to guard against console editing in browsers.
+        if (!mot.equals("disabled")) {
+            if (!MOTValidator.validate(startRoom, destinationRoom)) {
+                //return error
+            }
+        }
 
-        ResponseService result = operation.getRoute();
+        //Logic to determine type of operation
+        ResponseService motCheck = new MOTCheckService(startRoom, destinationRoom, mot).doMOTCheck();
+
+        if (motCheck.getStatus() == ResponseService.Status.ERROR) {
+            //Return error message
+        }
+
+        //Everything checked out, let's do some calculations!
+        ResponseService result = ((RouteCalculation) motCheck.getEntity()).getRoute();
 
 
-        return null;
+        return result.getEntity();
     }
 }
