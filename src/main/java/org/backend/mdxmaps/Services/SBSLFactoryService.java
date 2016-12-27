@@ -9,6 +9,7 @@ import org.backend.mdxmaps.Services.ResponseService.Status;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.backend.mdxmaps.Services.SingleLevelSLOCalculator.performSingleLevelSLO;
 
@@ -39,7 +40,7 @@ public class SBSLFactoryService implements RouteCalculation {
 
     @Override
     public ResponseService getRoute() {
-        ResponseService response = new ResponseService();
+
         Multimap<Double, ArrayList<LatLng>> SLOroutes = performSingleLevelSLO(start, destination, mot);
         if (SLOroutes == null) {
             return ResponseService.create(ResponseService.Status.ERROR, mot.equals("disabled") ? "No available wheelchair routes" :
@@ -51,10 +52,9 @@ public class SBSLFactoryService implements RouteCalculation {
 
         for (Double distance : SLOroutes.keySet()) {
             List<ArrayList<LatLng>> keyValues = (List<ArrayList<LatLng>>) SLOroutes.get(distance);
-            for (ArrayList<LatLng> route : keyValues) {
-                routes.add(SBSLResponseObject.createRouteObject(route, distance));
-            }
-
+            routes.addAll(keyValues.parallelStream()
+                    .map(route -> SBSLResponseObject.createRouteObject(route, distance))
+                    .collect(Collectors.toList()));
         }
 
         return ResponseService.create(Status.OK,

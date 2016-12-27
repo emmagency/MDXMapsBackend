@@ -42,7 +42,7 @@ public final class RoutingObjectsGetterUtilService {
     }
 
     public static RoutingObjects getRoomObjectFromName(String name) {
-        return getRooms().stream()
+        return getRooms().parallelStream()
                 .filter(room -> room.getName().equals(name))
                 .findFirst().orElse(null);
     }

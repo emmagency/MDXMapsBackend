@@ -20,7 +20,6 @@ public final class UtilService {
     private UtilService() {
     }
 
-    //Test
     /**
      * Method to filter connector objects by connector type
      *
@@ -41,7 +40,7 @@ public final class UtilService {
 
     public static ArrayList<ArrayList<RoutingObjects>> removeNonDisabledRoutes(ArrayList<ArrayList<RoutingObjects>> validRoutes) {
 
-        return (ArrayList<ArrayList<RoutingObjects>>) validRoutes.stream()
+        return (ArrayList<ArrayList<RoutingObjects>>) validRoutes.parallelStream()
                 .filter(route -> !route.stream()
                         .filter(connectorObject -> connectorObject.getIsWheelChairAccessible().equals("N"))
                         .findFirst().isPresent())

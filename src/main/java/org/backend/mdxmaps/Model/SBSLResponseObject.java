@@ -1,5 +1,6 @@
 package org.backend.mdxmaps.Model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.backend.mdxmaps.Services.ResponseService.Status;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
  */
 
 /*SBSL: Same building, same level*/
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class SBSLResponseObject {
 
     public Status status;

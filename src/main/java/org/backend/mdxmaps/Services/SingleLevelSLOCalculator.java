@@ -47,7 +47,7 @@ public final class SingleLevelSLOCalculator {
                         connectorObject.getName().equals(string)).findFirst().get())
                 .collect(Collectors.toList());
 
-        ArrayList<ArrayList<RoutingObjects>> validRoutesObjects = new ArrayList<>();
+        ArrayList<ArrayList<RoutingObjects>> validRoutesObjects;
 
         //finalValidRoutesObjects required because of Java's final or effectively final rule for variables used in lambdas/anonymous classes
         ArrayList<ArrayList<RoutingObjects>> finalValidRoutesObjects = new ArrayList<>();
@@ -59,6 +59,8 @@ public final class SingleLevelSLOCalculator {
 
         if (mot.equals("disabled")) {
             validRoutesObjects = removeNonDisabledRoutes(finalValidRoutesObjects);
+        } else {
+            validRoutesObjects = finalValidRoutesObjects;
         }
 
         if (validRoutesObjects.size() != 0) {
