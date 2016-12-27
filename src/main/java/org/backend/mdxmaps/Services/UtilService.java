@@ -41,9 +41,8 @@ public final class UtilService {
     public static ArrayList<ArrayList<RoutingObjects>> removeNonDisabledRoutes(ArrayList<ArrayList<RoutingObjects>> validRoutes) {
 
         return (ArrayList<ArrayList<RoutingObjects>>) validRoutes.parallelStream()
-                .filter(route -> !route.stream()
-                        .filter(connectorObject -> connectorObject.getIsWheelChairAccessible().equals("N"))
-                        .findFirst().isPresent())
+                .filter(route -> route.parallelStream()
+                        .noneMatch(connectorObject -> connectorObject.getIsWheelChairAccessible().equals("N")))
                 .collect(Collectors.toList());
     }
 
