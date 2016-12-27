@@ -36,7 +36,7 @@ public final class RoutingObjectsGetterUtilService {
     }
 
     public static RoutingObjects getConnectorObjectFromName(ArrayList<RoutingObjects> connectors, String name) {
-        return connectors.stream()
+        return connectors.parallelStream()
                 .filter(connector -> connector.getName().equals(name))
                 .findFirst().orElse(null);
     }
