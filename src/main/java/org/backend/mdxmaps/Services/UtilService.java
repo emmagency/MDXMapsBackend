@@ -52,8 +52,6 @@ public final class UtilService {
      */
     public static Multimap<Double, ArrayList<LatLng>> calculateMultipleRoutesDistanceAndSort(ArrayList<ArrayList<LatLng>> allLatLngs) {
 
-        //ListMultimap<Double, ArrayList<LatLng>> multimap = ArrayListMultimap.create();
-
         Multimap<Double, ArrayList<LatLng>> multimap = MultimapBuilder.treeKeys().linkedListValues().build();
 
         for (int i = 0; i < allLatLngs.size(); i++) {

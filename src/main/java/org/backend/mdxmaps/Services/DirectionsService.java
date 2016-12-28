@@ -5,6 +5,7 @@ import org.backend.mdxmaps.Model.RoutingObjects;
 
 import java.util.concurrent.Callable;
 
+import static org.backend.mdxmaps.Services.ResponseService.Status.ERROR;
 import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getRoomObjectFromName;
 
 /**
@@ -14,8 +15,6 @@ public class DirectionsService implements Callable {
 
     private String start, end;
     private String mot;
-    private RoutingObjects startRoom;
-    private RoutingObjects destinationRoom;
 
     public DirectionsService(String start, String end, String mot) {
         this.start = start;
@@ -40,27 +39,30 @@ public class DirectionsService implements Callable {
     @Override
     public Object call() throws Exception {
 
-        startRoom = getRoomObjectFromName(start);
-        destinationRoom = getRoomObjectFromName(end);
+        RoutingObjects startRoom = getRoomObjectFromName(start);
+        RoutingObjects destinationRoom = getRoomObjectFromName(end);
 
         //Thread.sleep(10000);
 
         if (startRoom == null || destinationRoom == null) {
-            //return error
+            return ResponseService.create(ERROR, startRoom == null && destinationRoom == null ?
+                    "Couldn't find rooms" + start + " & " + end + ". Please check your input and try again." :
+                    startRoom == null ? "Couldn't find room" + start + ". Please check your input and try again."
+                            : "Couldn't find room" + end + ". Please check your input and try again.");
         }
 
         //Logic to ensure user sends a valid mot to guard against console editing in browsers.
         if (!mot.equals("disabled")) {
             if (!MOTValidator.validate(startRoom, destinationRoom)) {
-                //return error
+                mot = "null";
             }
         }
 
         //Logic to determine type of operation
         ResponseService motCheck = new MOTCheckService(startRoom, destinationRoom, mot).doMOTCheck();
 
-        if (motCheck.getStatus() == ResponseService.Status.ERROR) {
-            //Return error message
+        if (motCheck.getStatus() == ERROR) {
+            return ResponseService.create(ERROR, motCheck.getMessage());
         }
 
         //Everything checked out, let's do some calculations!

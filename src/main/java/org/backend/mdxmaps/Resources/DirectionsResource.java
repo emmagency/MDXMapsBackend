@@ -21,6 +21,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import static org.backend.mdxmaps.Services.ResponseService.Status.ERROR;
+
 /**
  * Created by Emmanuel Keboh on 27/11/2016.
  */
@@ -37,7 +39,7 @@ public class DirectionsResource implements ServletContextListener {
     public Response getDirections(@QueryParam("start") String start, @QueryParam("end") String end,
                                   @DefaultValue("null") @QueryParam("mot") String mot) {
 
-        if (start != null && end != null) {
+        if (start != null && !start.equals("") && end != null && !end.equals("")) {
             try {
                 return Response.ok(service.submit(new DirectionsService(start, end, mot)).get()).build();
             } catch (InterruptedException | ExecutionException e) {
@@ -45,11 +47,8 @@ public class DirectionsResource implements ServletContextListener {
             }
         }
 
-        ResponseService error = new ResponseService();
-        error.setStatus(ResponseService.Status.ERROR);
-        error.setMessage("You need to specify a start room and destination room");
-
-        return Response.ok(error).build();
+        return Response.ok(ResponseService.create(ERROR,
+                "You need to specify a start room and destination room")).build();
 
     }
 

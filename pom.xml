@@ -9,12 +9,13 @@
     <url>http://maven.apache.org</url>
 
     <dependencies>
-        <!--<dependency>-->
-        <!--<groupId>junit</groupId>-->
-        <!--<artifactId>junit</artifactId>-->
-        <!--<version>3.8.1</version>-->
-        <!--<scope>test</scope>-->
-        <!--</dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
         <dependency>
@@ -65,6 +66,7 @@
         <jersey.version>2.24</jersey.version>
         <jackson.version>2.22.1</jackson.version>
         <google.guava.version>21.0-rc1</google.guava.version>
+        <mockito.version>2.4.3</mockito.version>
         <project.build.sourceEndcoding>UTF-8</project.build.sourceEndcoding>
     </properties>
 

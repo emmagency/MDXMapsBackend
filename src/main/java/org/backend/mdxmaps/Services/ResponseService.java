@@ -1,9 +1,12 @@
 package org.backend.mdxmaps.Services;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * Created by Emmanuel Keboh on 14/12/2016.
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ResponseService {
 
     private Object entity;
