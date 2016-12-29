@@ -38,19 +38,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>RELEASE</version>
+            <version>${junit.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
@@ -80,6 +70,7 @@
         <jersey.version>2.24</jersey.version>
         <jackson.version>2.22.1</jackson.version>
         <google.guava.version>21.0-rc1</google.guava.version>
+        <junit.version>4.12</junit.version>
         <mockito.version>2.4.3</mockito.version>
         <project.build.sourceEndcoding>UTF-8</project.build.sourceEndcoding>
     </properties>

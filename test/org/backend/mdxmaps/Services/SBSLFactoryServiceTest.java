@@ -8,8 +8,8 @@ import org.junit.Test;
 public class SBSLFactoryServiceTest {
 
     @Test
-    public ResponseService getRoute() {
-        return null;
+    public void getRoute() {
+
     }
 
 }

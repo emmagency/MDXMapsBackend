@@ -42,8 +42,6 @@ public class DirectionsService implements Callable {
         RoutingObjects startRoom = getRoomObjectFromName(start);
         RoutingObjects destinationRoom = getRoomObjectFromName(end);
 
-        //Thread.sleep(10000);
-
         if (startRoom == null || destinationRoom == null) {
             return ResponseService.create(ERROR, startRoom == null && destinationRoom == null ?
                     "Couldn't find rooms" + start + " & " + end + ". Please check your input and try again." :
