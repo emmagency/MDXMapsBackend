@@ -6,8 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.when;
-
 /**
  * Created by Emmanuel Keboh on 29/12/2016.
  */
@@ -23,10 +21,10 @@ public class MOTCheckServiceTest {
     @Test
     public void doMOTCheckForSBSL() throws Exception {
 
-        when(start.getBuilding()).thenReturn("College Building");
-        when(end.getBuilding()).thenReturn("College Building");
-        when(start.getActualLevel()).thenReturn(1);
-        when(end.getActualLevel()).thenReturn(1);
+//        when(start.getBuilding()).thenReturn("College Building");
+//        when(end.getBuilding()).thenReturn("College Building");
+//        when(start.getActualLevel()).thenReturn(1);
+//        when(end.getActualLevel()).thenReturn(1);
 
         //ResponseService response = new MOTCheckService(start, end, )
     }

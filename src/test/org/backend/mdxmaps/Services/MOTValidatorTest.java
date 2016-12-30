@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -29,7 +29,7 @@ public class MOTValidatorTest {
         when(start.getActualLevel()).thenReturn(1);
         when(end.getActualLevel()).thenReturn(1);
 
-        assertFalse(MOTValidator.validate(start, end));
+        assertTrue(MOTValidator.validate(start, end));
 
     }
 
