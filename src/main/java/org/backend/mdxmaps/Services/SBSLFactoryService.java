@@ -2,6 +2,7 @@ package org.backend.mdxmaps.Services;
 
 import com.google.common.collect.Multimap;
 import org.backend.mdxmaps.Model.LatLng;
+import org.backend.mdxmaps.Model.MOT;
 import org.backend.mdxmaps.Model.RouteCalculation;
 import org.backend.mdxmaps.Model.RoutingObjects;
 import org.backend.mdxmaps.Model.SBSLResponseObject;
@@ -20,19 +21,19 @@ import static org.backend.mdxmaps.Services.SingleLevelSLOCalculator.performSingl
 /*SBSL: Same building, same level*/
 public class SBSLFactoryService implements RouteCalculation {
 
-    private String mot;
+    private MOT mot;
     private RoutingObjects start, destination;
 
     //ToDo Add optional field for specifying the required number of routes
 
-    public SBSLFactoryService(RoutingObjects start, RoutingObjects destination, String mot) {
+    public SBSLFactoryService(RoutingObjects start, RoutingObjects destination, MOT mot) {
         this.start = start;
         this.destination = destination;
         this.mot = mot;
 
     }
 
-    public String getMot() {
+    public MOT getMot() {
         return mot;
     }
 

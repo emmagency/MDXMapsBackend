@@ -1,6 +1,9 @@
 package org.backend.mdxmaps.Services;
 
+import org.backend.mdxmaps.Model.MOT;
 import org.backend.mdxmaps.Model.RoutingObjects;
+
+import java.util.Arrays;
 
 /**
  * Created by Emmanuel Keboh on 22/12/2016.
@@ -17,5 +20,14 @@ public final class MOTValidator {
             return (start.getActualLevel() != 0 || end.getActualLevel() != 0);
         }
 
+    }
+
+    public static MOT autoResolve(RoutingObjects start, RoutingObjects end) {
+        return validate(start, end) ? MOT.STAIRS : MOT.NULL;
+    }
+
+
+    public static boolean validatePassedMOTTypeExists(String mot) {
+        return Arrays.asList(MOT.values()).contains(mot);
     }
 }

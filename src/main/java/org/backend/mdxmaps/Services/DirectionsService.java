@@ -1,5 +1,6 @@
 package org.backend.mdxmaps.Services;
 
+import org.backend.mdxmaps.Model.MOT;
 import org.backend.mdxmaps.Model.RouteCalculation;
 import org.backend.mdxmaps.Model.RoutingObjects;
 
@@ -14,12 +15,12 @@ import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getRo
 public class DirectionsService implements Callable {
 
     private String start, end;
-    private String mot;
+    private String passedMot;
 
-    public DirectionsService(String start, String end, String mot) {
+    public DirectionsService(String start, String end, String passedMot) {
         this.start = start;
         this.end = end;
-        this.mot = mot;
+        this.passedMot = passedMot;
     }
 
     private String getStart() {
@@ -32,8 +33,8 @@ public class DirectionsService implements Callable {
     }
 
 
-    private String getMot() {
-        return mot;
+    private String getPassedMot() {
+        return passedMot;
     }
 
     @Override
@@ -41,6 +42,7 @@ public class DirectionsService implements Callable {
 
         RoutingObjects startRoom = getRoomObjectFromName(start);
         RoutingObjects destinationRoom = getRoomObjectFromName(end);
+        MOT motEnum;
 
         if (startRoom == null || destinationRoom == null) {
             return ResponseService.create(ERROR, startRoom == null && destinationRoom == null ?
@@ -49,15 +51,20 @@ public class DirectionsService implements Callable {
                             : "Couldn't find room" + end + ". Please check your input and try again.");
         }
 
-        //Logic to ensure user sends a valid mot to guard against console editing in browsers.
-        if (!mot.equals("disabled")) {
-            if (!MOTValidator.validate(startRoom, destinationRoom)) {
-                mot = "null";
+        //User doesn't pass preferred mot or passed mot is incorrect
+        if (passedMot == null || !MOTValidator.validatePassedMOTTypeExists(passedMot.toUpperCase())) {
+            motEnum = MOTValidator.autoResolve(startRoom, destinationRoom);
+        } else {
+            motEnum = MOT.valueOf(passedMot.toUpperCase());
+            if (!motEnum.equals(MOT.DISABLED)) {
+                if (!MOTValidator.validate(startRoom, destinationRoom)) {
+                    motEnum = MOT.NULL;
+                }
             }
         }
 
         //Logic to determine type of operation
-        ResponseService motCheck = new MOTCheckService(startRoom, destinationRoom, mot).doMOTCheck();
+        ResponseService motCheck = new MOTCheckService(startRoom, destinationRoom, motEnum).doMOTCheck();
 
         if (motCheck.getStatus() == ERROR) {
             return ResponseService.create(ERROR, motCheck.getMessage());

@@ -3,12 +3,14 @@ package org.backend.mdxmaps.Services;
 
 import com.google.common.collect.Multimap;
 import org.backend.mdxmaps.Model.LatLng;
+import org.backend.mdxmaps.Model.MOT;
 import org.backend.mdxmaps.Model.RoutingObjects;
 import org.backend.mdxmaps.Services.Algorithms.IndoorAlgorithm;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import static org.backend.mdxmaps.Model.MOT.DISABLED;
 import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getAllPrimes;
 import static org.backend.mdxmaps.Services.UtilService.calculateMultipleRoutesDistanceAndSort;
 import static org.backend.mdxmaps.Services.UtilService.removeNonDisabledRoutes;
@@ -21,7 +23,7 @@ public final class SingleLevelSLOCalculator {
     private SingleLevelSLOCalculator() {
     }
 
-    public static Multimap<Double, ArrayList<LatLng>> performSingleLevelSLO(RoutingObjects start, RoutingObjects end, String mot) {
+    public static Multimap<Double, ArrayList<LatLng>> performSingleLevelSLO(RoutingObjects start, RoutingObjects end, MOT mot) {
 
         //Get the actual connector objects and filter objects by type
         ArrayList<RoutingObjects> connectorObjects =
@@ -57,7 +59,7 @@ public final class SingleLevelSLOCalculator {
                         .findFirst().get())
                 .collect(Collectors.toList())));
 
-        if (mot.equals("disabled")) {
+        if (mot.equals(DISABLED)) {
             validRoutesObjects = removeNonDisabledRoutes(finalValidRoutesObjects);
         } else {
             validRoutesObjects = finalValidRoutesObjects;

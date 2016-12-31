@@ -1,19 +1,24 @@
 package org.backend.mdxmaps.Services;
 
+import org.backend.mdxmaps.Model.MOT;
 import org.backend.mdxmaps.Model.RoutingObjects;
 import org.backend.mdxmaps.Services.ResponseService.Status;
+
+import static org.backend.mdxmaps.Model.MOT.ELEVATORS;
+import static org.backend.mdxmaps.Model.MOT.STAIRS;
 
 /**
  * Created by Emmanuel Keboh on 14/12/2016.
  */
 public class MOTCheckService {
 
-    private String startBuilding, destBuilding, startEDMethod, destEDMethod, mot;
+    private String startBuilding, destBuilding, startEDMethod, destEDMethod;
+    MOT mot;
     private int startLevel, destLevel;
     private boolean startED, destED = false;
     private RoutingObjects startObject, destinationObject;
 
-    public MOTCheckService(RoutingObjects startObject, RoutingObjects destinationObject, String mot) {
+    public MOTCheckService(RoutingObjects startObject, RoutingObjects destinationObject, MOT mot) {
         this.startBuilding = startObject.getBuilding();
         this.destBuilding = destinationObject.getBuilding();
         this.startLevel = startObject.getActualLevel();
@@ -27,17 +32,17 @@ public class MOTCheckService {
         ResponseService response = new ResponseService();
 
         switch (mot) {
-            case "null":
+            case NULL:
                 //It's either sbsl or diff buildings ground floors
                 response.setStatus(ResponseService.Status.OK);
                 if (startBuilding.equals(destBuilding)) {
-                    response.setEntity(new SBSLFactoryService(startObject, destinationObject, mot));
+                    response.setEntity(new SBSLFactoryService(startObject, destinationObject, MOT.NULL));
                 } else {
                     response.setEntity(new DiffBuildingFactoryService(null, null, false, false));
                 }
                 break;
 
-            case "disabled":
+            case DISABLED:
                 boolean startCheck;
                 boolean destCheck;
 
@@ -119,7 +124,7 @@ public class MOTCheckService {
                 }
                 break;
 
-            case "stairs":
+            case STAIRS:
                 if (startBuilding.equals(destBuilding)) { //Same Building
                     if (new RoutingObjects().getBuildingObject(startBuilding).hasStairs) {
                         response.setStatus(Status.OK);
@@ -127,7 +132,7 @@ public class MOTCheckService {
                         //No stairs, inform user app will use elevators
                         response.setStatus(Status.INFO);
                         response.setMessage("No stairs in " + startBuilding + ". App switched to elevators for this building");
-                        mot = "elevators";
+                        mot = ELEVATORS;
                     }
                     response.setEntity(new SBDLFactoryService(startBuilding, mot, startLevel, destLevel));
                 } else { //Diff buildings
@@ -174,13 +179,13 @@ public class MOTCheckService {
                 }
                 break;
 
-            case "elevators":
+            case ELEVATORS:
                 if (startBuilding.equals(destBuilding)) { //Same Building
                     if (new RoutingObjects().getBuildingObject(startBuilding).hasElevators) {
                         response.setStatus(Status.OK);
                     } else {
                         //No elevators
-                        mot = "stairs";
+                        mot = STAIRS;
                         response.setStatus(Status.INFO);
                         response.setMessage("No elevators in " + startBuilding + ". App switched to stairs for this building");
                     }
