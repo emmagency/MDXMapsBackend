@@ -11,6 +11,7 @@ import org.backend.mdxmaps.Model.RoutingObjects;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Provides helper methods to carry out trivial operations such as calculations, filtering, sorting, etc.
@@ -23,23 +24,17 @@ public final class UtilService {
     /**
      * Method to filter connector objects by connector type
      *
-     * @param connectors Arraylist of connecters to be filter
+     * @param connectors Arraylist of connecters to filter
      * @param type       Connector type we want
      * @return The filtered list.
      */
     public static ArrayList<RoutingObjects> filterConnectorObjectsByType(ArrayList<RoutingObjects> connectors, String type) {
-
-        for (int i = 0; i < connectors.size(); i++) {
-            if (!connectors.get(i).getType().equals(type)) {
-                connectors.remove(i);
-                i -= 1;
-            }
-        }
-        return connectors;
+        return (ArrayList<RoutingObjects>) connectors.parallelStream()
+                .filter(connector -> connector.getType().equals(type))
+                .collect(Collectors.toList());
     }
 
     public static ArrayList<ArrayList<RoutingObjects>> removeNonDisabledRoutes(ArrayList<ArrayList<RoutingObjects>> validRoutes) {
-
         return (ArrayList<ArrayList<RoutingObjects>>) validRoutes.parallelStream()
                 .filter(route -> route.parallelStream()
                         .noneMatch(connectorObject -> connectorObject.getIsWheelChairAccessible().equals("N")))
@@ -47,25 +42,23 @@ public final class UtilService {
     }
 
     /**
-     * @param allLatLngs ArrayList of all routes. Each sub ArrayList is a full route
+     * @param allLatLngs Each sub ArrayList is either a full or sub route, depending on the calling method
      * @return A sorted, non-duplicated key-value multimap containing all the passed routes with distance as key
      */
     public static Multimap<Double, ArrayList<LatLng>> calculateMultipleRoutesDistanceAndSort(ArrayList<ArrayList<LatLng>> allLatLngs) {
 
         Multimap<Double, ArrayList<LatLng>> multimap = MultimapBuilder.treeKeys().linkedListValues().build();
-
-        for (int i = 0; i < allLatLngs.size(); i++) {
-            double distance = 0;
-            for (int j = 0; j < allLatLngs.get(i).size() - 1; j++) {
-                double temp = calculateDistance(allLatLngs.get(i).get(j).latitude,
-                        allLatLngs.get(i).get(j).longitude,
-                        allLatLngs.get(i).get(j + 1).latitude,
-                        allLatLngs.get(i).get(j + 1).longitude);
-                distance += temp;
-            }
-            multimap.put(distance, allLatLngs.get(i));
-        }
-
+        allLatLngs.forEach(allLatLng ->
+                {
+                    double distance = IntStream.range(0, allLatLng.size() - 1)
+                            .mapToDouble(j -> calculateDistance(allLatLng.get(j).latitude,
+                                    allLatLng.get(j).longitude,
+                                    allLatLng.get(j + 1).latitude,
+                                    allLatLng.get(j + 1).longitude))
+                            .sum();
+                    multimap.put(distance, allLatLng);
+                }
+        );
         return multimap;
     }
 
