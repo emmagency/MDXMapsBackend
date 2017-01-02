@@ -13,7 +13,7 @@ import static org.backend.mdxmaps.Model.MOT.STAIRS;
 public class MOTCheckService {
 
     private String startBuilding, destBuilding, startEDMethod, destEDMethod;
-    MOT mot;
+    private MOT mot;
     private int startLevel, destLevel;
     private boolean startED, destED = false;
     private RoutingObjects startObject, destinationObject;

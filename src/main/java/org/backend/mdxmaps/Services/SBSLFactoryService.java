@@ -44,12 +44,12 @@ public class SBSLFactoryService implements RouteCalculation {
 
         Multimap<Double, ArrayList<LatLng>> SLOroutes = performSingleLevelSLO(start, destination, mot);
         if (SLOroutes == null) {
-            return ResponseService.create(ResponseService.Status.ERROR, mot.equals("disabled") ? "No available wheelchair routes" :
-                    "Something went wrong, couldn't find a route");
+            return ResponseService.create(ResponseService.Status.ERROR, mot.toString().equals("DISABLED") ?
+                    "No available wheelchair routes" : "Something went wrong, couldn't find a route");
         }
 
         ArrayList<SBSLResponseObject> routes = new ArrayList<>();
-        int maxRoutes = 0;
+        //int maxRoutes = 0;
 
         for (Double distance : SLOroutes.keySet()) {
             List<ArrayList<LatLng>> keyValues = (List<ArrayList<LatLng>>) SLOroutes.get(distance);

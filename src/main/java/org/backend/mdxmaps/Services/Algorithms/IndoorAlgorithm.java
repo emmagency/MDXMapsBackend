@@ -68,7 +68,7 @@ public class IndoorAlgorithm {
 
         RoutingObjects currentAlphaObject = getConnectorObjectFromName(currentAlpha);
         //Check if current alpha connector isn't in the same lane as destination
-        if (!currentAlphaObject.checkIfCurrentAlphaContainsDestination(currentAlphaObject, destinationLane)) {
+        if (!currentAlphaObject.checkIfCurrentAlphaContainsDestination(destinationLane)) {
             //Get valid adjacents for current alpha
             ArrayList<RoutingObjects> allAdjacents = getAdjacents(currentAlphaObject);
 
@@ -121,7 +121,6 @@ public class IndoorAlgorithm {
                     break; //Found, exit immediately
                 }
             }
-
         }
 
         //If current Alpha has previously been used to visit other connectors. Check its visited list to see if any reported

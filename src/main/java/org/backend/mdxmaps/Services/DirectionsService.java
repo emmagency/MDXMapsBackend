@@ -52,7 +52,7 @@ public class DirectionsService implements Callable {
         }
 
         //User doesn't pass preferred mot or passed mot is incorrect
-        if (passedMot == null || !MOTValidator.validatePassedMOTTypeExists(passedMot.toUpperCase())) {
+        if (passedMot == null || !MOTValidator.validateReceivedMOTTypeExists(passedMot)) {
             motEnum = MOTValidator.autoResolve(startRoom, destinationRoom);
         } else {
             motEnum = MOT.valueOf(passedMot.toUpperCase());

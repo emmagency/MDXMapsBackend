@@ -1,5 +1,6 @@
 package org.backend.mdxmaps.Services;
 
+import org.backend.mdxmaps.Model.MOT;
 import org.backend.mdxmaps.Model.RouteCalculation;
 
 /**
@@ -9,10 +10,11 @@ import org.backend.mdxmaps.Model.RouteCalculation;
 /*SBDL: Same building, different levels*/
 public class SBDLFactoryService implements RouteCalculation {
 
-    private String building, mot;
+    private String building;
+    private MOT mot;
     private int startLevel, destinationLevel;
 
-    public SBDLFactoryService(String building, String mot, int startLevel, int destinationLevel) {
+    public SBDLFactoryService(String building, MOT mot, int startLevel, int destinationLevel) {
         this.building = building;
         this.mot = mot;
         this.startLevel = startLevel;
@@ -23,7 +25,7 @@ public class SBDLFactoryService implements RouteCalculation {
         return building;
     }
 
-    public String getMot() {
+    public MOT getMot() {
         return mot;
     }
 

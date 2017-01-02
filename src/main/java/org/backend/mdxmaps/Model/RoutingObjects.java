@@ -1,6 +1,7 @@
 package org.backend.mdxmaps.Model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -61,13 +62,21 @@ public class RoutingObjects {
     //TODO Create constructor for outside connectors removing primeLanes, gMap and actual levels
 
     //Constructor for connectors & doors
-    public RoutingObjects(String name, String type, int[] primeLanes, int gMapgMapLevel,
+    public RoutingObjects(String name, String type, int[] primeLanes, int gMapLevel,
                           int actualLevel, LatLng latLng, String[] adjacentConnectors, String isWheelChairAccessible) {
         this.name = name;
         this.type = type;
         this.primeLanes = primeLanes;
-        this.gMapLevel = gMapgMapLevel;
+        this.gMapLevel = gMapLevel;
         this.actualLevel = actualLevel;
+        this.latLng = latLng;
+        this.adjacentConnectors = adjacentConnectors;
+        this.isWheelChairAccessible = isWheelChairAccessible;
+    }
+
+    //ToDO Use this for outside connectors instead
+    public RoutingObjects(String name, LatLng latLng, String[] adjacentConnectors, String isWheelChairAccessible) {
+        this.name = name;
         this.latLng = latLng;
         this.adjacentConnectors = adjacentConnectors;
         this.isWheelChairAccessible = isWheelChairAccessible;
@@ -1479,42 +1488,13 @@ public class RoutingObjects {
         return list.get(pos);
     }
 
-    /*Method deprecated*/
-    public RoutingObjects getConnectorObjectFromName(String name, String building, int gMapLevel) {
-        ArrayList<RoutingObjects> list = getConnectors(building, gMapLevel);
-        for (int i = 0; i < list.size(); i++) {
-            if (!list.get(i).getName().equals(name)) {
-                list.remove(i);
-                i -= 1;
-            }
-        }
-        return list.get(0);
-    }
-
     public int getGmapIntForGroundFloor(String building) {
         return getConnectors(building, 0).get(0).gMapLevel;
     }
 
-    public RoutingObjects getRoomObjectFromName(String name) {
-        ArrayList<RoutingObjects> list = getRooms();
-        int pos = 0;
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getName().equals(name)) {
-                pos = i;
-                break;
-            }
-        }
-        return list.get(pos);
-    }
 
-    public boolean checkIfCurrentAlphaContainsDestination(RoutingObjects currentAlpha, int destination) {
-        int[] primeLanes = currentAlpha.primeLanes;
-        for (int primeLane : primeLanes) {
-            if (primeLane == destination) {
-                return true;
-            }
-        }
-        return false;
+    public boolean checkIfCurrentAlphaContainsDestination(int destination) {
+        return Arrays.stream(primeLanes).anyMatch(primeLane -> primeLane == destination);
     }
 
 }

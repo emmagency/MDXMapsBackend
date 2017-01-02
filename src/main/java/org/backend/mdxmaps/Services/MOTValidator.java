@@ -13,13 +13,11 @@ public final class MOTValidator {
     }
 
     public static boolean validate(RoutingObjects start, RoutingObjects end) {
-
         if (start.getBuilding().equals(end.getBuilding())) {
             return start.getActualLevel() != end.getActualLevel();
         } else {
             return (start.getActualLevel() != 0 || end.getActualLevel() != 0);
         }
-
     }
 
     public static MOT autoResolve(RoutingObjects start, RoutingObjects end) {
@@ -27,7 +25,7 @@ public final class MOTValidator {
     }
 
 
-    public static boolean validatePassedMOTTypeExists(String mot) {
-        return Arrays.asList(MOT.values()).contains(mot);
+    public static boolean validateReceivedMOTTypeExists(String mot) {
+        return Arrays.stream(MOT.values()).anyMatch(MOT -> MOT.toString().equalsIgnoreCase(mot));
     }
 }
