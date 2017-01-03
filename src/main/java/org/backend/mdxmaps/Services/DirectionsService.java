@@ -15,12 +15,12 @@ import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getRo
 public class DirectionsService implements Callable {
 
     private String start, end;
-    private String passedMot;
+    private String receivedMot;
 
-    public DirectionsService(String start, String end, String passedMot) {
+    public DirectionsService(String start, String end, String receivedMot) {
         this.start = start;
         this.end = end;
-        this.passedMot = passedMot;
+        this.receivedMot = receivedMot;
     }
 
     private String getStart() {
@@ -33,8 +33,8 @@ public class DirectionsService implements Callable {
     }
 
 
-    private String getPassedMot() {
-        return passedMot;
+    private String getReceivedMot() {
+        return receivedMot;
     }
 
     @Override
@@ -51,11 +51,12 @@ public class DirectionsService implements Callable {
                             : "Couldn't find room" + end + ". Please check your input and try again.");
         }
 
-        //User doesn't pass preferred mot or passed mot is incorrect
-        if (passedMot == null || !MOTValidator.validateReceivedMOTTypeExists(passedMot)) {
+        if (receivedMot == null || !MOTValidator.validateReceivedMOTTypeExists(receivedMot)) {
+            //User doesn't pass preferred mot or passed mot is incorrect
             motEnum = MOTValidator.autoResolve(startRoom, destinationRoom);
         } else {
-            motEnum = MOT.valueOf(passedMot.toUpperCase());
+            //User passed a correct MOT, let's just confirm if it's needed for this operation
+            motEnum = MOT.valueOf(receivedMot.toUpperCase());
             if (!motEnum.equals(MOT.DISABLED)) {
                 if (!MOTValidator.validate(startRoom, destinationRoom)) {
                     motEnum = MOT.NULL;
@@ -64,7 +65,8 @@ public class DirectionsService implements Callable {
         }
 
         //Logic to determine type of operation
-        ResponseService motCheck = new MOTCheckService(startRoom, destinationRoom, motEnum).doMOTCheck();
+        ResponseService motCheck =
+                new ResolveOperationTypeService(startRoom, destinationRoom, motEnum).resolveOPType();
 
         if (motCheck.getStatus() == ERROR) {
             return ResponseService.create(ERROR, motCheck.getMessage());

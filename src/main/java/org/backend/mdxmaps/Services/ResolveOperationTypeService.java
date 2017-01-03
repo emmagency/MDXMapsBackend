@@ -10,7 +10,7 @@ import static org.backend.mdxmaps.Model.MOT.STAIRS;
 /**
  * Created by Emmanuel Keboh on 14/12/2016.
  */
-public class MOTCheckService {
+public class ResolveOperationTypeService {
 
     private String startBuilding, destBuilding, startEDMethod, destEDMethod;
     private MOT mot;
@@ -18,7 +18,7 @@ public class MOTCheckService {
     private boolean startED, destED = false;
     private RoutingObjects startObject, destinationObject;
 
-    public MOTCheckService(RoutingObjects startObject, RoutingObjects destinationObject, MOT mot) {
+    public ResolveOperationTypeService(RoutingObjects startObject, RoutingObjects destinationObject, MOT mot) {
         this.startBuilding = startObject.getBuilding();
         this.destBuilding = destinationObject.getBuilding();
         this.startLevel = startObject.getActualLevel();
@@ -28,7 +28,7 @@ public class MOTCheckService {
         this.destinationObject = destinationObject;
     }
 
-    public ResponseService doMOTCheck() {
+    public ResponseService resolveOPType() {
         ResponseService response = new ResponseService();
 
         switch (mot) {
