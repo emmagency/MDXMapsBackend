@@ -10,6 +10,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import static org.backend.mdxmaps.Model.RoutingObjects.BARN;
+import static org.backend.mdxmaps.Model.RoutingObjects.BUILDING10;
+import static org.backend.mdxmaps.Model.RoutingObjects.BUILDING9;
+import static org.backend.mdxmaps.Model.RoutingObjects.CIRCLE_CAFE;
+import static org.backend.mdxmaps.Model.RoutingObjects.COLLEGE;
+import static org.backend.mdxmaps.Model.RoutingObjects.GROVE_BLOCK_A;
+import static org.backend.mdxmaps.Model.RoutingObjects.GROVE_BLOCK_B;
+import static org.backend.mdxmaps.Model.RoutingObjects.GROVE_BLOCK_C;
+import static org.backend.mdxmaps.Model.RoutingObjects.HATHCROFT;
+import static org.backend.mdxmaps.Model.RoutingObjects.MDXHOUSE;
+import static org.backend.mdxmaps.Model.RoutingObjects.PORTACABIN_67;
+import static org.backend.mdxmaps.Model.RoutingObjects.PORTACABIN_A;
+import static org.backend.mdxmaps.Model.RoutingObjects.PORTACABIN_A_EXT;
+import static org.backend.mdxmaps.Model.RoutingObjects.PORTACABIN_B;
+import static org.backend.mdxmaps.Model.RoutingObjects.SHEPPARDLIBRARY;
+import static org.backend.mdxmaps.Model.RoutingObjects.VINE;
+import static org.backend.mdxmaps.Model.RoutingObjects.WILLIAMS;
 import static org.backend.mdxmaps.Model.RoutingObjects.getRooms;
 
 /**
@@ -45,6 +62,31 @@ public final class RoutingObjectsGetterUtilService {
         return getRooms().parallelStream()
                 .filter(room -> room.getName().equals(name))
                 .findFirst().orElse(null);
+    }
+
+    public static RoutingObjects getBuildingObject(String building) {
+        ArrayList<RoutingObjects> list = new ArrayList<>();
+        list.add(new RoutingObjects(COLLEGE, true, true, true));
+        list.add(new RoutingObjects(HATHCROFT, true, true, true));
+        list.add(new RoutingObjects(WILLIAMS, true, true, true));
+        list.add(new RoutingObjects(SHEPPARDLIBRARY, true, true, true));
+        list.add(new RoutingObjects(VINE, true, false, true));
+        list.add(new RoutingObjects(BARN, false, false, true));
+        list.add(new RoutingObjects(GROVE_BLOCK_A, true, true, true));
+        list.add(new RoutingObjects(GROVE_BLOCK_B, true, true, true));
+        list.add(new RoutingObjects(GROVE_BLOCK_C, true, true, true));
+        list.add(new RoutingObjects(BUILDING9, false, false, true));
+        list.add(new RoutingObjects(MDXHOUSE, true, true, true));
+        list.add(new RoutingObjects(PORTACABIN_A, true, false, true));
+        list.add(new RoutingObjects(PORTACABIN_A_EXT, false, false, true));
+        list.add(new RoutingObjects(PORTACABIN_67, true, false, false));
+        list.add(new RoutingObjects(PORTACABIN_B, false, false, true));
+        list.add(new RoutingObjects(BUILDING10, true, false, false));
+        list.add(new RoutingObjects(CIRCLE_CAFE, false, false, true));
+
+        return list.parallelStream()
+                .filter(buildingObject -> buildingObject.getName().equals(building))
+                .findFirst().get();
     }
 
 }

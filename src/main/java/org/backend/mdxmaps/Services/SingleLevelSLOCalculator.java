@@ -36,13 +36,11 @@ public final class SingleLevelSLOCalculator {
 
         ArrayList<String> requiredConnectors = new ArrayList<>();
 
-        validRoutes.forEach(strings -> {
-            strings.forEach(string -> {
-                if (!requiredConnectors.contains(string)) {
-                    requiredConnectors.add(string);
-                }
-            });
-        });
+        validRoutes.forEach(strings -> strings.forEach(string -> {
+            if (!requiredConnectors.contains(string)) {
+                requiredConnectors.add(string);
+            }
+        }));
 
         ArrayList<RoutingObjects> requiredConnectorsObjects = (ArrayList<RoutingObjects>) requiredConnectors.stream()
                 .map(string -> connectorObjects.stream().filter(connectorObject ->

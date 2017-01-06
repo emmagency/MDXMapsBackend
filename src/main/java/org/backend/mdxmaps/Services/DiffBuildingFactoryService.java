@@ -1,5 +1,6 @@
 package org.backend.mdxmaps.Services;
 
+import org.backend.mdxmaps.Model.MOT;
 import org.backend.mdxmaps.Model.RouteCalculation;
 
 /**
@@ -7,10 +8,26 @@ import org.backend.mdxmaps.Model.RouteCalculation;
  */
 public class DiffBuildingFactoryService implements RouteCalculation {
 
-    String startEDMethod, destEDMethod;
+    MOT startEDMethod, destEDMethod;
     boolean startED, destED;
 
-    public DiffBuildingFactoryService(String startEDMethod, String destEDMethod, boolean startED, boolean destED) {
+    public MOT getStartEDMethod() {
+        return startEDMethod;
+    }
+
+    public MOT getDestEDMethod() {
+        return destEDMethod;
+    }
+
+    public boolean isStartED() {
+        return startED;
+    }
+
+    public boolean isDestED() {
+        return destED;
+    }
+
+    public DiffBuildingFactoryService(MOT startEDMethod, MOT destEDMethod, boolean startED, boolean destED) {
         this.startEDMethod = startEDMethod;
         this.destEDMethod = destEDMethod;
         this.startED = startED;

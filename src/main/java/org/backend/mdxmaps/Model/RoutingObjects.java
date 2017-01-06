@@ -1,5 +1,7 @@
 package org.backend.mdxmaps.Model;
 
+import org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,31 +34,31 @@ public class RoutingObjects {
     String building;
 
     //Building-Only Attributes
-    public boolean hasStairs;
-    public boolean hasElevators;
-    public boolean wheelChairAccessible;
+    private boolean hasStairs;
+    private boolean hasElevators;
+    private boolean wheelChairAccessible;
 
 
     public int actualLevelWhenProbingForConnectors;
 
     /*Buildings*/
-    private final static String COLLEGE = "College Building";
-    private final static String HATHCROFT = "Hathcroft Building";
-    private final static String WILLIAMS = "Williams Building";
-    private final static String SHEPPARDLIBRARY = "Sheppard Library";
-    private final static String CIRCLE_CAFE = "Circle Cafe";
-    private final static String BARN = "Barn";
-    private final static String PORTACABIN_A = "Portacabin A";
-    private final static String PORTACABIN_B = "Portacabin B";
-    private final static String PORTACABIN_A_EXT = "Portacabin A.";
-    private final static String PORTACABIN_67 = "Portacabin 6 & 7";
-    private final static String MDXHOUSE = "MDX House";
-    private final static String BUILDING9 = "Building 9";
-    private final static String BUILDING10 = "Building 10";
-    private final static String GROVE_BLOCK_A = "Grove Block A";
-    private final static String GROVE_BLOCK_B = "Grove Block B";
-    private final static String GROVE_BLOCK_C = "Grove Block C";
-    private final static String VINE = "The Vine";
+    public final static String COLLEGE = "College Building";
+    public final static String HATHCROFT = "Hathcroft Building";
+    public final static String WILLIAMS = "Williams Building";
+    public final static String SHEPPARDLIBRARY = "Sheppard Library";
+    public final static String CIRCLE_CAFE = "Circle Cafe";
+    public final static String BARN = "Barn";
+    public final static String PORTACABIN_A = "Portacabin A";
+    public final static String PORTACABIN_B = "Portacabin B";
+    public final static String PORTACABIN_A_EXT = "Portacabin A.";
+    public final static String PORTACABIN_67 = "Portacabin 6 & 7";
+    public final static String MDXHOUSE = "MDX House";
+    public final static String BUILDING9 = "Building 9";
+    public final static String BUILDING10 = "Building 10";
+    public final static String GROVE_BLOCK_A = "Grove Block A";
+    public final static String GROVE_BLOCK_B = "Grove Block B";
+    public final static String GROVE_BLOCK_C = "Grove Block C";
+    public final static String VINE = "The Vine";
     private final static String OUTSIDE = "Outside";
 
     //TODO Create constructor for outside connectors removing primeLanes, gMap and actual levels
@@ -152,9 +154,21 @@ public class RoutingObjects {
         return building;
     }
 
+    public RoutingObjects getBuildingObject() {
+        return RoutingObjectsGetterUtilService.getBuildingObject(building);
+    }
+
     //Buildings
     public boolean isBuildingWheelChairAccessible() {
         return wheelChairAccessible;
+    }
+
+    public boolean hasStairs() {
+        return hasStairs;
+    }
+
+    public boolean hasElevators() {
+        return hasElevators;
     }
 
     public void setRoomName(String name) {
@@ -1456,36 +1470,6 @@ public class RoutingObjects {
         list.add(new RoutingObjects("BAG01", 1, BARN, 0, 0, new LatLng(51.590952, -0.228580), new String[]{"A"}));
         list.add(new RoutingObjects("BAG02", 3, BARN, 0, 0, new LatLng(51.591056, -0.228586), new String[]{"B"}));
         return list;
-    }
-
-    public RoutingObjects getBuildingObject(String building) {
-        ArrayList<RoutingObjects> list = new ArrayList<>();
-        list.add(new RoutingObjects(COLLEGE, true, true, true));
-        list.add(new RoutingObjects(HATHCROFT, true, true, true));
-        list.add(new RoutingObjects(WILLIAMS, true, true, true));
-        list.add(new RoutingObjects(SHEPPARDLIBRARY, true, true, true));
-        list.add(new RoutingObjects(VINE, true, false, true));
-        list.add(new RoutingObjects(BARN, false, false, true));
-        list.add(new RoutingObjects(GROVE_BLOCK_A, true, true, true));
-        list.add(new RoutingObjects(GROVE_BLOCK_B, true, true, true));
-        list.add(new RoutingObjects(GROVE_BLOCK_C, true, true, true));
-        list.add(new RoutingObjects(BUILDING9, false, false, true));
-        list.add(new RoutingObjects(MDXHOUSE, true, true, true));
-        list.add(new RoutingObjects(PORTACABIN_A, true, false, true));
-        list.add(new RoutingObjects(PORTACABIN_A_EXT, false, false, true));
-        list.add(new RoutingObjects(PORTACABIN_67, true, false, false));
-        list.add(new RoutingObjects(PORTACABIN_B, false, false, true));
-        list.add(new RoutingObjects(BUILDING10, true, false, false));
-        list.add(new RoutingObjects(CIRCLE_CAFE, false, false, true));
-
-        int pos = 0;
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getName().equals(building)) {
-                pos = i;
-                break;
-            }
-        }
-        return list.get(pos);
     }
 
     public int getGmapIntForGroundFloor(String building) {
