@@ -65,17 +65,16 @@ public class DirectionsService implements Callable {
         }
 
         //Logic to determine type of operation
-        ResponseService motCheck =
+        ResponseService resolveOPType =
                 new ResolveOperationTypeService(startRoom, destinationRoom, motEnum).resolveOPType();
 
-        if (motCheck.getStatus() == ERROR) {
-            return ResponseService.create(ERROR, motCheck.getMessage());
+        if (resolveOPType.getStatus() == ERROR) {
+            return ResponseService.create(ERROR, resolveOPType.getMessage());
         }
 
         //Everything checked out, let's do some calculations!
-        ResponseService result = ((RouteCalculation) motCheck.getEntity()).getRoute();
+        ResponseService result = ((RouteCalculation) resolveOPType.getEntity()).getRoute();
 
-
-        return result.getEntity();
+        return result.getEntity() != null ? result.getEntity() : result;
     }
 }

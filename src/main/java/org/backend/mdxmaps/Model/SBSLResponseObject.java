@@ -1,7 +1,6 @@
 package org.backend.mdxmaps.Model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.backend.mdxmaps.Services.ResponseService.Status;
 
 import java.util.ArrayList;
 
@@ -11,30 +10,23 @@ import java.util.ArrayList;
 
 /*SBSL: Same building, same level*/
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class SBSLResponseObject {
+public class SBSLResponseObject extends MainResponseObject {
 
-    public Status status;
-    public String message;
-    public ArrayList<SBSLResponseObject> routes;
-
-    public ArrayList<LatLng> route;
-    public Double distance;
-
-    private SBSLResponseObject(Status status, String message, ArrayList<SBSLResponseObject> routes) {
-        this.status = status;
-        this.message = message;
-        this.routes = routes;
-    }
+    private ArrayList<LatLng> route;
+    private Double distance;
 
     private SBSLResponseObject(ArrayList<LatLng> route, Double distance) {
         this.route = route;
         this.distance = distance;
     }
 
-    public static SBSLResponseObject createMainResponseObject(Status status, String message, ArrayList<SBSLResponseObject> routes) {
-        return new SBSLResponseObject(status, message, routes);
+    public ArrayList<LatLng> getRoute() {
+        return route;
     }
 
+    public Double getDistance() {
+        return distance;
+    }
 
     public static SBSLResponseObject createRouteObject(ArrayList<LatLng> route, Double distance) {
         return new SBSLResponseObject(route, distance);

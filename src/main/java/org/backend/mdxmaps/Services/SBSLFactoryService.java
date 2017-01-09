@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.backend.mdxmaps.Model.OperationTypes.SBSL;
 import static org.backend.mdxmaps.Services.SingleLevelSLOCalculator.performSingleLevelSLO;
 
 /**
@@ -26,18 +27,20 @@ public class SBSLFactoryService implements RouteCalculation {
 
     //ToDo Add optional field for specifying the required number of routes
 
-    public SBSLFactoryService(RoutingObjects start, RoutingObjects destination, MOT mot) {
+    private SBSLFactoryService(RoutingObjects start, RoutingObjects destination, MOT mot) {
         this.start = start;
         this.destination = destination;
         this.mot = mot;
 
     }
 
+    public static SBSLFactoryService create(RoutingObjects start, RoutingObjects destination, MOT mot) {
+        return new SBSLFactoryService(start, destination, mot);
+    }
+
     public MOT getMot() {
         return mot;
     }
-
-
 
     @Override
     public ResponseService getRoute() {
@@ -59,7 +62,7 @@ public class SBSLFactoryService implements RouteCalculation {
         }
 
         return ResponseService.create(Status.OK,
-                SBSLResponseObject.createMainResponseObject(Status.OK, "Test Message", routes));
+                SBSLResponseObject.createMainResponseObject(Status.OK, SBSL, "Test Message", routes));
     }
 
 }

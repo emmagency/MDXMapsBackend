@@ -36,7 +36,7 @@ public class ResolveOperationTypeService {
                 //It's either sbsl or diff buildings ground floors
                 response.setStatus(ResponseService.Status.OK);
                 if (startObject.getBuilding().equals(destinationObject.getBuilding())) {
-                    response.setEntity(new SBSLFactoryService(startObject, destinationObject, MOT.NULL));
+                    response.setEntity(SBSLFactoryService.create(startObject, destinationObject, MOT.NULL));
                 } else {
                     response.setEntity(new DiffBuildingFactoryService(null, null, false, false));
                 }
@@ -125,7 +125,7 @@ public class ResolveOperationTypeService {
                             }
                         } else {
                             response.setStatus(Status.OK);
-                            response.setEntity(new SBSLFactoryService(startObject, destinationObject, mot));
+                            response.setEntity(SBSLFactoryService.create(startObject, destinationObject, mot));
                         }
                     } else {
                         //Building isn't wheelchair accessible
