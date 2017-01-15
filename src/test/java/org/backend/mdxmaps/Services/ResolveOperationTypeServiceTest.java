@@ -7,10 +7,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.backend.mdxmaps.Model.MOT.DISABLED;
-import static org.backend.mdxmaps.Model.MOT.ELEVATORS;
-import static org.backend.mdxmaps.Model.MOT.NULL;
-import static org.backend.mdxmaps.Model.MOT.STAIRS;
+import static org.backend.mdxmaps.Model.Enums.MOT.DISABLED;
+import static org.backend.mdxmaps.Model.Enums.MOT.ELEVATORS;
+import static org.backend.mdxmaps.Model.Enums.MOT.NULL;
+import static org.backend.mdxmaps.Model.Enums.MOT.STAIRS;
 import static org.backend.mdxmaps.Services.ResponseService.Status.ERROR;
 import static org.backend.mdxmaps.Services.ResponseService.Status.INFO;
 import static org.backend.mdxmaps.Services.ResponseService.Status.OK;

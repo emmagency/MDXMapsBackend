@@ -1,12 +1,12 @@
 package org.backend.mdxmaps.Services;
 
-import org.backend.mdxmaps.Model.MOT;
+import org.backend.mdxmaps.Model.Enums.MOT;
 import org.backend.mdxmaps.Model.RoutingObjects;
 import org.backend.mdxmaps.Services.ResponseService.Status;
 
-import static org.backend.mdxmaps.Model.MOT.ELEVATORS;
-import static org.backend.mdxmaps.Model.MOT.NULL;
-import static org.backend.mdxmaps.Model.MOT.STAIRS;
+import static org.backend.mdxmaps.Model.Enums.MOT.ELEVATORS;
+import static org.backend.mdxmaps.Model.Enums.MOT.NULL;
+import static org.backend.mdxmaps.Model.Enums.MOT.STAIRS;
 
 /**
  * Created by Emmanuel Keboh on 14/12/2016.
@@ -38,7 +38,7 @@ public class ResolveOperationTypeService {
                 if (startObject.getBuilding().equals(destinationObject.getBuilding())) {
                     response.setEntity(SBSLFactoryService.create(startObject, destinationObject, MOT.NULL));
                 } else {
-                    response.setEntity(new DiffBuildingFactoryService(null, null, false, false));
+                    response.setEntity(new DiffBuildingFactoryService(NULL, NULL, false, false));
                 }
                 break;
 
@@ -117,7 +117,7 @@ public class ResolveOperationTypeService {
                         if (startLevel != 0 || destLevel != 0) {
                             if (startObject.getBuildingObject().hasElevators()) {
                                 response.setStatus(Status.OK);
-                                response.setEntity(new SBDLFactoryService(startObject.getBuilding(), mot, startLevel, destLevel));
+                                response.setEntity(SBDLFactoryService.create(startObject, destinationObject, mot));
                             } else {
                                 //Building doesn't have elevators
                                 response.setStatus(Status.ERROR);
@@ -145,7 +145,7 @@ public class ResolveOperationTypeService {
                         response.setMessage("No stairs in " + startObject.getBuilding() + ". App switched to elevators for this building");
                         mot = ELEVATORS;
                     }
-                    response.setEntity(new SBDLFactoryService(startObject.getBuilding(), mot, startLevel, destLevel));
+                    response.setEntity(SBDLFactoryService.create(startObject, destinationObject, mot));
                 } else { //Diff buildings
                     if (startLevel != 0) {
                         if (startObject.getBuildingObject().hasStairs()) {
@@ -200,7 +200,7 @@ public class ResolveOperationTypeService {
                         response.setStatus(Status.INFO);
                         response.setMessage("No elevators in " + startObject.getBuilding() + ". App switched to stairs for this building");
                     }
-                    response.setEntity(new SBDLFactoryService(startObject.getBuilding(), mot, startLevel, destLevel));
+                    response.setEntity(SBDLFactoryService.create(startObject, destinationObject, mot));
                 } else { //Diff Buildings
                     if (startLevel != 0) {
                         if (startObject.getBuildingObject().hasElevators()) {

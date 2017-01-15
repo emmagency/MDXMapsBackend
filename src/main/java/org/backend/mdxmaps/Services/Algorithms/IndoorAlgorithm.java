@@ -19,6 +19,7 @@ public class IndoorAlgorithm {
     ArrayList<RoutingObjects> allLevelConnectors;
     ArrayList<RoutingObjects> previouslyUsedConnectors;
 
+    //ToDO Switch to static method
     public ArrayList<ArrayList<String>> sameLevelOp(ArrayList<RoutingObjects> primes, int destinationLane, String building, int actualLevel) {
         allLevelConnectors = new RoutingObjects().getConnectors(building, actualLevel);
         previouslyUsedConnectors = new ArrayList<>();

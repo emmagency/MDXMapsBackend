@@ -1,18 +1,19 @@
 package org.backend.mdxmaps.Services;
 
 import com.google.common.collect.Multimap;
+import org.backend.mdxmaps.Model.Enums.MOT;
 import org.backend.mdxmaps.Model.LatLng;
-import org.backend.mdxmaps.Model.MOT;
 import org.backend.mdxmaps.Model.RouteCalculation;
 import org.backend.mdxmaps.Model.RoutingObjects;
 import org.backend.mdxmaps.Model.SBSLResponseObject;
-import org.backend.mdxmaps.Services.ResponseService.Status;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.backend.mdxmaps.Model.Enums.MOT.DISABLED;
 import static org.backend.mdxmaps.Model.OperationTypes.SBSL;
+import static org.backend.mdxmaps.Services.ResponseService.Status.OK;
 import static org.backend.mdxmaps.Services.SingleLevelSLOCalculator.performSingleLevelSLO;
 
 /**
@@ -34,7 +35,7 @@ public class SBSLFactoryService implements RouteCalculation {
 
     }
 
-    public static SBSLFactoryService create(RoutingObjects start, RoutingObjects destination, MOT mot) {
+    static SBSLFactoryService create(RoutingObjects start, RoutingObjects destination, MOT mot) {
         return new SBSLFactoryService(start, destination, mot);
     }
 
@@ -47,22 +48,23 @@ public class SBSLFactoryService implements RouteCalculation {
 
         Multimap<Double, ArrayList<LatLng>> SLOroutes = performSingleLevelSLO(start, destination, mot);
         if (SLOroutes == null) {
-            return ResponseService.create(ResponseService.Status.ERROR, mot.toString().equals("DISABLED") ?
-                    "No available wheelchair routes" : "Something went wrong, couldn't find a route");
+            return ResponseService.create(ResponseService.Status.ERROR, mot == DISABLED ?
+                    "No available wheelchair routes" : "Something went wrong, couldn't find a route. Please tell us about this issue.");
         }
 
         ArrayList<SBSLResponseObject> routes = new ArrayList<>();
         //int maxRoutes = 0;
 
-        for (Double distance : SLOroutes.keySet()) {
-            List<ArrayList<LatLng>> keyValues = (List<ArrayList<LatLng>>) SLOroutes.get(distance);
-            routes.addAll(keyValues.parallelStream()
-                    .map(route -> SBSLResponseObject.createRouteObject(route, distance))
-                    .collect(Collectors.toList()));
-        }
+        SLOroutes.keySet()
+                .forEach(distance -> {
+                    List<ArrayList<LatLng>> keyValues = (List<ArrayList<LatLng>>) SLOroutes.get(distance);
+                    routes.addAll(keyValues.parallelStream()
+                            .map(route -> SBSLResponseObject.createRouteObject(route, distance))
+                            .collect(Collectors.toList()));
+                });
 
-        return ResponseService.create(Status.OK,
-                SBSLResponseObject.createMainResponseObject(Status.OK, SBSL, "Test Message", routes));
+        return ResponseService.create(OK,
+                SBSLResponseObject.createMainResponseObject(OK, SBSL, null, routes));
     }
 
 }

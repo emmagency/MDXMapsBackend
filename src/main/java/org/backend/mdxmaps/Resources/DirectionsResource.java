@@ -8,7 +8,6 @@ import javax.inject.Singleton;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -37,7 +36,7 @@ public class DirectionsResource implements ServletContextListener {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDirections(@QueryParam("start") String start, @QueryParam("end") String end,
-                                  @DefaultValue("null") @QueryParam("mot") String mot) {
+                                  @QueryParam("mot") String mot) {
 
         if (start != null && !start.equals("") && end != null && !end.equals("")) {
             try {
@@ -48,7 +47,7 @@ public class DirectionsResource implements ServletContextListener {
         }
 
         return Response.ok(ResponseService.create(ERROR,
-                "You need to specify a start room and destination room")).build();
+                "Something went wrong. FIND IT!!!!!!")).build();
 
     }
 

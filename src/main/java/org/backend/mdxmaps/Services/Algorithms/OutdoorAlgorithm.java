@@ -26,6 +26,7 @@ public class OutdoorAlgorithm {
     ArrayList<RoutingObjects> previouslyUsedConnectors;
     int acceptedDistanceFromLine; //in meters
 
+    //ToDO Switch to static method and rename
     public ArrayList<ArrayList<String>> sameLevelOp(String startConnector, String destinationConnector, boolean wheelchair) {
         //Log.d("Gency", "Start: "+startConnector+" to "+destinationConnector);
         allOutdoorConnectors = new RoutingObjects().getConnectors("Outside", 0);

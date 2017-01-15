@@ -1,5 +1,7 @@
 package org.backend.mdxmaps.Model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.ArrayList;
 
 /**
@@ -7,6 +9,25 @@ import java.util.ArrayList;
  */
 
 /*SBDL: Same building, different levels*/
-public class SBDLResponseObject {
-    ArrayList<ArrayList<ArrayList<LatLng>>> sbdlFinalistsLatLng;
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class SBDLResponseObject extends MainResponseObject {
+    private ArrayList<ArrayList<LatLng>> route;
+    private Double distance;
+
+    private SBDLResponseObject(ArrayList<ArrayList<LatLng>> route, Double distance) {
+        this.route = route;
+        this.distance = distance;
+    }
+
+    public ArrayList<ArrayList<LatLng>> getRoute() {
+        return route;
+    }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public static SBDLResponseObject createRouteObject(ArrayList<ArrayList<LatLng>> route, Double distance) {
+        return new SBDLResponseObject(route, distance);
+    }
 }

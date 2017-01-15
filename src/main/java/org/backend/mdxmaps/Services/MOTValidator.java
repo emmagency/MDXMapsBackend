@@ -1,6 +1,6 @@
 package org.backend.mdxmaps.Services;
 
-import org.backend.mdxmaps.Model.MOT;
+import org.backend.mdxmaps.Model.Enums.MOT;
 import org.backend.mdxmaps.Model.RoutingObjects;
 
 import java.util.Arrays;

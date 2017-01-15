@@ -1,4 +1,4 @@
-package org.backend.mdxmaps.Model;
+package org.backend.mdxmaps.Model.Enums;
 
 /**
  * Created by Emmanuel Keboh on 29/12/2016.
