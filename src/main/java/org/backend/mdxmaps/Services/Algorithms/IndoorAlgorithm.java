@@ -4,6 +4,8 @@ import org.backend.mdxmaps.Model.RoutingObjects;
 
 import java.util.ArrayList;
 
+import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getConnectors;
+
 /**
  * Created by Emmanuel Keboh on 27/11/2016.
  */
@@ -21,7 +23,7 @@ public class IndoorAlgorithm {
 
     //ToDO Switch to static method
     public ArrayList<ArrayList<String>> sameLevelOp(ArrayList<RoutingObjects> primes, int destinationLane, String building, int actualLevel) {
-        allLevelConnectors = new RoutingObjects().getConnectors(building, actualLevel);
+        allLevelConnectors = getConnectors(building, actualLevel);
         previouslyUsedConnectors = new ArrayList<>();
         //Add all primes object names(String) to allPrimeNames array
         for (int i = 0; i < primes.size(); i++) {

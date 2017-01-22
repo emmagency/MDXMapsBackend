@@ -6,6 +6,7 @@ package org.backend.mdxmaps.Services;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
+import org.backend.mdxmaps.Model.Enums.ObjectType;
 import org.backend.mdxmaps.Model.LatLng;
 import org.backend.mdxmaps.Model.RoutingObjects;
 
@@ -20,6 +21,7 @@ import static java.util.stream.Collectors.toList;
  */
 
 public final class UtilService {
+
     private UtilService() {
     }
 
@@ -30,16 +32,22 @@ public final class UtilService {
      * @param type       Connector type we want
      * @return The filtered list.
      */
-    static ArrayList<RoutingObjects> filterConnectorObjectsByType(ArrayList<RoutingObjects> connectors, String type) {
+    public static ArrayList<RoutingObjects> filterConnectorObjectsByType(ArrayList<RoutingObjects> connectors, ObjectType type) {
         return (ArrayList<RoutingObjects>) connectors.parallelStream()
-                .filter(connector -> connector.getType().equals(type))
+                .filter(connector -> connector.getType() == type)
                 .collect(toList());
     }
 
-    static ArrayList<ArrayList<RoutingObjects>> removeNonDisabledRoutes(ArrayList<ArrayList<RoutingObjects>> validRoutes) {
+    public static ArrayList<ArrayList<RoutingObjects>> removeNonDisabledRoutes(ArrayList<ArrayList<RoutingObjects>> validRoutes) {
         return (ArrayList<ArrayList<RoutingObjects>>) validRoutes.parallelStream()
                 .filter(route -> route.parallelStream()
                         .noneMatch(connectorObject -> connectorObject.getIsWheelChairAccessible().equals("N")))
+                .collect(toList());
+    }
+
+    public static ArrayList<RoutingObjects> removeNonDisabledObjects(ArrayList<RoutingObjects> objects) {
+        return (ArrayList<RoutingObjects>) objects.parallelStream()
+                .filter(object -> !object.getIsWheelChairAccessible().equals("N"))
                 .collect(toList());
     }
 
@@ -47,7 +55,7 @@ public final class UtilService {
      * @param allLatLngs Arraylist of routes
      * @return A sorted, non-duplicated key-value multimap containing all the passed routes with distance as key
      */
-    static Multimap<Double, ArrayList<LatLng>> calculateMultipleRoutesDistanceAndSort(ArrayList<ArrayList<LatLng>> allLatLngs) {
+    public static Multimap<Double, ArrayList<LatLng>> calculateMultipleRoutesDistanceAndSort(ArrayList<ArrayList<LatLng>> allLatLngs) {
 
         Multimap<Double, ArrayList<LatLng>> multimap = MultimapBuilder.treeKeys().linkedListValues().build();
         allLatLngs.forEach(allLatLng ->
@@ -64,7 +72,7 @@ public final class UtilService {
         return multimap;
     }
 
-    static double calculateSingleRouteDistance(ArrayList<ArrayList<LatLng>> route) {
+    public static double calculateSingleRouteDistance(ArrayList<ArrayList<LatLng>> route) {
         return route.stream()
                 .mapToDouble(singleRoute -> IntStream.range(0, singleRoute.size() - 1)
                         .mapToDouble(i -> calculateDistance(singleRoute.get(i).latitude,
@@ -75,8 +83,8 @@ public final class UtilService {
                 .sum();
     }
 
-    static ArrayList<ArrayList<RoutingObjects>> transformValidRoutesStringToObjects(ArrayList<ArrayList<String>> validRoutes,
-                                                                                    ArrayList<RoutingObjects> connectorObjects) {
+    public static ArrayList<ArrayList<RoutingObjects>> transformValidRoutesStringToObjects(ArrayList<ArrayList<String>> validRoutes,
+                                                                                           ArrayList<RoutingObjects> connectorObjects) {
         ArrayList<String> requiredConnectors = new ArrayList<>();
 
         validRoutes.forEach(stringsArrayList -> stringsArrayList.forEach(string -> {
@@ -103,13 +111,19 @@ public final class UtilService {
 
     }
 
-    static Function<ArrayList<RoutingObjects>, ArrayList<LatLng>> validRouteObjectToLatLngTransformer() {
+    public static Function<ArrayList<RoutingObjects>, ArrayList<LatLng>> validRouteObjectToLatLngTransformer() {
         return validRoute -> (ArrayList<LatLng>) validRoute.stream()
                 .map(RoutingObjects::getLatLng)
                 .collect(toList());
     }
 
-    static ArrayList<ArrayList<RoutingObjects>> plugInStartAndEndObjects(RoutingObjects start, RoutingObjects end,
+    /**
+     * @param start       the start object
+     * @param end         the destination object
+     * @param validRoutes the list of routes
+     * @return list
+     */
+    public static ArrayList<ArrayList<RoutingObjects>> plugInStartAndEndObjects(RoutingObjects start, RoutingObjects end,
                                                                          ArrayList<ArrayList<RoutingObjects>> validRoutes) {
         return (ArrayList<ArrayList<RoutingObjects>>) validRoutes.stream()
                 .map(route -> {

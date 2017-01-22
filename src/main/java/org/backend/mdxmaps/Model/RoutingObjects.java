@@ -1,18 +1,22 @@
 package org.backend.mdxmaps.Model;
 
+import org.backend.mdxmaps.Model.Enums.ObjectType;
 import org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static org.backend.mdxmaps.Model.Enums.ObjectType.BASIC_CONNECTOR;
+import static org.backend.mdxmaps.Model.Enums.ObjectType.DOOR;
+import static org.backend.mdxmaps.Model.Enums.ObjectType.ELEVATOR;
+import static org.backend.mdxmaps.Model.Enums.ObjectType.STAIR;
+
 /**
  * Created by Emmanuel Keboh on 27/11/2016.
  */
 
 public class RoutingObjects {
-
-    HashMap<String, ArrayList<RoutingObjects>> connectorMap;
 
     //Connectors, room and buildings attribute
     String name;
@@ -25,7 +29,7 @@ public class RoutingObjects {
     //Connectors-Only Attributes
     int[] primeLanes;
     String[] adjacentConnectors;
-    String type;
+    ObjectType type;
     String isWheelChairAccessible;
 
     //Room-Only Attributes
@@ -37,9 +41,6 @@ public class RoutingObjects {
     private boolean hasStairs;
     private boolean hasElevators;
     private boolean wheelChairAccessible;
-
-
-    public int actualLevelWhenProbingForConnectors;
 
     /*Buildings*/
     public final static String COLLEGE = "College Building";
@@ -63,8 +64,8 @@ public class RoutingObjects {
 
     //TODO Create constructor for outside connectors removing primeLanes, gMap and actual levels
 
-    //Constructor for connectors & doors
-    public RoutingObjects(String name, String type, int[] primeLanes, int gMapLevel,
+    //Constructor for connectors, stairs, elevators & doors
+    public RoutingObjects(String name, ObjectType type, int[] primeLanes, int gMapLevel,
                           int actualLevel, LatLng latLng, String[] adjacentConnectors, String isWheelChairAccessible) {
         this.name = name;
         this.type = type;
@@ -76,9 +77,10 @@ public class RoutingObjects {
         this.isWheelChairAccessible = isWheelChairAccessible;
     }
 
-    //ToDO Use this for outside connectors instead
-    public RoutingObjects(String name, LatLng latLng, String[] adjacentConnectors, String isWheelChairAccessible) {
+    //Constructor for outside objects
+    public RoutingObjects(String name, ObjectType type, LatLng latLng, String[] adjacentConnectors, String isWheelChairAccessible) {
         this.name = name;
+        this.type = type;
         this.latLng = latLng;
         this.adjacentConnectors = adjacentConnectors;
         this.isWheelChairAccessible = isWheelChairAccessible;
@@ -133,7 +135,7 @@ public class RoutingObjects {
         return adjacentConnectors;
     }
 
-    public String getType() {
+    public ObjectType getType() {
         return type;
     }
 
@@ -155,7 +157,7 @@ public class RoutingObjects {
     }
 
     public RoutingObjects getBuildingObject() {
-        return RoutingObjectsGetterUtilService.getBuildingObject(building);
+        return getBuilding(building);
     }
 
     //Buildings
@@ -171,64 +173,43 @@ public class RoutingObjects {
         return hasElevators;
     }
 
-    public void setRoomName(String name) {
-        this.name = name;
-    }
-
-    public void setRoomLane(int lane) {
-        this.lane = lane;
-    }
-
-    public void setRoomLatLng(LatLng latLng) {
-        this.latLng = latLng;
-    }
-
-    public ArrayList<RoutingObjects> getConnectors(String building, int actualLevel) {
-        actualLevelWhenProbingForConnectors = actualLevel;
-        connectorMapInit(building);
-        return connectorMap.get(building);
-    }
-
-    private void connectorMapInit(String building) {
-        connectorMap = new HashMap<>();
+    public static HashMap<String, ArrayList<RoutingObjects>> connectorMapInit(String building, int actualLevel) {
+        HashMap<String, ArrayList<RoutingObjects>> connectorMap = new HashMap<>();
         switch (building) {
             case COLLEGE:
-                connectorMap.put(COLLEGE, getCollegeConnectors(actualLevelWhenProbingForConnectors));
+                connectorMap.put(COLLEGE, getCollegeConnectors(actualLevel));
                 break;
             case HATHCROFT:
-                connectorMap.put(HATHCROFT, getHatchcroftConnectors(actualLevelWhenProbingForConnectors));
+                connectorMap.put(HATHCROFT, getHatchcroftConnectors(actualLevel));
                 break;
             case WILLIAMS:
-                connectorMap.put(WILLIAMS, getWilliamsConnectors(actualLevelWhenProbingForConnectors));
+                connectorMap.put(WILLIAMS, getWilliamsConnectors(actualLevel));
                 break;
             case SHEPPARDLIBRARY:
-                connectorMap.put(SHEPPARDLIBRARY, getShepherdConnectors(actualLevelWhenProbingForConnectors));
+                connectorMap.put(SHEPPARDLIBRARY, getShepherdConnectors(actualLevel));
                 break;
             case GROVE_BLOCK_A:
-                connectorMap.put(GROVE_BLOCK_A, getGroveBlockAConnectors(actualLevelWhenProbingForConnectors));
+                connectorMap.put(GROVE_BLOCK_A, getGroveBlockAConnectors(actualLevel));
                 break;
             case GROVE_BLOCK_B:
-                connectorMap.put(GROVE_BLOCK_B, getGroveBlockBConnectors(actualLevelWhenProbingForConnectors));
+                connectorMap.put(GROVE_BLOCK_B, getGroveBlockBConnectors(actualLevel));
                 break;
             case GROVE_BLOCK_C:
-                connectorMap.put(GROVE_BLOCK_C, getGroveBlockCConnectors(actualLevelWhenProbingForConnectors));
+                connectorMap.put(GROVE_BLOCK_C, getGroveBlockCConnectors(actualLevel));
                 break;
             case MDXHOUSE:
-                connectorMap.put(MDXHOUSE, getMDXHouseConnectors(actualLevelWhenProbingForConnectors));
+                connectorMap.put(MDXHOUSE, getMDXHouseConnectors(actualLevel));
                 break;
             case BUILDING9:
                 connectorMap.put(BUILDING9, getBuilding9Connetors());
                 break;
             case BUILDING10:
-                connectorMap.put(BUILDING10, getBuilding10Connetors(actualLevelWhenProbingForConnectors));
+                connectorMap.put(BUILDING10, getBuilding10Connetors(actualLevel));
             case VINE:
-                connectorMap.put(VINE, getVineConnectors(actualLevelWhenProbingForConnectors));
-                break;
-            case OUTSIDE:
-                connectorMap.put(OUTSIDE, getOutsideConnectors());
+                connectorMap.put(VINE, getVineConnectors(actualLevel));
                 break;
             case PORTACABIN_A:
-                connectorMap.put(PORTACABIN_A, getPortacabinAConnectors(actualLevelWhenProbingForConnectors));
+                connectorMap.put(PORTACABIN_A, getPortacabinAConnectors(actualLevel));
                 break;
             case PORTACABIN_A_EXT:
                 connectorMap.put(PORTACABIN_A_EXT, getPortacabinAEXTConnectors());
@@ -245,7 +226,7 @@ public class RoutingObjects {
                 connectorMap.put(CIRCLE_CAFE, getCircleCafeConnectors());
                 break;
         }
-
+        return connectorMap;
     }
     
        /*
@@ -257,173 +238,173 @@ public class RoutingObjects {
         * Position 0 = Lane inside the building which the door belongs to
         * */
 
-    private ArrayList<RoutingObjects> getCollegeConnectors(int actualLevelWhenProbingForConnectors) {
+    private static ArrayList<RoutingObjects> getCollegeConnectors(int actualLevel) {
         ArrayList<RoutingObjects> list = new ArrayList<>();
 
-        switch (actualLevelWhenProbingForConnectors) {
+        switch (actualLevel) {
             case 0:
                 //Ground floor connectors, stairs, elevators and doors
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 12}, 2, 0, new LatLng(51.589945, -0.228274), new String[]{"B", "U"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 4}, 2, 0, new LatLng(51.589977, -0.228560), new String[]{"A", "C", "S"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{1, 5}, 2, 0, new LatLng(51.590003, -0.228806), new String[]{"B", "V", "Q"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{1, 6}, 2, 0, new LatLng(51.590030, -0.229051), new String[]{"V", "E", "O"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{1, 7}, 2, 0, new LatLng(51.590054, -0.229273), new String[]{"D", "I", "Z"}, "Y"));
-                list.add(new RoutingObjects("G", "Basic Connector", new int[]{8, 14}, 2, 0, new LatLng(51.589910, -0.229450), new String[]{"H", "J"}, "Y"));
-                list.add(new RoutingObjects("H", "Basic Connector", new int[]{14}, 2, 0, new LatLng(51.589903, -0.229378), new String[]{"G", "I"}, "N"));
-                list.add(new RoutingObjects("I", "Basic Connector", new int[]{7, 14}, 2, 0, new LatLng(51.589898, -0.229318), new String[]{"E", "H", "M"}, "Y"));
-                list.add(new RoutingObjects("J", "Basic Connector", new int[]{8, 10}, 2, 0, new LatLng(51.589819, -0.229477), new String[]{"G", "L"}, "Y"));
-                list.add(new RoutingObjects("K", "Basic Connector", new int[]{3, 9}, 2, 0, new LatLng(51.589703, -0.229464), new String[]{"L", "N", "Y"}, "Y"));
-                list.add(new RoutingObjects("L", "Basic Connector", new int[]{9, 10}, 2, 0, new LatLng(51.589809, -0.229434), new String[]{"J", "K", "M"}, "Y"));
-                list.add(new RoutingObjects("M", "Basic Connector", new int[]{7, 10}, 2, 0, new LatLng(51.589802, -0.229347), new String[]{"I", "L"}, "Y"));
-                list.add(new RoutingObjects("N", "Basic Connector", new int[]{3, 6}, 2, 0, new LatLng(51.589668, -0.229155), new String[]{"K", "O", "X"}, "Y"));
-                list.add(new RoutingObjects("O", "Basic Connector", new int[]{2, 6}, 2, 0, new LatLng(51.589850, -0.229099), new String[]{"D", "N", "W"}, "Y"));
-                list.add(new RoutingObjects("P", "Basic Connector", new int[]{3, 5}, 2, 0, new LatLng(51.589639, -0.228897), new String[]{"X", "Q", "R"}, "Y"));
-                list.add(new RoutingObjects("Q", "Basic Connector", new int[]{2, 5}, 2, 0, new LatLng(51.589825, -0.228839), new String[]{"C", "W", "P", "S"}, "Y"));
-                list.add(new RoutingObjects("R", "Basic Connector", new int[]{3, 4}, 2, 0, new LatLng(51.589610, -0.228666), new String[]{"P", "S", "T"}, "Y"));
-                list.add(new RoutingObjects("S", "Basic Connector", new int[]{2, 4}, 2, 0, new LatLng(51.589806, -0.228613), new String[]{"B", "Q", "R"}, "Y"));
-                list.add(new RoutingObjects("T", "Basic Connector", new int[]{3, 13}, 2, 0, new LatLng(51.589582, -0.228378), new String[]{"R"}, "Y"));
-                list.add(new RoutingObjects("U", "Basic Connector", new int[]{12, 15}, 2, 0, new LatLng(51.590054, -0.228247), new String[]{"A"}, "Y"));
-                list.add(new RoutingObjects("V", "Basic Connector", new int[]{1, 16}, 2, 0, new LatLng(51.590022, -0.228981), new String[]{"C", "D"}, "Y"));
-                list.add(new RoutingObjects("W", "Basic Connector", new int[]{2, 16, 17}, 2, 0, new LatLng(51.589844, -0.229032), new String[]{"O", "Q"}, "Y"));
-                list.add(new RoutingObjects("X", "Basic Connector", new int[]{3, 17}, 2, 0, new LatLng(51.589659, -0.229084), new String[]{"N", "P"}, "Y"));
-                list.add(new RoutingObjects("Y", "Basic Connector", new int[]{3}, 2, 0, new LatLng(51.589723, -0.229636), new String[]{"K"}, "Y"));
-                list.add(new RoutingObjects("Z", "Basic Connector", new int[]{1}, 2, 0, new LatLng(51.590086, -0.229538), new String[]{"E"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 12}, 2, 0, new LatLng(51.589945, -0.228274), new String[]{"B", "U"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 4}, 2, 0, new LatLng(51.589977, -0.228560), new String[]{"A", "C", "S"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{1, 5}, 2, 0, new LatLng(51.590003, -0.228806), new String[]{"B", "V", "Q"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{1, 6}, 2, 0, new LatLng(51.590030, -0.229051), new String[]{"V", "E", "O"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{1, 7}, 2, 0, new LatLng(51.590054, -0.229273), new String[]{"D", "I", "Z"}, "Y"));
+                list.add(new RoutingObjects("G", BASIC_CONNECTOR, new int[]{8, 14}, 2, 0, new LatLng(51.589910, -0.229450), new String[]{"H", "J"}, "Y"));
+                list.add(new RoutingObjects("H", BASIC_CONNECTOR, new int[]{14}, 2, 0, new LatLng(51.589903, -0.229378), new String[]{"G", "I"}, "N"));
+                list.add(new RoutingObjects("I", BASIC_CONNECTOR, new int[]{7, 14}, 2, 0, new LatLng(51.589898, -0.229318), new String[]{"E", "H", "M"}, "Y"));
+                list.add(new RoutingObjects("J", BASIC_CONNECTOR, new int[]{8, 10}, 2, 0, new LatLng(51.589819, -0.229477), new String[]{"G", "L"}, "Y"));
+                list.add(new RoutingObjects("K", BASIC_CONNECTOR, new int[]{3, 9}, 2, 0, new LatLng(51.589703, -0.229464), new String[]{"L", "N", "Y"}, "Y"));
+                list.add(new RoutingObjects("L", BASIC_CONNECTOR, new int[]{9, 10}, 2, 0, new LatLng(51.589809, -0.229434), new String[]{"J", "K", "M"}, "Y"));
+                list.add(new RoutingObjects("M", BASIC_CONNECTOR, new int[]{7, 10}, 2, 0, new LatLng(51.589802, -0.229347), new String[]{"I", "L"}, "Y"));
+                list.add(new RoutingObjects("N", BASIC_CONNECTOR, new int[]{3, 6}, 2, 0, new LatLng(51.589668, -0.229155), new String[]{"K", "O", "X"}, "Y"));
+                list.add(new RoutingObjects("O", BASIC_CONNECTOR, new int[]{2, 6}, 2, 0, new LatLng(51.589850, -0.229099), new String[]{"D", "N", "W"}, "Y"));
+                list.add(new RoutingObjects("P", BASIC_CONNECTOR, new int[]{3, 5}, 2, 0, new LatLng(51.589639, -0.228897), new String[]{"X", "Q", "R"}, "Y"));
+                list.add(new RoutingObjects("Q", BASIC_CONNECTOR, new int[]{2, 5}, 2, 0, new LatLng(51.589825, -0.228839), new String[]{"C", "W", "P", "S"}, "Y"));
+                list.add(new RoutingObjects("R", BASIC_CONNECTOR, new int[]{3, 4}, 2, 0, new LatLng(51.589610, -0.228666), new String[]{"P", "S", "T"}, "Y"));
+                list.add(new RoutingObjects("S", BASIC_CONNECTOR, new int[]{2, 4}, 2, 0, new LatLng(51.589806, -0.228613), new String[]{"B", "Q", "R"}, "Y"));
+                list.add(new RoutingObjects("T", BASIC_CONNECTOR, new int[]{3, 13}, 2, 0, new LatLng(51.589582, -0.228378), new String[]{"R"}, "Y"));
+                list.add(new RoutingObjects("U", BASIC_CONNECTOR, new int[]{12, 15}, 2, 0, new LatLng(51.590054, -0.228247), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("V", BASIC_CONNECTOR, new int[]{1, 16}, 2, 0, new LatLng(51.590022, -0.228981), new String[]{"C", "D"}, "Y"));
+                list.add(new RoutingObjects("W", BASIC_CONNECTOR, new int[]{2, 16, 17}, 2, 0, new LatLng(51.589844, -0.229032), new String[]{"O", "Q"}, "Y"));
+                list.add(new RoutingObjects("X", BASIC_CONNECTOR, new int[]{3, 17}, 2, 0, new LatLng(51.589659, -0.229084), new String[]{"N", "P"}, "Y"));
+                list.add(new RoutingObjects("Y", BASIC_CONNECTOR, new int[]{3}, 2, 0, new LatLng(51.589723, -0.229636), new String[]{"K"}, "Y"));
+                list.add(new RoutingObjects("Z", BASIC_CONNECTOR, new int[]{1}, 2, 0, new LatLng(51.590086, -0.229538), new String[]{"E"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{3}, 2, 0, new LatLng(51.589662, -0.229134), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{1}, 2, 0, new LatLng(51.590033, -0.229028), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S3", "stairs", new int[]{13}, 2, 0, new LatLng(51.589615, -0.228371), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S4", "stairs", new int[]{12}, 2, 0, new LatLng(51.589921, -0.228284), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S5", "stairs", new int[]{4}, 2, 0, new LatLng(51.589675, -0.228648), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S6", "stairs", new int[]{4}, 2, 0, new LatLng(51.589918, -0.228575), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{3}, 2, 0, new LatLng(51.589662, -0.229134), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{1}, 2, 0, new LatLng(51.590033, -0.229028), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S3", STAIR, new int[]{13}, 2, 0, new LatLng(51.589615, -0.228371), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S4", STAIR, new int[]{12}, 2, 0, new LatLng(51.589921, -0.228284), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S5", STAIR, new int[]{4}, 2, 0, new LatLng(51.589675, -0.228648), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S6", STAIR, new int[]{4}, 2, 0, new LatLng(51.589918, -0.228575), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{5}, 2, 0, new LatLng(51.589727, -0.228875), new String[]{"null"}, "Y"));
-                list.add(new RoutingObjects("E2", "elevators", new int[]{1}, 2, 0, new LatLng(51.590027, -0.228994), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{5}, 2, 0, new LatLng(51.589727, -0.228875), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E2", ELEVATOR, new int[]{1}, 2, 0, new LatLng(51.590027, -0.228994), new String[]{"null"}, "Y"));
 
-                list.add(new RoutingObjects("D1", "doors", new int[]{6}, 2, 0, new LatLng(51.590099, -0.229035), new String[]{"D", "K"}, "Y"));
-                list.add(new RoutingObjects("D2", "doors", new int[]{6}, 2, 0, new LatLng(51.589599, -0.229185), new String[]{"N", "R"}, "Y"));
-                list.add(new RoutingObjects("D3", "doors", new int[]{3}, 2, 0, new LatLng(51.589731, -0.229684), new String[]{"Y", "O"}, "N"));
-                list.add(new RoutingObjects("D4", "doors", new int[]{1}, 2, 0, new LatLng(51.590091, -0.229583), new String[]{"Z", "N"}, "N"));
-                list.add(new RoutingObjects("D5", "doors", new int[]{15}, 2, 0, new LatLng(51.590084, -0.228142), new String[]{"U", "A"}, "N"));
+                list.add(new RoutingObjects("D1", DOOR, new int[]{6}, 2, 0, new LatLng(51.590099, -0.229035), new String[]{"D", "K"}, "Y"));
+                list.add(new RoutingObjects("D2", DOOR, new int[]{6}, 2, 0, new LatLng(51.589599, -0.229185), new String[]{"N", "R"}, "Y"));
+                list.add(new RoutingObjects("D3", DOOR, new int[]{3}, 2, 0, new LatLng(51.589731, -0.229684), new String[]{"Y", "O"}, "N"));
+                list.add(new RoutingObjects("D4", DOOR, new int[]{1}, 2, 0, new LatLng(51.590091, -0.229583), new String[]{"Z", "N"}, "N"));
+                list.add(new RoutingObjects("D5", DOOR, new int[]{15}, 2, 0, new LatLng(51.590084, -0.228142), new String[]{"U", "A"}, "N"));
                 break;
             case 1:
                 //First floor connectors, stairs and elevators
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 3}, 1, 1, new LatLng(51.589943, -0.228275), new String[]{"B", "G"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 4}, 1, 1, new LatLng(51.589988, -0.228687), new String[]{"A", "D", "N"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{1, 6}, 1, 1, new LatLng(51.590015, -0.228915), new String[]{"N", "F", "O"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{4, 5}, 1, 1, new LatLng(51.589949, -0.228696), new String[]{"B", "M"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{2, 11}, 1, 1, new LatLng(51.589698, -0.229416), new String[]{"P", "J"}, "Y"));
-                list.add(new RoutingObjects("F", "Basic Connector", new int[]{6}, 1, 1, new LatLng(51.589836, -0.228956), new String[]{"C", "J", "L", "M"}, "Y"));
-                list.add(new RoutingObjects("G", "Basic Connector", new int[]{2, 3}, 1, 1, new LatLng(51.589582, -0.228378), new String[]{"A", "H"}, "Y"));
-                list.add(new RoutingObjects("H", "Basic Connector", new int[]{2, 8}, 1, 1, new LatLng(51.589628, -0.228792), new String[]{"G", "I", "K"}, "Y"));
-                list.add(new RoutingObjects("I", "Basic Connector", new int[]{7, 8}, 1, 1, new LatLng(51.589669, -0.228773), new String[]{"H", "L"}, "Y"));
-                list.add(new RoutingObjects("J", "Basic Connector", new int[]{2, 6}, 1, 1, new LatLng(51.589654, -0.229015), new String[]{"E", "F", "K"}, "Y"));
-                list.add(new RoutingObjects("K", "Basic Connector", new int[]{2, 9}, 1, 1, new LatLng(51.589642, -0.228922), new String[]{"H", "J", "L"}, "Y"));
-                list.add(new RoutingObjects("L", "Basic Connector", new int[]{7, 9}, 1, 1, new LatLng(51.589724, -0.228898), new String[]{"F", "I", "K"}, "Y"));
-                list.add(new RoutingObjects("M", "Basic Connector", new int[]{5, 10}, 1, 1, new LatLng(51.589931, -0.228836), new String[]{"D", "F", "N"}, "Y"));
-                list.add(new RoutingObjects("N", "Basic Connector", new int[]{1, 10}, 1, 1, new LatLng(51.590005, -0.228819), new String[]{"B", "C", "M"}, "Y"));
-                list.add(new RoutingObjects("O", "Basic Connector", new int[]{1, 13}, 1, 1, new LatLng(51.590066, -0.229359), new String[]{"Q", "C"}, "Y"));
-                list.add(new RoutingObjects("P", "Basic Connector", new int[]{12, 11}, 1, 1, new LatLng(51.590033, -0.229321), new String[]{"E", "Q"}, "Y"));
-                list.add(new RoutingObjects("Q", "Basic Connector", new int[]{12, 13}, 1, 1, new LatLng(51.590037, -0.229370), new String[]{"O", "P"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 3}, 1, 1, new LatLng(51.589943, -0.228275), new String[]{"B", "G"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 4}, 1, 1, new LatLng(51.589988, -0.228687), new String[]{"A", "D", "N"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{1, 6}, 1, 1, new LatLng(51.590015, -0.228915), new String[]{"N", "F", "O"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{4, 5}, 1, 1, new LatLng(51.589949, -0.228696), new String[]{"B", "M"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{2, 11}, 1, 1, new LatLng(51.589698, -0.229416), new String[]{"P", "J"}, "Y"));
+                list.add(new RoutingObjects("F", BASIC_CONNECTOR, new int[]{6}, 1, 1, new LatLng(51.589836, -0.228956), new String[]{"C", "J", "L", "M"}, "Y"));
+                list.add(new RoutingObjects("G", BASIC_CONNECTOR, new int[]{2, 3}, 1, 1, new LatLng(51.589582, -0.228378), new String[]{"A", "H"}, "Y"));
+                list.add(new RoutingObjects("H", BASIC_CONNECTOR, new int[]{2, 8}, 1, 1, new LatLng(51.589628, -0.228792), new String[]{"G", "I", "K"}, "Y"));
+                list.add(new RoutingObjects("I", BASIC_CONNECTOR, new int[]{7, 8}, 1, 1, new LatLng(51.589669, -0.228773), new String[]{"H", "L"}, "Y"));
+                list.add(new RoutingObjects("J", BASIC_CONNECTOR, new int[]{2, 6}, 1, 1, new LatLng(51.589654, -0.229015), new String[]{"E", "F", "K"}, "Y"));
+                list.add(new RoutingObjects("K", BASIC_CONNECTOR, new int[]{2, 9}, 1, 1, new LatLng(51.589642, -0.228922), new String[]{"H", "J", "L"}, "Y"));
+                list.add(new RoutingObjects("L", BASIC_CONNECTOR, new int[]{7, 9}, 1, 1, new LatLng(51.589724, -0.228898), new String[]{"F", "I", "K"}, "Y"));
+                list.add(new RoutingObjects("M", BASIC_CONNECTOR, new int[]{5, 10}, 1, 1, new LatLng(51.589931, -0.228836), new String[]{"D", "F", "N"}, "Y"));
+                list.add(new RoutingObjects("N", BASIC_CONNECTOR, new int[]{1, 10}, 1, 1, new LatLng(51.590005, -0.228819), new String[]{"B", "C", "M"}, "Y"));
+                list.add(new RoutingObjects("O", BASIC_CONNECTOR, new int[]{1, 13}, 1, 1, new LatLng(51.590066, -0.229359), new String[]{"Q", "C"}, "Y"));
+                list.add(new RoutingObjects("P", BASIC_CONNECTOR, new int[]{12, 11}, 1, 1, new LatLng(51.590033, -0.229321), new String[]{"E", "Q"}, "Y"));
+                list.add(new RoutingObjects("Q", BASIC_CONNECTOR, new int[]{12, 13}, 1, 1, new LatLng(51.590037, -0.229370), new String[]{"O", "P"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{2}, 1, 1, new LatLng(51.589662, -0.229134), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{1}, 1, 1, new LatLng(51.590033, -0.229028), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S3", "stairs", new int[]{3}, 1, 1, new LatLng(51.589615, -0.228371), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S4", "stairs", new int[]{3}, 1, 1, new LatLng(51.589921, -0.228284), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S5", "stairs", new int[]{7, 8}, 1, 1, new LatLng(51.589668, -0.228775), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S6", "stairs", new int[]{4, 5}, 1, 1, new LatLng(51.589947, -0.228689), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{2}, 1, 1, new LatLng(51.589662, -0.229134), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{1}, 1, 1, new LatLng(51.590033, -0.229028), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S3", STAIR, new int[]{3}, 1, 1, new LatLng(51.589615, -0.228371), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S4", STAIR, new int[]{3}, 1, 1, new LatLng(51.589921, -0.228284), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S5", STAIR, new int[]{7, 8}, 1, 1, new LatLng(51.589668, -0.228775), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S6", STAIR, new int[]{4, 5}, 1, 1, new LatLng(51.589947, -0.228689), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{7, 9}, 1, 1, new LatLng(51.589727, -0.228875), new String[]{"null"}, "Y"));
-                list.add(new RoutingObjects("E2", "elevators", new int[]{1}, 1, 1, new LatLng(51.590027, -0.228994), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{7, 9}, 1, 1, new LatLng(51.589727, -0.228875), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E2", ELEVATOR, new int[]{1}, 1, 1, new LatLng(51.590027, -0.228994), new String[]{"null"}, "Y"));
                 break;
             case 2:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 0, 2, new LatLng(51.589583, -0.228376), new String[]{"A"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{3, 2}, 0, 2, new LatLng(51.589647, -0.228961), new String[]{"A", "C", "T"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{5, 2}, 0, 2, new LatLng(51.589650, -0.229003), new String[]{"B", "D", "Q"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{6, 2}, 0, 2, new LatLng(51.589656, -0.229049), new String[]{"F", "C", "G"}, "Y"));
-                list.add(new RoutingObjects("F", "Basic Connector", new int[]{2, 10}, 0, 2, new LatLng(51.589675, -0.229197), new String[]{"D", "J"}, "N"));
-                list.add(new RoutingObjects("G", "Basic Connector", new int[]{6, 7}, 0, 2, new LatLng(51.589682, -0.229042), new String[]{"D", "H"}, "Y"));
-                list.add(new RoutingObjects("H", "Basic Connector", new int[]{8, 7}, 0, 2, new LatLng(51.589694, -0.229150), new String[]{"G", "I"}, "Y"));
-                list.add(new RoutingObjects("I", "Basic Connector", new int[]{8, 9}, 0, 2, new LatLng(51.589807, -0.229117), new String[]{"H", "J"}, "Y"));
-                list.add(new RoutingObjects("J", "Basic Connector", new int[]{10, 9}, 0, 2, new LatLng(51.589813, -0.229155), new String[]{"F", "I", "K"}, "Y"));
-                list.add(new RoutingObjects("K", "Basic Connector", new int[]{10, 11}, 0, 2, new LatLng(51.590038, -0.229089), new String[]{"J", "L"}, "N"));
-                list.add(new RoutingObjects("L", "Basic Connector", new int[]{5, 11}, 0, 2, new LatLng(51.590018, -0.228909), new String[]{"O", "K", "M"}, "Y"));
-                list.add(new RoutingObjects("M", "Basic Connector", new int[]{12, 11}, 0, 2, new LatLng(51.590008, -0.228827), new String[]{"L", "N"}, "Y"));
-                list.add(new RoutingObjects("N", "Basic Connector", new int[]{12, 13}, 0, 2, new LatLng(51.589948, -0.228838), new String[]{"O", "M"}, "Y"));
-                list.add(new RoutingObjects("O", "Basic Connector", new int[]{5}, 0, 2, new LatLng(51.589937, -0.228931), new String[]{"Q", "N", "L"}, "Y"));
-                list.add(new RoutingObjects("Q", "Basic Connector", new int[]{5}, 0, 2, new LatLng(51.589738, -0.228989), new String[]{"C", "O", "R"}, "Y"));
-                list.add(new RoutingObjects("R", "Basic Connector", new int[]{3, 14}, 0, 2, new LatLng(51.589733, -0.228938), new String[]{"Q", "T"}, "Y"));
-                list.add(new RoutingObjects("T", "Basic Connector", new int[]{3, 4}, 0, 2, new LatLng(51.589712, -0.228942), new String[]{"B", "R"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 0, 2, new LatLng(51.589583, -0.228376), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{3, 2}, 0, 2, new LatLng(51.589647, -0.228961), new String[]{"A", "C", "T"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{5, 2}, 0, 2, new LatLng(51.589650, -0.229003), new String[]{"B", "D", "Q"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{6, 2}, 0, 2, new LatLng(51.589656, -0.229049), new String[]{"F", "C", "G"}, "Y"));
+                list.add(new RoutingObjects("F", BASIC_CONNECTOR, new int[]{2, 10}, 0, 2, new LatLng(51.589675, -0.229197), new String[]{"D", "J"}, "N"));
+                list.add(new RoutingObjects("G", BASIC_CONNECTOR, new int[]{6, 7}, 0, 2, new LatLng(51.589682, -0.229042), new String[]{"D", "H"}, "Y"));
+                list.add(new RoutingObjects("H", BASIC_CONNECTOR, new int[]{8, 7}, 0, 2, new LatLng(51.589694, -0.229150), new String[]{"G", "I"}, "Y"));
+                list.add(new RoutingObjects("I", BASIC_CONNECTOR, new int[]{8, 9}, 0, 2, new LatLng(51.589807, -0.229117), new String[]{"H", "J"}, "Y"));
+                list.add(new RoutingObjects("J", BASIC_CONNECTOR, new int[]{10, 9}, 0, 2, new LatLng(51.589813, -0.229155), new String[]{"F", "I", "K"}, "Y"));
+                list.add(new RoutingObjects("K", BASIC_CONNECTOR, new int[]{10, 11}, 0, 2, new LatLng(51.590038, -0.229089), new String[]{"J", "L"}, "N"));
+                list.add(new RoutingObjects("L", BASIC_CONNECTOR, new int[]{5, 11}, 0, 2, new LatLng(51.590018, -0.228909), new String[]{"O", "K", "M"}, "Y"));
+                list.add(new RoutingObjects("M", BASIC_CONNECTOR, new int[]{12, 11}, 0, 2, new LatLng(51.590008, -0.228827), new String[]{"L", "N"}, "Y"));
+                list.add(new RoutingObjects("N", BASIC_CONNECTOR, new int[]{12, 13}, 0, 2, new LatLng(51.589948, -0.228838), new String[]{"O", "M"}, "Y"));
+                list.add(new RoutingObjects("O", BASIC_CONNECTOR, new int[]{5}, 0, 2, new LatLng(51.589937, -0.228931), new String[]{"Q", "N", "L"}, "Y"));
+                list.add(new RoutingObjects("Q", BASIC_CONNECTOR, new int[]{5}, 0, 2, new LatLng(51.589738, -0.228989), new String[]{"C", "O", "R"}, "Y"));
+                list.add(new RoutingObjects("R", BASIC_CONNECTOR, new int[]{3, 14}, 0, 2, new LatLng(51.589733, -0.228938), new String[]{"Q", "T"}, "Y"));
+                list.add(new RoutingObjects("T", BASIC_CONNECTOR, new int[]{3, 4}, 0, 2, new LatLng(51.589712, -0.228942), new String[]{"B", "R"}, "Y"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{14}, 0, 2, new LatLng(51.589726, -0.228853), new String[]{"null"}, "Y"));
-                list.add(new RoutingObjects("E2", "elevators", new int[]{11}, 0, 2, new LatLng(51.590028, -0.228982), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{14}, 0, 2, new LatLng(51.589726, -0.228853), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E2", ELEVATOR, new int[]{11}, 0, 2, new LatLng(51.590028, -0.228982), new String[]{"null"}, "Y"));
 
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{2}, 0, 2, new LatLng(51.589666, -0.229138), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{11}, 0, 2, new LatLng(51.590033, -0.229046), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S3", "stairs", new int[]{1}, 0, 2, new LatLng(51.589615, -0.228367), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S5", "stairs", new int[]{4}, 0, 2, new LatLng(51.589682, -0.228869), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S6", "stairs", new int[]{13}, 0, 2, new LatLng(51.589957, -0.228789), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{2}, 0, 2, new LatLng(51.589666, -0.229138), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{11}, 0, 2, new LatLng(51.590033, -0.229046), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S3", STAIR, new int[]{1}, 0, 2, new LatLng(51.589615, -0.228367), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S5", STAIR, new int[]{4}, 0, 2, new LatLng(51.589682, -0.228869), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S6", STAIR, new int[]{13}, 0, 2, new LatLng(51.589957, -0.228789), new String[]{"null"}, "N"));
                 break;
         }
 
         return list;
     }
 
-    private ArrayList<RoutingObjects> getHatchcroftConnectors(int actualLevelWhenProbingForConnectors) {
+    private static ArrayList<RoutingObjects> getHatchcroftConnectors(int actualLevel) {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        switch (actualLevelWhenProbingForConnectors) {
+        switch (actualLevel) {
             case 0:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 2, 0, new LatLng(51.589162, -0.229212), new String[]{"B", "G", "H"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{2, 3}, 2, 0, new LatLng(51.588936, -0.229291), new String[]{"A"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{1, 4}, 2, 0, new LatLng(51.589107, -0.228772), new String[]{"G", "D"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{4, 5}, 2, 0, new LatLng(51.589090, -0.228778), new String[]{"C", "F"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{4, 5}, 2, 0, new LatLng(51.589090, -0.228778), new String[]{"C", "F"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{6, 7}, 2, 0, new LatLng(51.589096, -0.228650), new String[]{"F"}, "Y"));
-                list.add(new RoutingObjects("F", "Basic Connector", new int[]{5, 6}, 2, 0, new LatLng(51.589077, -0.228657), new String[]{"D", "E"}, "Y"));
-                list.add(new RoutingObjects("G", "Basic Connector", new int[]{1, 8}, 2, 0, new LatLng(51.589158, -0.229166), new String[]{"A", "C"}, "Y"));
-                list.add(new RoutingObjects("H", "Basic Connector", new int[]{1, 9}, 2, 0, new LatLng(51.589177, -0.229386), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 2, 0, new LatLng(51.589162, -0.229212), new String[]{"B", "G", "H"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{2, 3}, 2, 0, new LatLng(51.588936, -0.229291), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{1, 4}, 2, 0, new LatLng(51.589107, -0.228772), new String[]{"G", "D"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{4, 5}, 2, 0, new LatLng(51.589090, -0.228778), new String[]{"C", "F"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{4, 5}, 2, 0, new LatLng(51.589090, -0.228778), new String[]{"C", "F"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{6, 7}, 2, 0, new LatLng(51.589096, -0.228650), new String[]{"F"}, "Y"));
+                list.add(new RoutingObjects("F", BASIC_CONNECTOR, new int[]{5, 6}, 2, 0, new LatLng(51.589077, -0.228657), new String[]{"D", "E"}, "Y"));
+                list.add(new RoutingObjects("G", BASIC_CONNECTOR, new int[]{1, 8}, 2, 0, new LatLng(51.589158, -0.229166), new String[]{"A", "C"}, "Y"));
+                list.add(new RoutingObjects("H", BASIC_CONNECTOR, new int[]{1, 9}, 2, 0, new LatLng(51.589177, -0.229386), new String[]{"A"}, "Y"));
 
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{8}, 2, 0, new LatLng(51.589233, -0.229137), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{7}, 2, 0, new LatLng(51.589073, -0.228539), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S3", "stairs", new int[]{1}, 2, 0, new LatLng(51.589218, -0.229718), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S4", "stairs", new int[]{3}, 2, 0, new LatLng(51.588936, -0.229256), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{8}, 2, 0, new LatLng(51.589233, -0.229137), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{7}, 2, 0, new LatLng(51.589073, -0.228539), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S3", STAIR, new int[]{1}, 2, 0, new LatLng(51.589218, -0.229718), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S4", STAIR, new int[]{3}, 2, 0, new LatLng(51.588936, -0.229256), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{1}, 2, 0, new LatLng(51.589152, -0.229131), new String[]{"null"}, "Y"));
-                list.add(new RoutingObjects("E2", "elevators", new int[]{9}, 2, 0, new LatLng(51.589157, -0.229394), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{1}, 2, 0, new LatLng(51.589152, -0.229131), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E2", ELEVATOR, new int[]{9}, 2, 0, new LatLng(51.589157, -0.229394), new String[]{"null"}, "Y"));
 
-                list.add(new RoutingObjects("D1", "doors", new int[]{2}, 2, 0, new LatLng(51.589222, -0.229192), new String[]{"A", "S"}, "Y"));
-                list.add(new RoutingObjects("D2", "doors", new int[]{3}, 2, 0, new LatLng(51.588942, -0.229339), new String[]{"B", "V"}, "Y"));
+                list.add(new RoutingObjects("D1", DOOR, new int[]{2}, 2, 0, new LatLng(51.589222, -0.229192), new String[]{"A", "S"}, "Y"));
+                list.add(new RoutingObjects("D2", DOOR, new int[]{3}, 2, 0, new LatLng(51.588942, -0.229339), new String[]{"B", "V"}, "Y"));
                 break;
 
             case 1:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 6}, 1, 1, new LatLng(51.589208, -0.229651), new String[]{"C"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 2}, 1, 1, new LatLng(51.589154, -0.229159), new String[]{"F"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{1, 5}, 1, 1, new LatLng(51.589186, -0.229466), new String[]{"A", "D", "G"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{4, 5}, 1, 1, new LatLng(51.589003, -0.229521), new String[]{"C", "E"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{3, 4}, 1, 1, new LatLng(51.588973, -0.229280), new String[]{"F", "D"}, "Y"));
-                list.add(new RoutingObjects("F", "Basic Connector", new int[]{1, 3}, 1, 1, new LatLng(51.589162, -0.229229), new String[]{"G", "B", "E"}, "Y"));
-                list.add(new RoutingObjects("G", "Basic Connector", new int[]{1, 7}, 1, 1, new LatLng(51.589177, -0.229387), new String[]{"C", "F"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 6}, 1, 1, new LatLng(51.589208, -0.229651), new String[]{"C"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 2}, 1, 1, new LatLng(51.589154, -0.229159), new String[]{"F"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{1, 5}, 1, 1, new LatLng(51.589186, -0.229466), new String[]{"A", "D", "G"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{4, 5}, 1, 1, new LatLng(51.589003, -0.229521), new String[]{"C", "E"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{3, 4}, 1, 1, new LatLng(51.588973, -0.229280), new String[]{"F", "D"}, "Y"));
+                list.add(new RoutingObjects("F", BASIC_CONNECTOR, new int[]{1, 3}, 1, 1, new LatLng(51.589162, -0.229229), new String[]{"G", "B", "E"}, "Y"));
+                list.add(new RoutingObjects("G", BASIC_CONNECTOR, new int[]{1, 7}, 1, 1, new LatLng(51.589177, -0.229387), new String[]{"C", "F"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{2}, 1, 1, new LatLng(51.589229, -0.229137), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{1}, 1, 1, new LatLng(51.589082, -0.228566), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S3", "stairs", new int[]{1}, 1, 1, new LatLng(51.589221, -0.229723), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S4", "stairs", new int[]{3}, 1, 1, new LatLng(51.589024, -0.229266), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{2}, 1, 1, new LatLng(51.589229, -0.229137), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{1}, 1, 1, new LatLng(51.589082, -0.228566), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S3", STAIR, new int[]{1}, 1, 1, new LatLng(51.589221, -0.229723), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S4", STAIR, new int[]{3}, 1, 1, new LatLng(51.589024, -0.229266), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{1}, 1, 1, new LatLng(51.589152, -0.229131), new String[]{"null"}, "Y"));
-                list.add(new RoutingObjects("E2", "elevators", new int[]{7}, 1, 1, new LatLng(51.589157, -0.229394), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{1}, 1, 1, new LatLng(51.589152, -0.229131), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E2", ELEVATOR, new int[]{7}, 1, 1, new LatLng(51.589157, -0.229394), new String[]{"null"}, "Y"));
                 break;
 
             case 2:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 0, 2, new LatLng(51.589153, -0.229163), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 3}, 0, 2, new LatLng(51.589177, -0.229388), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 0, 2, new LatLng(51.589153, -0.229163), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 3}, 0, 2, new LatLng(51.589177, -0.229388), new String[]{"A"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{2}, 0, 2, new LatLng(51.589229, -0.229137), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{1}, 0, 2, new LatLng(51.589082, -0.228566), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S3", "stairs", new int[]{1}, 0, 2, new LatLng(51.589221, -0.229723), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{2}, 0, 2, new LatLng(51.589229, -0.229137), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{1}, 0, 2, new LatLng(51.589082, -0.228566), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S3", STAIR, new int[]{1}, 0, 2, new LatLng(51.589221, -0.229723), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{1}, 0, 2, new LatLng(51.589152, -0.229131), new String[]{"null"}, "Y"));
-                list.add(new RoutingObjects("E2", "elevators", new int[]{3}, 0, 2, new LatLng(51.589157, -0.229394), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{1}, 0, 2, new LatLng(51.589152, -0.229131), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E2", ELEVATOR, new int[]{3}, 0, 2, new LatLng(51.589157, -0.229394), new String[]{"null"}, "Y"));
                 break;
 
         }
@@ -431,311 +412,311 @@ public class RoutingObjects {
         return list;
     }
 
-    private ArrayList<RoutingObjects> getWilliamsConnectors(int actualLevelWhenProbingForConnectors) {
+    private static ArrayList<RoutingObjects> getWilliamsConnectors(int actualLevel) {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        switch (actualLevelWhenProbingForConnectors) {
+        switch (actualLevel) {
             case 0:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 1, 0, new LatLng(51.590663, -0.228260), new String[]{"B", "J", "M"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{2, 3}, 1, 0, new LatLng(51.590649, -0.228101), new String[]{"A", "C"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{3, 4}, 1, 0, new LatLng(51.590400, -0.228173), new String[]{"B", "L"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{4, 10}, 1, 0, new LatLng(51.590444, -0.228568), new String[]{"L", "E", "K"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{4, 5}, 1, 0, new LatLng(51.590463, -0.228728), new String[]{"D", "H", "G"}, "Y"));
-                //list.add(new RoutingObjects("F", "Basic Connector", new int[] {4, 6}, 1, 0, new LatLng(51.590479, -0.228873), new String[] {"E", "H"}, "Y"));
-                list.add(new RoutingObjects("G", "Basic Connector", new int[]{5, 8}, 1, 0, new LatLng(51.590505, -0.228718), new String[]{"E", "I"}, "Y"));
-                list.add(new RoutingObjects("H", "Basic Connector", new int[]{4, 7}, 1, 0, new LatLng(51.590524, -0.229225), new String[]{"E", "I"}, "Y"));
-                list.add(new RoutingObjects("I", "Basic Connector", new int[]{7, 8}, 1, 0, new LatLng(51.590562, -0.229212), new String[]{"G", "H"}, "Y"));
-                list.add(new RoutingObjects("J", "Basic Connector", new int[]{1, 9}, 1, 0, new LatLng(51.590575, -0.228284), new String[]{"A"}, "Y"));
-                list.add(new RoutingObjects("K", "Basic Connector", new int[]{10}, 1, 0, new LatLng(51.590516, -0.228559), new String[]{"D"}, "Y"));
-                list.add(new RoutingObjects("L", "Basic Connector", new int[]{4, 11}, 1, 0, new LatLng(51.590420, -0.228379), new String[]{"C", "D"}, "Y"));
-                list.add(new RoutingObjects("M", "Basic Connector", new int[]{1}, 1, 0, new LatLng(51.590731, -0.228240), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 1, 0, new LatLng(51.590663, -0.228260), new String[]{"B", "J", "M"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{2, 3}, 1, 0, new LatLng(51.590649, -0.228101), new String[]{"A", "C"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{3, 4}, 1, 0, new LatLng(51.590400, -0.228173), new String[]{"B", "L"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{4, 10}, 1, 0, new LatLng(51.590444, -0.228568), new String[]{"L", "E", "K"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{4, 5}, 1, 0, new LatLng(51.590463, -0.228728), new String[]{"D", "H", "G"}, "Y"));
+                //list.add(new RoutingObjects("F", BASIC_CONNECTOR, new int[] {4, 6}, 1, 0, new LatLng(51.590479, -0.228873), new String[] {"E", "H"}, "Y"));
+                list.add(new RoutingObjects("G", BASIC_CONNECTOR, new int[]{5, 8}, 1, 0, new LatLng(51.590505, -0.228718), new String[]{"E", "I"}, "Y"));
+                list.add(new RoutingObjects("H", BASIC_CONNECTOR, new int[]{4, 7}, 1, 0, new LatLng(51.590524, -0.229225), new String[]{"E", "I"}, "Y"));
+                list.add(new RoutingObjects("I", BASIC_CONNECTOR, new int[]{7, 8}, 1, 0, new LatLng(51.590562, -0.229212), new String[]{"G", "H"}, "Y"));
+                list.add(new RoutingObjects("J", BASIC_CONNECTOR, new int[]{1, 9}, 1, 0, new LatLng(51.590575, -0.228284), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("K", BASIC_CONNECTOR, new int[]{10}, 1, 0, new LatLng(51.590516, -0.228559), new String[]{"D"}, "Y"));
+                list.add(new RoutingObjects("L", BASIC_CONNECTOR, new int[]{4, 11}, 1, 0, new LatLng(51.590420, -0.228379), new String[]{"C", "D"}, "Y"));
+                list.add(new RoutingObjects("M", BASIC_CONNECTOR, new int[]{1}, 1, 0, new LatLng(51.590731, -0.228240), new String[]{"A"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{10}, 1, 0, new LatLng(51.590492, -0.228563), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{11}, 1, 0, new LatLng(51.590396, -0.228385), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S3", "stairs", new int[]{9}, 1, 0, new LatLng(51.590572, -0.228343), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{10}, 1, 0, new LatLng(51.590492, -0.228563), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{11}, 1, 0, new LatLng(51.590396, -0.228385), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S3", STAIR, new int[]{9}, 1, 0, new LatLng(51.590572, -0.228343), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{10}, 1, 0, new LatLng(51.590478, -0.228537), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{10}, 1, 0, new LatLng(51.590478, -0.228537), new String[]{"null"}, "Y"));
 
-                list.add(new RoutingObjects("D1", "doors", new int[]{3}, 1, 0, new LatLng(51.590358, -0.228184), new String[]{"C", "B"}, "Y"));
-                list.add(new RoutingObjects("D2", "doors", new int[]{10}, 1, 0, new LatLng(51.590406, -0.228582), new String[]{"D", "C"}, "Y"));
-                //list.add(new RoutingObjects("D3", "doors", new int[] {6}, 1, 0, new LatLng(51.590431, -0.228888), new String[] {"F", "D"}, "N"));
-                list.add(new RoutingObjects("D4", "doors", new int[]{10}, 1, 0, new LatLng(51.590538, -0.228547), new String[]{"K", "I1"}, "N"));
-                list.add(new RoutingObjects("D5", "doors", new int[]{1}, 1, 0, new LatLng(51.590566, -0.228286), new String[]{"J", "S1"}, "Y"));
-                list.add(new RoutingObjects("D6", "doors", new int[]{1}, 1, 0, new LatLng(51.590738, -0.228239), new String[]{"M", "T1"}, "N"));
+                list.add(new RoutingObjects("D1", DOOR, new int[]{3}, 1, 0, new LatLng(51.590358, -0.228184), new String[]{"C", "B"}, "Y"));
+                list.add(new RoutingObjects("D2", DOOR, new int[]{10}, 1, 0, new LatLng(51.590406, -0.228582), new String[]{"D", "C"}, "Y"));
+                //list.add(new RoutingObjects("D3", DOOR, new int[] {6}, 1, 0, new LatLng(51.590431, -0.228888), new String[] {"F", "D"}, "N"));
+                list.add(new RoutingObjects("D4", DOOR, new int[]{10}, 1, 0, new LatLng(51.590538, -0.228547), new String[]{"K", "I1"}, "N"));
+                list.add(new RoutingObjects("D5", DOOR, new int[]{1}, 1, 0, new LatLng(51.590566, -0.228286), new String[]{"J", "S1"}, "Y"));
+                list.add(new RoutingObjects("D6", DOOR, new int[]{1}, 1, 0, new LatLng(51.590738, -0.228239), new String[]{"M", "T1"}, "N"));
                 break;
 
             case 1:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 3}, 0, 1, new LatLng(51.590629, -0.228278), new String[]{"B", "C"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 2}, 0, 1, new LatLng(51.590586, -0.228294), new String[]{"A"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{3, 4}, 0, 1, new LatLng(51.590608, -0.228093), new String[]{"A", "D"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{4, 5}, 0, 1, new LatLng(51.590413, -0.228157), new String[]{"C", "F"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{5, 6}, 0, 1, new LatLng(51.590460, -0.228555), new String[]{"F"}, "Y"));
-                list.add(new RoutingObjects("F", "Basic Connector", new int[]{5, 7}, 0, 1, new LatLng(51.590441, -0.228396), new String[]{"E", "D"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 3}, 0, 1, new LatLng(51.590629, -0.228278), new String[]{"B", "C"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 2}, 0, 1, new LatLng(51.590586, -0.228294), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{3, 4}, 0, 1, new LatLng(51.590608, -0.228093), new String[]{"A", "D"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{4, 5}, 0, 1, new LatLng(51.590413, -0.228157), new String[]{"C", "F"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{5, 6}, 0, 1, new LatLng(51.590460, -0.228555), new String[]{"F"}, "Y"));
+                list.add(new RoutingObjects("F", BASIC_CONNECTOR, new int[]{5, 7}, 0, 1, new LatLng(51.590441, -0.228396), new String[]{"E", "D"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{6}, 0, 1, new LatLng(51.590495, -0.228555), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{7}, 0, 1, new LatLng(51.590400, -0.228409), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S3", "stairs", new int[]{2}, 0, 1, new LatLng(51.590593, -0.228351), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{6}, 0, 1, new LatLng(51.590495, -0.228555), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{7}, 0, 1, new LatLng(51.590400, -0.228409), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S3", STAIR, new int[]{2}, 0, 1, new LatLng(51.590593, -0.228351), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{6}, 0, 1, new LatLng(51.590478, -0.228537), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{6}, 0, 1, new LatLng(51.590478, -0.228537), new String[]{"null"}, "Y"));
                 break;
         }
 
         return list;
     }
 
-    private ArrayList<RoutingObjects> getMDXHouseConnectors(int actualLevelWhenProbingForConnectors) {
+    private static ArrayList<RoutingObjects> getMDXHouseConnectors(int actualLevel) {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        switch (actualLevelWhenProbingForConnectors) {
+        switch (actualLevel) {
             case -1:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1}, 1, -1, new LatLng(51.590121, -0.230623), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 2}, 1, -1, new LatLng(51.590129, -0.230725), new String[]{"A", "C"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{2, 3}, 1, -1, new LatLng(51.589826, -0.230786), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1}, 1, -1, new LatLng(51.590121, -0.230623), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 2}, 1, -1, new LatLng(51.590129, -0.230725), new String[]{"A", "C"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{2, 3}, 1, -1, new LatLng(51.589826, -0.230786), new String[]{"B"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{1}, 1, -1, new LatLng(51.590124, -0.230585), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{1}, 1, -1, new LatLng(51.590124, -0.230585), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{2}, 1, -1, new LatLng(51.590152, -0.230719), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{2}, 1, -1, new LatLng(51.590152, -0.230719), new String[]{"null"}, "Y"));
                 break;
             case 0:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 0, 0, new LatLng(51.590136, -0.230650), new String[]{"B", "C"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 3}, 0, 0, new LatLng(51.590144, -0.230771), new String[]{"A"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{2, 4}, 0, 0, new LatLng(51.590112, -0.230654), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 0, 0, new LatLng(51.590136, -0.230650), new String[]{"B", "C"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 3}, 0, 0, new LatLng(51.590144, -0.230771), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{2, 4}, 0, 0, new LatLng(51.590112, -0.230654), new String[]{"A"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{4}, 0, 0, new LatLng(51.590108, -0.230594), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("E1", "elevators", new int[]{3}, 0, 0, new LatLng(51.590185, -0.230748), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{4}, 0, 0, new LatLng(51.590108, -0.230594), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{3}, 0, 0, new LatLng(51.590185, -0.230748), new String[]{"null"}, "Y"));
 
-                list.add(new RoutingObjects("D1", "doors", new int[]{1}, 0, 0, new LatLng(51.590134, -0.230584), new String[]{"A", "D1"}, "Y"));
+                list.add(new RoutingObjects("D1", DOOR, new int[]{1}, 0, 0, new LatLng(51.590134, -0.230584), new String[]{"A", "D1"}, "Y"));
                 break;
         }
 
         return list;
     }
 
-    private ArrayList<RoutingObjects> getBuilding9Connetors() {
+    private static ArrayList<RoutingObjects> getBuilding9Connetors() {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 0, 0, new LatLng(51.588713, -0.229279), new String[]{"B", "C"}, "Y"));
-        list.add(new RoutingObjects("B", "Basic Connector", new int[]{2, 3}, 0, 0, new LatLng(51.588765, -0.229443), new String[]{"A", "D"}, "Y"));
-        list.add(new RoutingObjects("C", "Basic Connector", new int[]{1}, 0, 0, new LatLng(51.588608, -0.229364), new String[]{"A"}, "Y"));
-        list.add(new RoutingObjects("D", "Basic Connector", new int[]{3}, 0, 0, new LatLng(51.588660, -0.229530), new String[]{"B"}, "Y"));
+        list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 0, 0, new LatLng(51.588713, -0.229279), new String[]{"B", "C"}, "Y"));
+        list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{2, 3}, 0, 0, new LatLng(51.588765, -0.229443), new String[]{"A", "D"}, "Y"));
+        list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{1}, 0, 0, new LatLng(51.588608, -0.229364), new String[]{"A"}, "Y"));
+        list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{3}, 0, 0, new LatLng(51.588660, -0.229530), new String[]{"B"}, "Y"));
 
-        list.add(new RoutingObjects("D1", "doors", new int[]{3}, 0, 0, new LatLng(51.588651, -0.229538), new String[]{"D", "R1"}, "Y"));
-        list.add(new RoutingObjects("D2", "doors", new int[]{1}, 0, 0, new LatLng(51.588601, -0.229370), new String[]{"C", "Z1"}, "Y"));
+        list.add(new RoutingObjects("D1", DOOR, new int[]{3}, 0, 0, new LatLng(51.588651, -0.229538), new String[]{"D", "R1"}, "Y"));
+        list.add(new RoutingObjects("D2", DOOR, new int[]{1}, 0, 0, new LatLng(51.588601, -0.229370), new String[]{"C", "Z1"}, "Y"));
 
         return list;
     }
 
-    private ArrayList<RoutingObjects> getBuilding10Connetors(int actualLevelWhenProbingForConnectors) {
+    private static ArrayList<RoutingObjects> getBuilding10Connetors(int actualLevel) {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        switch (actualLevelWhenProbingForConnectors) {
+        switch (actualLevel) {
             case 0:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1}, 1, 0, new LatLng(51.589812, -0.229875), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 2}, 1, 0, new LatLng(51.589842, -0.229865), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1}, 1, 0, new LatLng(51.589812, -0.229875), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 2}, 1, 0, new LatLng(51.589842, -0.229865), new String[]{"A"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{1}, 1, 0, new LatLng(51.589866, -0.229858), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("D1", "doors", new int[]{1}, 1, 0, new LatLng(51.589806, -0.229879), new String[]{"A", "P"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{1}, 1, 0, new LatLng(51.589866, -0.229858), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("D1", DOOR, new int[]{1}, 1, 0, new LatLng(51.589806, -0.229879), new String[]{"A", "P"}, "N"));
                 break;
             case 1:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1}, 0, 1, new LatLng(51.589845, -0.229861), new String[]{""}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1}, 0, 1, new LatLng(51.589845, -0.229861), new String[]{""}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{1}, 0, 1, new LatLng(51.589859, -0.229856), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{1}, 0, 1, new LatLng(51.589859, -0.229856), new String[]{"null"}, "N"));
         }
 
         return list;
     }
 
-    private ArrayList<RoutingObjects> getShepherdConnectors(int actualLevelWhenProbingForConnectors) {
+    private static ArrayList<RoutingObjects> getShepherdConnectors(int actualLevel) {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        switch (actualLevelWhenProbingForConnectors) {
+        switch (actualLevel) {
             case -1:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 4, -1, new LatLng(51.590422, -0.229399), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{2, 6}, 4, -1, new LatLng(51.590438, -0.229440), new String[]{"A", "C"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{2, 3}, 4, -1, new LatLng(51.590494, -0.229566), new String[]{"B", "D"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{3, 4}, 4, -1, new LatLng(51.590564, -0.229551), new String[]{"C", "E"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{5, 4}, 4, -1, new LatLng(51.590579, -0.229718), new String[]{"D"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 4, -1, new LatLng(51.590422, -0.229399), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{2, 6}, 4, -1, new LatLng(51.590438, -0.229440), new String[]{"A", "C"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{2, 3}, 4, -1, new LatLng(51.590494, -0.229566), new String[]{"B", "D"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{3, 4}, 4, -1, new LatLng(51.590564, -0.229551), new String[]{"C", "E"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{5, 4}, 4, -1, new LatLng(51.590579, -0.229718), new String[]{"D"}, "Y"));
 
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{5}, 4, -1, new LatLng(51.590548, -0.229726), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{3}, 4, -1, new LatLng(51.590787, -0.229484), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{5}, 4, -1, new LatLng(51.590548, -0.229726), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{3}, 4, -1, new LatLng(51.590787, -0.229484), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{6}, 4, -1, new LatLng(51.590399, -0.229477), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{6}, 4, -1, new LatLng(51.590399, -0.229477), new String[]{"null"}, "Y"));
                 break;
             case 0:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{2, 7}, 3, 0, new LatLng(51.590368, -0.229511), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 2}, 3, 0, new LatLng(51.590392, -0.229569), new String[]{"A", "C"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{3, 2}, 3, 0, new LatLng(51.590469, -0.229754), new String[]{"B", "D"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{3, 4}, 3, 0, new LatLng(51.590583, -0.229723), new String[]{"C", "E"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{5, 4}, 3, 0, new LatLng(51.590563, -0.229552), new String[]{"D", "F"}, "Y"));
-                list.add(new RoutingObjects("F", "Basic Connector", new int[]{5, 6}, 3, 0, new LatLng(51.590780, -0.229489), new String[]{"E"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{2, 7}, 3, 0, new LatLng(51.590368, -0.229511), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 2}, 3, 0, new LatLng(51.590392, -0.229569), new String[]{"A", "C"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{3, 2}, 3, 0, new LatLng(51.590469, -0.229754), new String[]{"B", "D"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{3, 4}, 3, 0, new LatLng(51.590583, -0.229723), new String[]{"C", "E"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{5, 4}, 3, 0, new LatLng(51.590563, -0.229552), new String[]{"D", "F"}, "Y"));
+                list.add(new RoutingObjects("F", BASIC_CONNECTOR, new int[]{5, 6}, 3, 0, new LatLng(51.590780, -0.229489), new String[]{"E"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{3}, 3, 0, new LatLng(51.590548, -0.229726), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{3}, 3, 0, new LatLng(51.590780, -0.229489), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{3}, 3, 0, new LatLng(51.590548, -0.229726), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{3}, 3, 0, new LatLng(51.590780, -0.229489), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{7}, 3, 0, new LatLng(51.590392, -0.229483), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{7}, 3, 0, new LatLng(51.590392, -0.229483), new String[]{"null"}, "Y"));
 
-                list.add(new RoutingObjects("D1", "doors", new int[]{1}, 3, 0, new LatLng(51.590429, -0.229534), new String[]{"B", "N1"}, "Y"));
+                list.add(new RoutingObjects("D1", DOOR, new int[]{1}, 3, 0, new LatLng(51.590429, -0.229534), new String[]{"B", "N1"}, "Y"));
                 break;
 
             case 1:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 2, 1, new LatLng(51.590780, -0.229489), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{3, 2}, 2, 1, new LatLng(51.590563, -0.229552), new String[]{"A", "C"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{3, 4}, 2, 1, new LatLng(51.590583, -0.229723), new String[]{"B", "D"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{5, 4}, 2, 1, new LatLng(51.590461, -0.229754), new String[]{"C", "E"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{5, 6}, 2, 1, new LatLng(51.590379, -0.229562), new String[]{"D", "F"}, "Y"));
-                list.add(new RoutingObjects("F", "Basic Connector", new int[]{5, 7}, 2, 1, new LatLng(51.590360, -0.229518), new String[]{"E"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 2, 1, new LatLng(51.590780, -0.229489), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{3, 2}, 2, 1, new LatLng(51.590563, -0.229552), new String[]{"A", "C"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{3, 4}, 2, 1, new LatLng(51.590583, -0.229723), new String[]{"B", "D"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{5, 4}, 2, 1, new LatLng(51.590461, -0.229754), new String[]{"C", "E"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{5, 6}, 2, 1, new LatLng(51.590379, -0.229562), new String[]{"D", "F"}, "Y"));
+                list.add(new RoutingObjects("F", BASIC_CONNECTOR, new int[]{5, 7}, 2, 1, new LatLng(51.590360, -0.229518), new String[]{"E"}, "Y"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{7}, 2, 1, new LatLng(51.590392, -0.229483), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{7}, 2, 1, new LatLng(51.590392, -0.229483), new String[]{"null"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{4}, 2, 1, new LatLng(51.590548, -0.229726), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{2}, 2, 1, new LatLng(51.590780, -0.229489), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{4}, 2, 1, new LatLng(51.590548, -0.229726), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{2}, 2, 1, new LatLng(51.590780, -0.229489), new String[]{"null"}, "N"));
                 break;
 
             case 2:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 1, 2, new LatLng(51.590780, -0.229489), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{3, 2}, 1, 2, new LatLng(51.590563, -0.229552), new String[]{"A", "C"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{3, 4}, 1, 2, new LatLng(51.590583, -0.229723), new String[]{"B", "D"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{5, 4}, 1, 2, new LatLng(51.590461, -0.229754), new String[]{"C", "E"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{5, 6}, 1, 2, new LatLng(51.590360, -0.229518), new String[]{"D"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 1, 2, new LatLng(51.590780, -0.229489), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{3, 2}, 1, 2, new LatLng(51.590563, -0.229552), new String[]{"A", "C"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{3, 4}, 1, 2, new LatLng(51.590583, -0.229723), new String[]{"B", "D"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{5, 4}, 1, 2, new LatLng(51.590461, -0.229754), new String[]{"C", "E"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{5, 6}, 1, 2, new LatLng(51.590360, -0.229518), new String[]{"D"}, "Y"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{6}, 1, 2, new LatLng(51.590392, -0.229483), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{6}, 1, 2, new LatLng(51.590392, -0.229483), new String[]{"null"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{4}, 1, 2, new LatLng(51.590548, -0.229726), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{2}, 1, 2, new LatLng(51.590780, -0.229489), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{4}, 1, 2, new LatLng(51.590548, -0.229726), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{2}, 1, 2, new LatLng(51.590780, -0.229489), new String[]{"null"}, "N"));
                 break;
 
             case 3:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 0, 3, new LatLng(51.590461, -0.229754), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{2, 3}, 0, 3, new LatLng(51.590360, -0.229518), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 0, 3, new LatLng(51.590461, -0.229754), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{2, 3}, 0, 3, new LatLng(51.590360, -0.229518), new String[]{"A"}, "Y"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{3}, 0, 3, new LatLng(51.590392, -0.229483), new String[]{"null"}, "Y"));
-                list.add(new RoutingObjects("S1", "stairs", new int[]{1}, 0, 3, new LatLng(51.590548, -0.229726), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{3}, 0, 3, new LatLng(51.590392, -0.229483), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{1}, 0, 3, new LatLng(51.590548, -0.229726), new String[]{"null"}, "N"));
                 break;
         }
 
         return list;
     }
 
-    private ArrayList<RoutingObjects> getCircleCafeConnectors() {
+    private static ArrayList<RoutingObjects> getCircleCafeConnectors() {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 3, 0, new LatLng(51.590482, -0.229790), new String[]{""}, "Y"));
-        list.add(new RoutingObjects("D1", "doors", new int[]{1}, 3, 0, new LatLng(51.590522, -0.229743), new String[]{"A", "O1"}, "Y"));
-        list.add(new RoutingObjects("D2", "doors", new int[]{1}, 3, 0, new LatLng(51.590420, -0.229863), new String[]{"A", "A1"}, "Y"));
+        list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 3, 0, new LatLng(51.590482, -0.229790), new String[]{""}, "Y"));
+        list.add(new RoutingObjects("D1", DOOR, new int[]{1}, 3, 0, new LatLng(51.590522, -0.229743), new String[]{"A", "O1"}, "Y"));
+        list.add(new RoutingObjects("D2", DOOR, new int[]{1}, 3, 0, new LatLng(51.590420, -0.229863), new String[]{"A", "A1"}, "Y"));
         return list;
     }
 
-    private ArrayList<RoutingObjects> getGroveBlockAConnectors(int actualLevelWhenProbingForConnectors) {
+    private static ArrayList<RoutingObjects> getGroveBlockAConnectors(int actualLevel) {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        switch (actualLevelWhenProbingForConnectors) {
+        switch (actualLevel) {
             case -1:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 6}, 5, -1, new LatLng(51.588786, -0.230623), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 2}, 5, -1, new LatLng(51.588710, -0.230637), new String[]{"A", "C"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{3, 2}, 5, -1, new LatLng(51.588701, -0.230593), new String[]{"B", "D"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{3, 4}, 5, -1, new LatLng(51.588602, -0.230637), new String[]{"C", "E"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{5, 4}, 5, -1, new LatLng(51.588597, -0.230606), new String[]{"D", "G"}, "Y"));
-                list.add(new RoutingObjects("F", "Basic Connector", new int[]{7, 8}, 5, -1, new LatLng(51.588519, -0.230682), new String[]{"G"}, "Y"));
-                list.add(new RoutingObjects("G", "Basic Connector", new int[]{7, 5}, 5, -1, new LatLng(51.588511, -0.230641), new String[]{"E", "F"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 6}, 5, -1, new LatLng(51.588786, -0.230623), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 2}, 5, -1, new LatLng(51.588710, -0.230637), new String[]{"A", "C"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{3, 2}, 5, -1, new LatLng(51.588701, -0.230593), new String[]{"B", "D"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{3, 4}, 5, -1, new LatLng(51.588602, -0.230637), new String[]{"C", "E"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{5, 4}, 5, -1, new LatLng(51.588597, -0.230606), new String[]{"D", "G"}, "Y"));
+                list.add(new RoutingObjects("F", BASIC_CONNECTOR, new int[]{7, 8}, 5, -1, new LatLng(51.588519, -0.230682), new String[]{"G"}, "Y"));
+                list.add(new RoutingObjects("G", BASIC_CONNECTOR, new int[]{7, 5}, 5, -1, new LatLng(51.588511, -0.230641), new String[]{"E", "F"}, "Y"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{1}, 5, -1, new LatLng(51.588763, -0.230630), new String[]{"null"}, "Y"));
-                list.add(new RoutingObjects("E2", "elevators", new int[]{8}, 5, -1, new LatLng(51.588763, -0.230630), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{1}, 5, -1, new LatLng(51.588763, -0.230630), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E2", ELEVATOR, new int[]{8}, 5, -1, new LatLng(51.588763, -0.230630), new String[]{"null"}, "Y"));
 
-                list.add(new RoutingObjects("S4", "stairs", new int[]{6}, 5, -1, new LatLng(51.588787, -0.230592), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S5", "stairs", new int[]{5}, 5, -1, new LatLng(51.588434, -0.230673), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S4", STAIR, new int[]{6}, 5, -1, new LatLng(51.588787, -0.230592), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S5", STAIR, new int[]{5}, 5, -1, new LatLng(51.588434, -0.230673), new String[]{"null"}, "N"));
 
                 break;
             case 0:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 3}, 4, 0, new LatLng(51.588831, -0.230624), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 2}, 4, 0, new LatLng(51.588798, -0.230633), new String[]{"A", "C"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{1, 4, 5}, 4, 0, new LatLng(51.588698, -0.230634), new String[]{"D", "H", "B"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{11, 5}, 4, 0, new LatLng(51.588719, -0.230758), new String[]{"C", "E"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{6, 5}, 4, 0, new LatLng(51.588734, -0.230900), new String[]{"D", "F"}, "Y"));
-                list.add(new RoutingObjects("F", "Basic Connector", new int[]{6, 7}, 4, 0, new LatLng(51.588596, -0.231010), new String[]{"E", "G"}, "Y"));
-                list.add(new RoutingObjects("G", "Basic Connector", new int[]{1, 7, 9, 10}, 4, 0, new LatLng(51.588510, -0.230673), new String[]{"F", "H"}, "Y"));
-                list.add(new RoutingObjects("H", "Basic Connector", new int[]{1, 8}, 4, 0, new LatLng(51.588612, -0.230631), new String[]{"G", "C"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 3}, 4, 0, new LatLng(51.588831, -0.230624), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 2}, 4, 0, new LatLng(51.588798, -0.230633), new String[]{"A", "C"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{1, 4, 5}, 4, 0, new LatLng(51.588698, -0.230634), new String[]{"D", "H", "B"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{11, 5}, 4, 0, new LatLng(51.588719, -0.230758), new String[]{"C", "E"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{6, 5}, 4, 0, new LatLng(51.588734, -0.230900), new String[]{"D", "F"}, "Y"));
+                list.add(new RoutingObjects("F", BASIC_CONNECTOR, new int[]{6, 7}, 4, 0, new LatLng(51.588596, -0.231010), new String[]{"E", "G"}, "Y"));
+                list.add(new RoutingObjects("G", BASIC_CONNECTOR, new int[]{1, 7, 9, 10}, 4, 0, new LatLng(51.588510, -0.230673), new String[]{"F", "H"}, "Y"));
+                list.add(new RoutingObjects("H", BASIC_CONNECTOR, new int[]{1, 8}, 4, 0, new LatLng(51.588612, -0.230631), new String[]{"G", "C"}, "Y"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{1}, 4, 0, new LatLng(51.588755, -0.230633), new String[]{"null"}, "Y"));
-                list.add(new RoutingObjects("E2", "elevators", new int[]{10}, 4, 0, new LatLng(51.588494, -0.230701), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{1}, 4, 0, new LatLng(51.588755, -0.230633), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E2", ELEVATOR, new int[]{10}, 4, 0, new LatLng(51.588494, -0.230701), new String[]{"null"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{4}, 4, 0, new LatLng(51.588613, -0.230227), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{9}, 4, 0, new LatLng(51.588460, -0.230299), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S3", "stairs", new int[]{3}, 4, 0, new LatLng(51.588841, -0.230702), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S4", "stairs", new int[]{2}, 4, 0, new LatLng(51.588795, -0.230587), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S5", "stairs", new int[]{10}, 4, 0, new LatLng(51.588422, -0.230699), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{4}, 4, 0, new LatLng(51.588613, -0.230227), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{9}, 4, 0, new LatLng(51.588460, -0.230299), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S3", STAIR, new int[]{3}, 4, 0, new LatLng(51.588841, -0.230702), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S4", STAIR, new int[]{2}, 4, 0, new LatLng(51.588795, -0.230587), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S5", STAIR, new int[]{10}, 4, 0, new LatLng(51.588422, -0.230699), new String[]{"null"}, "N"));
 
 
-                list.add(new RoutingObjects("D1", "doors", new int[]{1}, 4, 0, new LatLng(51.588854, -0.230615), new String[]{"A", "L1"}, "Y"));
+                list.add(new RoutingObjects("D1", DOOR, new int[]{1}, 4, 0, new LatLng(51.588854, -0.230615), new String[]{"A", "L1"}, "Y"));
                 break;
             case 1:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 14}, 3, 1, new LatLng(51.588803, -0.230641), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 2}, 3, 1, new LatLng(51.588704, -0.230653), new String[]{"A", "C", "N"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{3, 2}, 3, 1, new LatLng(51.588718, -0.230760), new String[]{"B", "D"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{4, 2}, 3, 1, new LatLng(51.588736, -0.230901), new String[]{"C", "E"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{4, 5, 6}, 3, 1, new LatLng(51.588592, -0.231008), new String[]{"D", "F", "H"}, "Y"));
-                list.add(new RoutingObjects("F", "Basic Connector", new int[]{5, 7}, 3, 1, new LatLng(51.588549, -0.231032), new String[]{"E", "G"}, "Y"));
-                list.add(new RoutingObjects("G", "Basic Connector", new int[]{8, 7}, 3, 1, new LatLng(51.588485, -0.230788), new String[]{"F", "H"}, "Y"));
-                list.add(new RoutingObjects("H", "Basic Connector", new int[]{8, 6}, 3, 1, new LatLng(51.588528, -0.230767), new String[]{"G", "I", "E"}, "Y"));
-                list.add(new RoutingObjects("I", "Basic Connector", new int[]{9, 6, 10}, 3, 1, new LatLng(51.588503, -0.230652), new String[]{"O", "J", "H"}, "Y"));
-                list.add(new RoutingObjects("J", "Basic Connector", new int[]{11, 10}, 3, 1, new LatLng(51.588490, -0.230533), new String[]{"K", "I", "P"}, "Y"));
-                list.add(new RoutingObjects("K", "Basic Connector", new int[]{12, 10}, 3, 1, new LatLng(51.588470, -0.230399), new String[]{"L", "J"}, "Y"));
-                list.add(new RoutingObjects("L", "Basic Connector", new int[]{12, 13}, 3, 1, new LatLng(51.588634, -0.230327), new String[]{"M", "K"}, "Y"));
-                list.add(new RoutingObjects("M", "Basic Connector", new int[]{11, 13}, 3, 1, new LatLng(51.588662, -0.230449), new String[]{"L", "N", "P"}, "Y"));
-                list.add(new RoutingObjects("N", "Basic Connector", new int[]{9, 13}, 3, 1, new LatLng(51.588695, -0.230611), new String[]{"M", "O", "B"}, "Y"));
-                list.add(new RoutingObjects("O", "Basic Connector", new int[]{9, 15}, 3, 1, new LatLng(51.588549, -0.230641), new String[]{"N", "I", "P"}, "Y"));
-                list.add(new RoutingObjects("P", "Basic Connector", new int[]{11, 15}, 3, 1, new LatLng(51.588533, -0.230514), new String[]{"M", "J", "O"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 14}, 3, 1, new LatLng(51.588803, -0.230641), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 2}, 3, 1, new LatLng(51.588704, -0.230653), new String[]{"A", "C", "N"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{3, 2}, 3, 1, new LatLng(51.588718, -0.230760), new String[]{"B", "D"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{4, 2}, 3, 1, new LatLng(51.588736, -0.230901), new String[]{"C", "E"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{4, 5, 6}, 3, 1, new LatLng(51.588592, -0.231008), new String[]{"D", "F", "H"}, "Y"));
+                list.add(new RoutingObjects("F", BASIC_CONNECTOR, new int[]{5, 7}, 3, 1, new LatLng(51.588549, -0.231032), new String[]{"E", "G"}, "Y"));
+                list.add(new RoutingObjects("G", BASIC_CONNECTOR, new int[]{8, 7}, 3, 1, new LatLng(51.588485, -0.230788), new String[]{"F", "H"}, "Y"));
+                list.add(new RoutingObjects("H", BASIC_CONNECTOR, new int[]{8, 6}, 3, 1, new LatLng(51.588528, -0.230767), new String[]{"G", "I", "E"}, "Y"));
+                list.add(new RoutingObjects("I", BASIC_CONNECTOR, new int[]{9, 6, 10}, 3, 1, new LatLng(51.588503, -0.230652), new String[]{"O", "J", "H"}, "Y"));
+                list.add(new RoutingObjects("J", BASIC_CONNECTOR, new int[]{11, 10}, 3, 1, new LatLng(51.588490, -0.230533), new String[]{"K", "I", "P"}, "Y"));
+                list.add(new RoutingObjects("K", BASIC_CONNECTOR, new int[]{12, 10}, 3, 1, new LatLng(51.588470, -0.230399), new String[]{"L", "J"}, "Y"));
+                list.add(new RoutingObjects("L", BASIC_CONNECTOR, new int[]{12, 13}, 3, 1, new LatLng(51.588634, -0.230327), new String[]{"M", "K"}, "Y"));
+                list.add(new RoutingObjects("M", BASIC_CONNECTOR, new int[]{11, 13}, 3, 1, new LatLng(51.588662, -0.230449), new String[]{"L", "N", "P"}, "Y"));
+                list.add(new RoutingObjects("N", BASIC_CONNECTOR, new int[]{9, 13}, 3, 1, new LatLng(51.588695, -0.230611), new String[]{"M", "O", "B"}, "Y"));
+                list.add(new RoutingObjects("O", BASIC_CONNECTOR, new int[]{9, 15}, 3, 1, new LatLng(51.588549, -0.230641), new String[]{"N", "I", "P"}, "Y"));
+                list.add(new RoutingObjects("P", BASIC_CONNECTOR, new int[]{11, 15}, 3, 1, new LatLng(51.588533, -0.230514), new String[]{"M", "J", "O"}, "Y"));
 
                 //S3 ends on this level, S6 starts on this level
-                list.add(new RoutingObjects("S1", "stairs", new int[]{13}, 3, 1, new LatLng(51.588612, -0.230221), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{10}, 3, 1, new LatLng(51.588460, -0.230308), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S3", "stairs", new int[]{14}, 3, 1, new LatLng(51.588808, -0.230714), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S4", "stairs", new int[]{14}, 3, 1, new LatLng(51.588793, -0.230590), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S5", "stairs", new int[]{9}, 3, 1, new LatLng(51.588413, -0.230699), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S6", "stairs", new int[]{15}, 3, 1, new LatLng(51.588547, -0.230613), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{13}, 3, 1, new LatLng(51.588612, -0.230221), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{10}, 3, 1, new LatLng(51.588460, -0.230308), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S3", STAIR, new int[]{14}, 3, 1, new LatLng(51.588808, -0.230714), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S4", STAIR, new int[]{14}, 3, 1, new LatLng(51.588793, -0.230590), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S5", STAIR, new int[]{9}, 3, 1, new LatLng(51.588413, -0.230699), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S6", STAIR, new int[]{15}, 3, 1, new LatLng(51.588547, -0.230613), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{1}, 3, 1, new LatLng(51.588732, -0.230633), new String[]{"null"}, "Y"));
-                list.add(new RoutingObjects("E2", "elevators", new int[]{9}, 3, 1, new LatLng(51.588495, -0.230687), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{1}, 3, 1, new LatLng(51.588732, -0.230633), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E2", ELEVATOR, new int[]{9}, 3, 1, new LatLng(51.588495, -0.230687), new String[]{"null"}, "Y"));
                 break;
             case 2:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 13}, 2, 2, new LatLng(51.588776, -0.230544), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 2, 11}, 2, 2, new LatLng(51.588686, -0.230564), new String[]{"A", "C", "O", "N"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{7, 2}, 2, 2, new LatLng(51.588694, -0.230610), new String[]{"B", "D", "P"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{5, 2}, 2, 2, new LatLng(51.588721, -0.230767), new String[]{"C", "E", "I"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{4, 2}, 2, 2, new LatLng(51.588724, -0.230795), new String[]{"D", "F", "H"}, "Y"));
-                list.add(new RoutingObjects("F", "Basic Connector", new int[]{3, 2}, 2, 2, new LatLng(51.588737, -0.230899), new String[]{"E", "G"}, "Y"));
-                list.add(new RoutingObjects("G", "Basic Connector", new int[]{3, 6}, 2, 2, new LatLng(51.588593, -0.231005), new String[]{"F", "H"}, "Y"));
-                list.add(new RoutingObjects("H", "Basic Connector", new int[]{4, 6}, 2, 2, new LatLng(51.588567, -0.230914), new String[]{"I", "G", "E"}, "Y"));
-                list.add(new RoutingObjects("I", "Basic Connector", new int[]{5, 6}, 2, 2, new LatLng(51.588537, -0.230806), new String[]{"J", "H", "D"}, "Y"));
-                list.add(new RoutingObjects("J", "Basic Connector", new int[]{10, 6, 7}, 2, 2, new LatLng(51.588506, -0.230659), new String[]{"K", "I", "P"}, "Y"));
-                list.add(new RoutingObjects("K", "Basic Connector", new int[]{10, 8}, 2, 2, new LatLng(51.588490, -0.230552), new String[]{"L", "J", "N"}, "Y"));
-                list.add(new RoutingObjects("L", "Basic Connector", new int[]{10, 9}, 2, 2, new LatLng(51.588468, -0.230406), new String[]{"K", "M"}, "Y"));
-                list.add(new RoutingObjects("M", "Basic Connector", new int[]{11, 9}, 2, 2, new LatLng(51.588634, -0.230322), new String[]{"L", "N"}, "Y"));
-                list.add(new RoutingObjects("N", "Basic Connector", new int[]{11, 8}, 2, 2, new LatLng(51.588665, -0.230450), new String[]{"M", "K", "B"}, "Y"));
-                list.add(new RoutingObjects("O", "Basic Connector", new int[]{1, 12}, 2, 2, new LatLng(51.588628, -0.230576), new String[]{"B", "P"}, "Y"));
-                list.add(new RoutingObjects("P", "Basic Connector", new int[]{7, 12}, 2, 2, new LatLng(51.588638, -0.230630), new String[]{"C", "O", "J"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 13}, 2, 2, new LatLng(51.588776, -0.230544), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 2, 11}, 2, 2, new LatLng(51.588686, -0.230564), new String[]{"A", "C", "O", "N"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{7, 2}, 2, 2, new LatLng(51.588694, -0.230610), new String[]{"B", "D", "P"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{5, 2}, 2, 2, new LatLng(51.588721, -0.230767), new String[]{"C", "E", "I"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{4, 2}, 2, 2, new LatLng(51.588724, -0.230795), new String[]{"D", "F", "H"}, "Y"));
+                list.add(new RoutingObjects("F", BASIC_CONNECTOR, new int[]{3, 2}, 2, 2, new LatLng(51.588737, -0.230899), new String[]{"E", "G"}, "Y"));
+                list.add(new RoutingObjects("G", BASIC_CONNECTOR, new int[]{3, 6}, 2, 2, new LatLng(51.588593, -0.231005), new String[]{"F", "H"}, "Y"));
+                list.add(new RoutingObjects("H", BASIC_CONNECTOR, new int[]{4, 6}, 2, 2, new LatLng(51.588567, -0.230914), new String[]{"I", "G", "E"}, "Y"));
+                list.add(new RoutingObjects("I", BASIC_CONNECTOR, new int[]{5, 6}, 2, 2, new LatLng(51.588537, -0.230806), new String[]{"J", "H", "D"}, "Y"));
+                list.add(new RoutingObjects("J", BASIC_CONNECTOR, new int[]{10, 6, 7}, 2, 2, new LatLng(51.588506, -0.230659), new String[]{"K", "I", "P"}, "Y"));
+                list.add(new RoutingObjects("K", BASIC_CONNECTOR, new int[]{10, 8}, 2, 2, new LatLng(51.588490, -0.230552), new String[]{"L", "J", "N"}, "Y"));
+                list.add(new RoutingObjects("L", BASIC_CONNECTOR, new int[]{10, 9}, 2, 2, new LatLng(51.588468, -0.230406), new String[]{"K", "M"}, "Y"));
+                list.add(new RoutingObjects("M", BASIC_CONNECTOR, new int[]{11, 9}, 2, 2, new LatLng(51.588634, -0.230322), new String[]{"L", "N"}, "Y"));
+                list.add(new RoutingObjects("N", BASIC_CONNECTOR, new int[]{11, 8}, 2, 2, new LatLng(51.588665, -0.230450), new String[]{"M", "K", "B"}, "Y"));
+                list.add(new RoutingObjects("O", BASIC_CONNECTOR, new int[]{1, 12}, 2, 2, new LatLng(51.588628, -0.230576), new String[]{"B", "P"}, "Y"));
+                list.add(new RoutingObjects("P", BASIC_CONNECTOR, new int[]{7, 12}, 2, 2, new LatLng(51.588638, -0.230630), new String[]{"C", "O", "J"}, "Y"));
 
                 //S6 and S2 ends on this level
-                list.add(new RoutingObjects("S1", "stairs", new int[]{11}, 2, 2, new LatLng(51.588609, -0.230234), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{10}, 2, 2, new LatLng(51.588462, -0.230295), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S4", "stairs", new int[]{13}, 2, 2, new LatLng(51.588782, -0.230593), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S5", "stairs", new int[]{7}, 2, 2, new LatLng(51.588414, -0.230694), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S6", "stairs", new int[]{1}, 2, 2, new LatLng(51.588594, -0.230594), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{11}, 2, 2, new LatLng(51.588609, -0.230234), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{10}, 2, 2, new LatLng(51.588462, -0.230295), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S4", STAIR, new int[]{13}, 2, 2, new LatLng(51.588782, -0.230593), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S5", STAIR, new int[]{7}, 2, 2, new LatLng(51.588414, -0.230694), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S6", STAIR, new int[]{1}, 2, 2, new LatLng(51.588594, -0.230594), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{1}, 2, 2, new LatLng(51.588731, -0.230559), new String[]{"null"}, "Y"));
-                list.add(new RoutingObjects("E2", "elevators", new int[]{7}, 2, 2, new LatLng(51.588495, -0.230690), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{1}, 2, 2, new LatLng(51.588731, -0.230559), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E2", ELEVATOR, new int[]{7}, 2, 2, new LatLng(51.588495, -0.230690), new String[]{"null"}, "Y"));
 
                 break;
             case 3:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 1, 3, new LatLng(51.588698, -0.230637), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 3}, 1, 3, new LatLng(51.588754, -0.230631), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 1, 3, new LatLng(51.588698, -0.230637), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 3}, 1, 3, new LatLng(51.588754, -0.230631), new String[]{"A"}, "Y"));
 
 
                 //S1 ends here.
                 //Left out S5 and E2 on this level and the next for reasons best known to me. Grove building is fvk#ng weird
-                list.add(new RoutingObjects("S1", "stairs", new int[]{2}, 1, 3, new LatLng(51.588611, -0.230222), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S4", "stairs", new int[]{3}, 1, 3, new LatLng(51.588758, -0.230597), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{2}, 1, 3, new LatLng(51.588611, -0.230222), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S4", STAIR, new int[]{3}, 1, 3, new LatLng(51.588758, -0.230597), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{1}, 1, 3, new LatLng(51.588735, -0.230617), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{1}, 1, 3, new LatLng(51.588735, -0.230617), new String[]{"null"}, "Y"));
                 break;
             case 4:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 0, 4, new LatLng(51.588750, -0.230639), new String[]{""}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 0, 4, new LatLng(51.588750, -0.230639), new String[]{""}, "Y"));
 
-                list.add(new RoutingObjects("S4", "stairs", new int[]{2}, 0, 4, new LatLng(51.588754, -0.230597), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("E1", "elevators", new int[]{1}, 0, 4, new LatLng(51.588733, -0.230631), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("S4", STAIR, new int[]{2}, 0, 4, new LatLng(51.588754, -0.230597), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{1}, 0, 4, new LatLng(51.588733, -0.230631), new String[]{"null"}, "Y"));
 
                 break;
 
@@ -743,217 +724,213 @@ public class RoutingObjects {
         return list;
     }
 
-    private ArrayList<RoutingObjects> getGroveBlockBConnectors(int actualLevelWhenProbingForConnectors) {
+    private static ArrayList<RoutingObjects> getGroveBlockBConnectors(int actualLevel) {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        switch (actualLevelWhenProbingForConnectors) {
+        switch (actualLevel) {
             case 0:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 3}, 4, 0, new LatLng(51.588955, -0.230486), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 2}, 4, 0, new LatLng(51.588908, -0.230244), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 3}, 4, 0, new LatLng(51.588955, -0.230486), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 2}, 4, 0, new LatLng(51.588908, -0.230244), new String[]{"A"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{3}, 4, 0, new LatLng(51.589012, -0.230456), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{1}, 4, 0, new LatLng(51.588875, -0.230086), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{3}, 4, 0, new LatLng(51.589012, -0.230456), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{1}, 4, 0, new LatLng(51.588875, -0.230086), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{1}, 4, 0, new LatLng(51.588952, -0.230430), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{1}, 4, 0, new LatLng(51.588952, -0.230430), new String[]{"null"}, "Y"));
 
-                list.add(new RoutingObjects("D1", "doors", new int[]{1}, 4, 0, new LatLng(51.588957, -0.230488), new String[]{"A", "A10"}, "Y"));
+                list.add(new RoutingObjects("D1", DOOR, new int[]{1}, 4, 0, new LatLng(51.588957, -0.230488), new String[]{"A", "A10"}, "Y"));
                 break;
             case 1:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 3, 1, new LatLng(51.588950, -0.230485), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{3, 2}, 3, 1, new LatLng(51.588882, -0.230141), new String[]{"A", "C"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{3, 4}, 3, 1, new LatLng(51.588955, -0.230107), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 3, 1, new LatLng(51.588950, -0.230485), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{3, 2}, 3, 1, new LatLng(51.588882, -0.230141), new String[]{"A", "C"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{3, 4}, 3, 1, new LatLng(51.588955, -0.230107), new String[]{"B"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{1}, 3, 1, new LatLng(51.589022, -0.230451), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{2}, 3, 1, new LatLng(51.588874, -0.230086), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("E1", "elevators", new int[]{2}, 3, 1, new LatLng(51.588941, -0.230438), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{1}, 3, 1, new LatLng(51.589022, -0.230451), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{2}, 3, 1, new LatLng(51.588874, -0.230086), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{2}, 3, 1, new LatLng(51.588941, -0.230438), new String[]{"null"}, "Y"));
                 break;
             case 2:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 2, 2, new LatLng(51.588949, -0.230470), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{3, 2}, 2, 2, new LatLng(51.588883, -0.230145), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 2, 2, new LatLng(51.588949, -0.230470), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{3, 2}, 2, 2, new LatLng(51.588883, -0.230145), new String[]{"A"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{1}, 2, 2, new LatLng(51.589019, -0.230423), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{2}, 2, 2, new LatLng(51.588876, -0.230086), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("E1", "elevators", new int[]{2}, 2, 2, new LatLng(51.588944, -0.230440), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{1}, 2, 2, new LatLng(51.589019, -0.230423), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{2}, 2, 2, new LatLng(51.588876, -0.230086), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{2}, 2, 2, new LatLng(51.588944, -0.230440), new String[]{"null"}, "Y"));
                 break;
         }
         return list;
     }
 
-    private ArrayList<RoutingObjects> getGroveBlockCConnectors(int actualLevelWhenProbingForConnectors) {
+    private static ArrayList<RoutingObjects> getGroveBlockCConnectors(int actualLevel) {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        switch (actualLevelWhenProbingForConnectors) {
+        switch (actualLevel) {
             case 0:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 4, 0, new LatLng(51.589186, -0.230249), new String[]{"E"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{3, 4}, 4, 0, new LatLng(51.589270, -0.230040), new String[]{"C"}, "Y"));
-                list.add(new RoutingObjects("C", "Basic Connector", new int[]{3, 2}, 4, 0, new LatLng(51.589280, -0.230142), new String[]{"B", "D", "E"}, "Y"));
-                list.add(new RoutingObjects("D", "Basic Connector", new int[]{3}, 4, 0, new LatLng(51.589301, -0.230184), new String[]{"C"}, "Y"));
-                list.add(new RoutingObjects("E", "Basic Connector", new int[]{5, 2}, 4, 0, new LatLng(51.589231, -0.230196), new String[]{"A", "C"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 4, 0, new LatLng(51.589186, -0.230249), new String[]{"E"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{3, 4}, 4, 0, new LatLng(51.589270, -0.230040), new String[]{"C"}, "Y"));
+                list.add(new RoutingObjects("C", BASIC_CONNECTOR, new int[]{3, 2}, 4, 0, new LatLng(51.589280, -0.230142), new String[]{"B", "D", "E"}, "Y"));
+                list.add(new RoutingObjects("D", BASIC_CONNECTOR, new int[]{3}, 4, 0, new LatLng(51.589301, -0.230184), new String[]{"C"}, "Y"));
+                list.add(new RoutingObjects("E", BASIC_CONNECTOR, new int[]{5, 2}, 4, 0, new LatLng(51.589231, -0.230196), new String[]{"A", "C"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{3}, 4, 0, new LatLng(51.589273, -0.230221), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{3}, 4, 0, new LatLng(51.589273, -0.230221), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("E1", "elevators", new int[]{5}, 4, 0, new LatLng(51.589241, -0.230215), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{5}, 4, 0, new LatLng(51.589241, -0.230215), new String[]{"null"}, "Y"));
 
-                list.add(new RoutingObjects("D1", "doors", new int[]{3}, 4, 0, new LatLng(51.589312, -0.230166), new String[]{"D", "A9"}, "Y"));
-                list.add(new RoutingObjects("D2", "doors", new int[]{1}, 4, 0, new LatLng(51.589167, -0.230253), new String[]{"A", "A12"}, "Y"));
+                list.add(new RoutingObjects("D1", DOOR, new int[]{3}, 4, 0, new LatLng(51.589312, -0.230166), new String[]{"D", "A9"}, "Y"));
+                list.add(new RoutingObjects("D2", DOOR, new int[]{1}, 4, 0, new LatLng(51.589167, -0.230253), new String[]{"A", "A12"}, "Y"));
                 break;
             case 1:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 3, 1, new LatLng(51.589215, -0.230285), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{3, 2}, 3, 1, new LatLng(51.589207, -0.230184), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 3, 1, new LatLng(51.589215, -0.230285), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{3, 2}, 3, 1, new LatLng(51.589207, -0.230184), new String[]{"A"}, "Y"));
 
-                list.add(new RoutingObjects("S1", "stairs", new int[]{1}, 3, 1, new LatLng(51.589261, -0.230234), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("E1", "elevators", new int[]{2}, 3, 1, new LatLng(51.589214, -0.230244), new String[]{"null"}, "Y"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{1}, 3, 1, new LatLng(51.589261, -0.230234), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("E1", ELEVATOR, new int[]{2}, 3, 1, new LatLng(51.589214, -0.230244), new String[]{"null"}, "Y"));
         }
 
         return list;
     }
 
-    private ArrayList<RoutingObjects> getVineConnectors(int actualLevelWhenProbingForConnectors) {
+    private static ArrayList<RoutingObjects> getVineConnectors(int actualLevel) {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        switch (actualLevelWhenProbingForConnectors) {
+        switch (actualLevel) {
             case 0:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 1, 0, new LatLng(51.590611, -0.230630), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{3, 2}, 1, 0, new LatLng(51.590640, -0.230913), new String[]{"A"}, "Y"));
-                list.add(new RoutingObjects("S1", "stairs", new int[]{2}, 1, 0, new LatLng(51.590609, -0.230608), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{2}, 1, 0, new LatLng(51.590643, -0.230935), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 1, 0, new LatLng(51.590611, -0.230630), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{3, 2}, 1, 0, new LatLng(51.590640, -0.230913), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{2}, 1, 0, new LatLng(51.590609, -0.230608), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{2}, 1, 0, new LatLng(51.590643, -0.230935), new String[]{"null"}, "N"));
 
-                list.add(new RoutingObjects("D1", "doors", new int[]{1}, 1, 0, new LatLng(51.590599, -0.230635), new String[]{"A", "A8"}, "Y"));
-                list.add(new RoutingObjects("D2", "doors", new int[]{3}, 1, 0, new LatLng(51.590630, -0.230917), new String[]{"B", "A7"}, "Y"));
+                list.add(new RoutingObjects("D1", DOOR, new int[]{1}, 1, 0, new LatLng(51.590599, -0.230635), new String[]{"A", "A8"}, "Y"));
+                list.add(new RoutingObjects("D2", DOOR, new int[]{3}, 1, 0, new LatLng(51.590630, -0.230917), new String[]{"B", "A7"}, "Y"));
                 break;
             case 1:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{3, 2}, 0, 1, new LatLng(51.590637, -0.230908), new String[]{"B"}, "Y"));
-                list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 2}, 0, 1, new LatLng(51.590610, -0.230630), new String[]{"A"}, "Y"));
-                list.add(new RoutingObjects("S1", "stairs", new int[]{1}, 0, 1, new LatLng(51.590645, -0.230625), new String[]{"null"}, "N"));
-                list.add(new RoutingObjects("S2", "stairs", new int[]{3}, 0, 1, new LatLng(51.590673, -0.230901), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{3, 2}, 0, 1, new LatLng(51.590637, -0.230908), new String[]{"B"}, "Y"));
+                list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 2}, 0, 1, new LatLng(51.590610, -0.230630), new String[]{"A"}, "Y"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{1}, 0, 1, new LatLng(51.590645, -0.230625), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("S2", STAIR, new int[]{3}, 0, 1, new LatLng(51.590673, -0.230901), new String[]{"null"}, "N"));
                 break;
         }
 
         return list;
     }
 
-    private ArrayList<RoutingObjects> getPortacabinAConnectors(int actualLevelWhenProbingForConnectors) {
+    private static ArrayList<RoutingObjects> getPortacabinAConnectors(int actualLevel) {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        switch (actualLevelWhenProbingForConnectors) {
+        switch (actualLevel) {
             case 0:
-                //list.add(new RoutingObjects("A", "Basic Connector", new int[] {1}, 1, 0, new LatLng(51.589771, -0.230222), new String[] {"B"}, "Y"));
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 1, 0, new LatLng(51.589760, -0.230224), new String[]{""}, "Y"));
-                list.add(new RoutingObjects("D1", "doors", new int[]{1}, 1, 0, new LatLng(51.589771, -0.230243), new String[]{"A", "A13"}, "Y"));
-                list.add(new RoutingObjects("S1", "stairs", new int[]{1}, 1, 0, new LatLng(51.589754, -0.230190), new String[]{"null"}, "N"));
+                //list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[] {1}, 1, 0, new LatLng(51.589771, -0.230222), new String[] {"B"}, "Y"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 1, 0, new LatLng(51.589760, -0.230224), new String[]{""}, "Y"));
+                list.add(new RoutingObjects("D1", DOOR, new int[]{1}, 1, 0, new LatLng(51.589771, -0.230243), new String[]{"A", "A13"}, "Y"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{1}, 1, 0, new LatLng(51.589754, -0.230190), new String[]{"null"}, "N"));
                 break;
             case 1:
-                list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 0, 1, new LatLng(51.589769, -0.230224), new String[]{""}, "Y"));
-                list.add(new RoutingObjects("S1", "stairs", new int[]{1}, 0, 1, new LatLng(51.589766, -0.230160), new String[]{"null"}, "N"));
+                list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 0, 1, new LatLng(51.589769, -0.230224), new String[]{""}, "Y"));
+                list.add(new RoutingObjects("S1", STAIR, new int[]{1}, 0, 1, new LatLng(51.589766, -0.230160), new String[]{"null"}, "N"));
                 break;
         }
 
         return list;
     }
 
-    private ArrayList<RoutingObjects> getPortacabinAEXTConnectors() {
+    private static ArrayList<RoutingObjects> getPortacabinAEXTConnectors() {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        list.add(new RoutingObjects("A", "Basic Connector", new int[]{1}, 1, 0, new LatLng(51.589871, -0.230213), new String[]{""}, "Y"));
-        list.add(new RoutingObjects("D1", "doors", new int[]{1}, 1, 0, new LatLng(51.589871, -0.230228), new String[]{"A", "A14"}, "Y"));
+        list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1}, 1, 0, new LatLng(51.589871, -0.230213), new String[]{""}, "Y"));
+        list.add(new RoutingObjects("D1", DOOR, new int[]{1}, 1, 0, new LatLng(51.589871, -0.230228), new String[]{"A", "A14"}, "Y"));
 
         return list;
     }
 
-    private ArrayList<RoutingObjects> getPortacabinBConnectors() {
+    private static ArrayList<RoutingObjects> getPortacabinBConnectors() {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        list.add(new RoutingObjects("A", "Basic Connector", new int[]{1}, 0, 0, new LatLng(51.590717, -0.229117), new String[]{""}, "Y"));
-        list.add(new RoutingObjects("D1", "doors", new int[]{1}, 0, 0, new LatLng(51.590721, -0.229157), new String[]{"A", "A3"}, "Y"));
+        list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1}, 0, 0, new LatLng(51.590717, -0.229117), new String[]{""}, "Y"));
+        list.add(new RoutingObjects("D1", DOOR, new int[]{1}, 0, 0, new LatLng(51.590721, -0.229157), new String[]{"A", "A3"}, "Y"));
         return list;
     }
 
 
-    private ArrayList<RoutingObjects> getPortacabin67Connectors() {
+    private static ArrayList<RoutingObjects> getPortacabin67Connectors() {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 1, 0, new LatLng(51.589716, -0.229821), new String[]{"B"}, "N"));
-        list.add(new RoutingObjects("B", "Basic Connector", new int[]{1, 3}, 1, 0, new LatLng(51.589732, -0.229955), new String[]{"A"}, "N"));
-        list.add(new RoutingObjects("D1", "doors", new int[]{2}, 1, 0, new LatLng(51.589724, -0.229817), new String[]{"A", "A15"}, "N"));
-        list.add(new RoutingObjects("D2", "doors", new int[]{3}, 1, 0, new LatLng(51.589737, -0.229951), new String[]{"B", "A16"}, "N"));
+        list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 1, 0, new LatLng(51.589716, -0.229821), new String[]{"B"}, "N"));
+        list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{1, 3}, 1, 0, new LatLng(51.589732, -0.229955), new String[]{"A"}, "N"));
+        list.add(new RoutingObjects("D1", DOOR, new int[]{2}, 1, 0, new LatLng(51.589724, -0.229817), new String[]{"A", "A15"}, "N"));
+        list.add(new RoutingObjects("D2", DOOR, new int[]{3}, 1, 0, new LatLng(51.589737, -0.229951), new String[]{"B", "A16"}, "N"));
 
         return list;
     }
 
-    private ArrayList<RoutingObjects> getBarnConnectors() {
+    private static ArrayList<RoutingObjects> getBarnConnectors() {
         ArrayList<RoutingObjects> list = new ArrayList<>();
-        list.add(new RoutingObjects("A", "Basic Connector", new int[]{1, 2}, 0, 0, new LatLng(51.590938, -0.228504), new String[]{"B"}, "Y"));
-        list.add(new RoutingObjects("B", "Basic Connector", new int[]{2, 3}, 0, 0, new LatLng(51.591057, -0.228516), new String[]{"A"}, "Y"));
-        list.add(new RoutingObjects("D1", "doors", new int[]{1}, 0, 0, new LatLng(51.590938, -0.228426), new String[]{"A", "U1"}, "Y"));
+        list.add(new RoutingObjects("A", BASIC_CONNECTOR, new int[]{1, 2}, 0, 0, new LatLng(51.590938, -0.228504), new String[]{"B"}, "Y"));
+        list.add(new RoutingObjects("B", BASIC_CONNECTOR, new int[]{2, 3}, 0, 0, new LatLng(51.591057, -0.228516), new String[]{"A"}, "Y"));
+        list.add(new RoutingObjects("D1", DOOR, new int[]{1}, 0, 0, new LatLng(51.590938, -0.228426), new String[]{"A", "U1"}, "Y"));
         return list;
     }
 
 
-    public ArrayList<RoutingObjects> getOutsideConnectors() {
+    public static ArrayList<RoutingObjects> getOutsideConnectors() {
         ArrayList<RoutingObjects> list = new ArrayList<>();
 
-        //NOTE: PrimeLanes attribute is unused, I changed the approach to how outdoor routing should work when I was more than halfway through inputing
-        //these data, now they're are irrelevant to the redesigned algorithm.
-
-        list.add(new RoutingObjects("A", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590097, -0.228139), new String[]{"B"}, "Y"));
-        list.add(new RoutingObjects("B", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590315, -0.228194), new String[]{"A", "C", "V1"}, "Y"));
-        list.add(new RoutingObjects("C", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590350, -0.228599), new String[]{"B", "E", "I1"}, "Y"));
-        //list.add(new RoutingObjects("D", "Basic Connector", new int[] {3}, 0, 0, new LatLng(51.590379, -0.228916), new String[] {"C", "E"}, "Y"));
-        list.add(new RoutingObjects("E", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590379, -0.228964), new String[]{"C", "F", "K"}, "Y"));
-        list.add(new RoutingObjects("F", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590401, -0.229140), new String[]{"E", "G", "N1"}, "Y"));
-        list.add(new RoutingObjects("G", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590435, -0.229140), new String[]{"F", "H"}, "Y"));
-        list.add(new RoutingObjects("H", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590471, -0.229376), new String[]{"G", "I"}, "Y"));
-        list.add(new RoutingObjects("I", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590657, -0.229313), new String[]{"H", "A3", "P1"}, "Y"));
-        list.add(new RoutingObjects("J", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590830, -0.229251), new String[]{"P1", "H1"}, "Y"));
-        list.add(new RoutingObjects("K", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590168, -0.229023), new String[]{"E", "L", "R"}, "Y"));
-        list.add(new RoutingObjects("L", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590187, -0.229187), new String[]{"F", "K", "M"}, "Y"));
-        list.add(new RoutingObjects("M", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590159, -0.229616), new String[]{"L", "N", "Z"}, "Y"));
-        list.add(new RoutingObjects("N", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590096, -0.229637), new String[]{"M", "Q"}, "Y"));
-        list.add(new RoutingObjects("O", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589733, -0.229727), new String[]{"A15", "T", "Q"}, "Y"));
-        list.add(new RoutingObjects("P", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589749, -0.229884), new String[]{"A15", "A16"}, "Y"));
-        list.add(new RoutingObjects("Q", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589979, -0.229679), new String[]{"O", "N"}, "Y"));
-        list.add(new RoutingObjects("R", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589575, -0.229187), new String[]{"S", "K"}, "Y"));
-        list.add(new RoutingObjects("S", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589486, -0.229187), new String[]{"R", "U", "T"}, "Y"));
-        list.add(new RoutingObjects("T", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589551, -0.229763), new String[]{"O", "S", "A11", "W"}, "Y"));
-        list.add(new RoutingObjects("U", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.588938, -0.229297), new String[]{"S", "V"}, "Y"));
-        list.add(new RoutingObjects("V", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589014, -0.229861), new String[]{"A11", "U", "A12", "K1"}, "Y"));
-        list.add(new RoutingObjects("W", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589572, -0.230001), new String[]{"T", "E1", "A9"}, "Y"));
-        list.add(new RoutingObjects("X", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589761, -0.230020), new String[]{"A16", "Y"}, "Y"));
-        list.add(new RoutingObjects("Y", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589967, -0.229947), new String[]{"X", "Z", "B1"}, "Y"));
-        list.add(new RoutingObjects("Z", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590174, -0.229934), new String[]{"M", "Y", "D1", "A1"}, "N"));
-        list.add(new RoutingObjects("A1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590377, -0.229911), new String[]{"Z", "F1", "O1"}, "Y"));
-        list.add(new RoutingObjects("B1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589979, -0.230105), new String[]{"Y", "C1"}, "N"));
-        list.add(new RoutingObjects("C1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589993, -0.230266), new String[]{"D1", "A14", "B1"}, "Y"));
-        list.add(new RoutingObjects("D1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590108, -0.230247), new String[]{"Z", "C1", "F1"}, "Y"));
-        list.add(new RoutingObjects("E1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589620, -0.230408), new String[]{"W", "A13"}, "Y"));
-        list.add(new RoutingObjects("F1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590471, -0.230036), new String[]{"A1", "D1", "G1"}, "Y"));
-        list.add(new RoutingObjects("G1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590642, -0.229904), new String[]{"F1", "H1", "O1", "A5"}, "Y"));
-        list.add(new RoutingObjects("H1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590891, -0.229726), new String[]{"J", "G1"}, "Y"));
-        list.add(new RoutingObjects("I1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590564, -0.228539), new String[]{"C", "A3", "S1", "U1"}, "N"));
-        list.add(new RoutingObjects("J1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589134, -0.230500), new String[]{"A12", "A9", "A10"}, "Y"));
-        list.add(new RoutingObjects("K1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.588787, -0.229967), new String[]{"V", "L1", "Q1"}, "Y"));
-        list.add(new RoutingObjects("L1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.588917, -0.230597), new String[]{"A10", "K1"}, "Y"));
-        list.add(new RoutingObjects("N1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590443, -0.229521), new String[]{"F", "O1"}, "Y"));
-        list.add(new RoutingObjects("O1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590540, -0.229722), new String[]{"G1", "N1", "A1"}, "Y"));
-        list.add(new RoutingObjects("P1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590736, -0.229285), new String[]{"I", "J"}, "N"));
-        list.add(new RoutingObjects("Q1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.588700, -0.229998), new String[]{"K1", "X1", "Y1"}, "Y"));
-        list.add(new RoutingObjects("R1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.588579, -0.229606), new String[]{"Y1", "Z1"}, "Y"));
-        list.add(new RoutingObjects("T1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590758, -0.228237), new String[]{"U1", "W1"}, "N"));
-        list.add(new RoutingObjects("S1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590540, -0.228306), new String[]{"I1", "W1", "A2"}, "Y"));
-        list.add(new RoutingObjects("U1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590801, -0.228478), new String[]{"I1", "T1", "A2"}, "Y"));
-        list.add(new RoutingObjects("V1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590650, -0.228098), new String[]{"B", "W1"}, "Y"));
-        list.add(new RoutingObjects("W1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590664, -0.228257), new String[]{"S1", "T1", "V1"}, "Y"));
-        list.add(new RoutingObjects("X1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.588455, -0.230132), new String[]{"Q1"}, "Y"));
-        list.add(new RoutingObjects("Z1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.588526, -0.229428), new String[]{"R1"}, "Y"));
-        list.add(new RoutingObjects("Y1", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.588643, -0.229776), new String[]{"Q1", "R1"}, "Y"));
-        list.add(new RoutingObjects("A2", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590578, -0.228537), new String[]{"S1", "U1"}, "Y"));
-        list.add(new RoutingObjects("A3", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590646, -0.229174), new String[]{"I", "A4", "I1"}, "Y"));
-        list.add(new RoutingObjects("A4", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590736, -0.229152), new String[]{"A3"}, "Y"));
-        list.add(new RoutingObjects("A5", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590669, -0.230289), new String[]{"G1", "A6"}, "Y"));
-        list.add(new RoutingObjects("A6", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590508, -0.230537), new String[]{"A8", "A5"}, "Y"));
-        list.add(new RoutingObjects("A7", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590537, -0.230941), new String[]{"A8"}, "Y"));
-        list.add(new RoutingObjects("A8", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.590508, -0.230666), new String[]{"A6", "A7"}, "Y"));
-        list.add(new RoutingObjects("A9", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589402, -0.230089), new String[]{"W", "J1", "A11"}, "Y"));
-        list.add(new RoutingObjects("A10", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.588977, -0.230572), new String[]{"L1", "J1"}, "Y"));
-        list.add(new RoutingObjects("A11", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589368, -0.229769), new String[]{"T", "V", "A9"}, "Y"));
-        list.add(new RoutingObjects("A12", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589093, -0.230278), new String[]{"J1", "V"}, "Y"));
-        list.add(new RoutingObjects("A13", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589778, -0.230348), new String[]{"E1", "A14"}, "Y"));
-        list.add(new RoutingObjects("A14", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589878, -0.230309), new String[]{"A13", "C1"}, "Y"));
-        list.add(new RoutingObjects("A15", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589739, -0.229810), new String[]{"O", "P"}, "Y"));
-        list.add(new RoutingObjects("A16", "Basic Connector", new int[]{}, 0, 0, new LatLng(51.589754, -0.229946), new String[]{"P", "X"}, "Y"));
+        list.add(new RoutingObjects("A", BASIC_CONNECTOR, new LatLng(51.590097, -0.228139), new String[]{"B"}, "Y"));
+        list.add(new RoutingObjects("B", BASIC_CONNECTOR, new LatLng(51.590315, -0.228194), new String[]{"A", "C", "V1"}, "Y"));
+        list.add(new RoutingObjects("C", BASIC_CONNECTOR, new LatLng(51.590350, -0.228599), new String[]{"B", "E", "I1"}, "Y"));
+        list.add(new RoutingObjects("E", BASIC_CONNECTOR, new LatLng(51.590379, -0.228964), new String[]{"C", "F", "K"}, "Y"));
+        list.add(new RoutingObjects("F", BASIC_CONNECTOR, new LatLng(51.590401, -0.229140), new String[]{"E", "G", "N1"}, "Y"));
+        list.add(new RoutingObjects("G", BASIC_CONNECTOR, new LatLng(51.590435, -0.229140), new String[]{"F", "H"}, "Y"));
+        list.add(new RoutingObjects("H", BASIC_CONNECTOR, new LatLng(51.590471, -0.229376), new String[]{"G", "I"}, "Y"));
+        list.add(new RoutingObjects("I", BASIC_CONNECTOR, new LatLng(51.590657, -0.229313), new String[]{"H", "A3", "P1"}, "Y"));
+        list.add(new RoutingObjects("J", BASIC_CONNECTOR, new LatLng(51.590830, -0.229251), new String[]{"P1", "H1"}, "Y"));
+        list.add(new RoutingObjects("K", BASIC_CONNECTOR, new LatLng(51.590168, -0.229023), new String[]{"E", "L", "R"}, "Y"));
+        list.add(new RoutingObjects("L", BASIC_CONNECTOR, new LatLng(51.590187, -0.229187), new String[]{"F", "K", "M"}, "Y"));
+        list.add(new RoutingObjects("M", BASIC_CONNECTOR, new LatLng(51.590159, -0.229616), new String[]{"L", "N", "Z"}, "Y"));
+        list.add(new RoutingObjects("N", BASIC_CONNECTOR, new LatLng(51.590096, -0.229637), new String[]{"M", "Q"}, "Y"));
+        list.add(new RoutingObjects("O", BASIC_CONNECTOR, new LatLng(51.589733, -0.229727), new String[]{"A15", "T", "Q"}, "Y"));
+        list.add(new RoutingObjects("P", BASIC_CONNECTOR, new LatLng(51.589749, -0.229884), new String[]{"A15", "A16"}, "Y"));
+        list.add(new RoutingObjects("Q", BASIC_CONNECTOR, new LatLng(51.589979, -0.229679), new String[]{"O", "N"}, "Y"));
+        list.add(new RoutingObjects("R", BASIC_CONNECTOR, new LatLng(51.589575, -0.229187), new String[]{"S", "K"}, "Y"));
+        list.add(new RoutingObjects("S", BASIC_CONNECTOR, new LatLng(51.589486, -0.229187), new String[]{"R", "U", "T"}, "Y"));
+        list.add(new RoutingObjects("T", BASIC_CONNECTOR, new LatLng(51.589551, -0.229763), new String[]{"O", "S", "A11", "W"}, "Y"));
+        list.add(new RoutingObjects("U", BASIC_CONNECTOR, new LatLng(51.588938, -0.229297), new String[]{"S", "V"}, "Y"));
+        list.add(new RoutingObjects("V", BASIC_CONNECTOR, new LatLng(51.589014, -0.229861), new String[]{"A11", "U", "A12", "K1"}, "Y"));
+        list.add(new RoutingObjects("W", BASIC_CONNECTOR, new LatLng(51.589572, -0.230001), new String[]{"T", "E1", "A9"}, "Y"));
+        list.add(new RoutingObjects("X", BASIC_CONNECTOR, new LatLng(51.589761, -0.230020), new String[]{"A16", "Y"}, "Y"));
+        list.add(new RoutingObjects("Y", BASIC_CONNECTOR, new LatLng(51.589967, -0.229947), new String[]{"X", "Z", "B1"}, "Y"));
+        list.add(new RoutingObjects("Z", BASIC_CONNECTOR, new LatLng(51.590174, -0.229934), new String[]{"M", "Y", "D1", "A1"}, "N"));
+        list.add(new RoutingObjects("A1", BASIC_CONNECTOR, new LatLng(51.590377, -0.229911), new String[]{"Z", "F1", "O1"}, "Y"));
+        list.add(new RoutingObjects("B1", BASIC_CONNECTOR, new LatLng(51.589979, -0.230105), new String[]{"Y", "C1"}, "N"));
+        list.add(new RoutingObjects("C1", BASIC_CONNECTOR, new LatLng(51.589993, -0.230266), new String[]{"D1", "A14", "B1"}, "Y"));
+        list.add(new RoutingObjects("D1", BASIC_CONNECTOR, new LatLng(51.590108, -0.230247), new String[]{"Z", "C1", "F1"}, "Y"));
+        list.add(new RoutingObjects("E1", BASIC_CONNECTOR, new LatLng(51.589620, -0.230408), new String[]{"W", "A13"}, "Y"));
+        list.add(new RoutingObjects("F1", BASIC_CONNECTOR, new LatLng(51.590471, -0.230036), new String[]{"A1", "D1", "G1"}, "Y"));
+        list.add(new RoutingObjects("G1", BASIC_CONNECTOR, new LatLng(51.590642, -0.229904), new String[]{"F1", "H1", "O1", "A5"}, "Y"));
+        list.add(new RoutingObjects("H1", BASIC_CONNECTOR, new LatLng(51.590891, -0.229726), new String[]{"J", "G1"}, "Y"));
+        list.add(new RoutingObjects("I1", BASIC_CONNECTOR, new LatLng(51.590564, -0.228539), new String[]{"C", "A3", "S1", "U1"}, "N"));
+        list.add(new RoutingObjects("J1", BASIC_CONNECTOR, new LatLng(51.589134, -0.230500), new String[]{"A12", "A9", "A10"}, "Y"));
+        list.add(new RoutingObjects("K1", BASIC_CONNECTOR, new LatLng(51.588787, -0.229967), new String[]{"V", "L1", "Q1"}, "Y"));
+        list.add(new RoutingObjects("L1", BASIC_CONNECTOR, new LatLng(51.588917, -0.230597), new String[]{"A10", "K1"}, "Y"));
+        list.add(new RoutingObjects("N1", BASIC_CONNECTOR, new LatLng(51.590443, -0.229521), new String[]{"F", "O1"}, "Y"));
+        list.add(new RoutingObjects("O1", BASIC_CONNECTOR, new LatLng(51.590540, -0.229722), new String[]{"G1", "N1", "A1"}, "Y"));
+        list.add(new RoutingObjects("P1", BASIC_CONNECTOR, new LatLng(51.590736, -0.229285), new String[]{"I", "J"}, "N"));
+        list.add(new RoutingObjects("Q1", BASIC_CONNECTOR, new LatLng(51.588700, -0.229998), new String[]{"K1", "X1", "Y1"}, "Y"));
+        list.add(new RoutingObjects("R1", BASIC_CONNECTOR, new LatLng(51.588579, -0.229606), new String[]{"Y1", "Z1"}, "Y"));
+        list.add(new RoutingObjects("T1", BASIC_CONNECTOR, new LatLng(51.590758, -0.228237), new String[]{"U1", "W1"}, "N"));
+        list.add(new RoutingObjects("S1", BASIC_CONNECTOR, new LatLng(51.590540, -0.228306), new String[]{"I1", "W1", "A2"}, "Y"));
+        list.add(new RoutingObjects("U1", BASIC_CONNECTOR, new LatLng(51.590801, -0.228478), new String[]{"I1", "T1", "A2"}, "Y"));
+        list.add(new RoutingObjects("V1", BASIC_CONNECTOR, new LatLng(51.590650, -0.228098), new String[]{"B", "W1"}, "Y"));
+        list.add(new RoutingObjects("W1", BASIC_CONNECTOR, new LatLng(51.590664, -0.228257), new String[]{"S1", "T1", "V1"}, "Y"));
+        list.add(new RoutingObjects("X1", BASIC_CONNECTOR, new LatLng(51.588455, -0.230132), new String[]{"Q1"}, "Y"));
+        list.add(new RoutingObjects("Z1", BASIC_CONNECTOR, new LatLng(51.588526, -0.229428), new String[]{"R1"}, "Y"));
+        list.add(new RoutingObjects("Y1", BASIC_CONNECTOR, new LatLng(51.588643, -0.229776), new String[]{"Q1", "R1"}, "Y"));
+        list.add(new RoutingObjects("A2", BASIC_CONNECTOR, new LatLng(51.590578, -0.228537), new String[]{"S1", "U1"}, "Y"));
+        list.add(new RoutingObjects("A3", BASIC_CONNECTOR, new LatLng(51.590646, -0.229174), new String[]{"I", "A4", "I1"}, "Y"));
+        list.add(new RoutingObjects("A4", BASIC_CONNECTOR, new LatLng(51.590736, -0.229152), new String[]{"A3"}, "Y"));
+        list.add(new RoutingObjects("A5", BASIC_CONNECTOR, new LatLng(51.590669, -0.230289), new String[]{"G1", "A6"}, "Y"));
+        list.add(new RoutingObjects("A6", BASIC_CONNECTOR, new LatLng(51.590508, -0.230537), new String[]{"A8", "A5"}, "Y"));
+        list.add(new RoutingObjects("A7", BASIC_CONNECTOR, new LatLng(51.590537, -0.230941), new String[]{"A8"}, "Y"));
+        list.add(new RoutingObjects("A8", BASIC_CONNECTOR, new LatLng(51.590508, -0.230666), new String[]{"A6", "A7"}, "Y"));
+        list.add(new RoutingObjects("A9", BASIC_CONNECTOR, new LatLng(51.589402, -0.230089), new String[]{"W", "J1", "A11"}, "Y"));
+        list.add(new RoutingObjects("A10", BASIC_CONNECTOR, new LatLng(51.588977, -0.230572), new String[]{"L1", "J1"}, "Y"));
+        list.add(new RoutingObjects("A11", BASIC_CONNECTOR, new LatLng(51.589368, -0.229769), new String[]{"T", "V", "A9"}, "Y"));
+        list.add(new RoutingObjects("A12", BASIC_CONNECTOR, new LatLng(51.589093, -0.230278), new String[]{"J1", "V"}, "Y"));
+        list.add(new RoutingObjects("A13", BASIC_CONNECTOR, new LatLng(51.589778, -0.230348), new String[]{"E1", "A14"}, "Y"));
+        list.add(new RoutingObjects("A14", BASIC_CONNECTOR, new LatLng(51.589878, -0.230309), new String[]{"A13", "C1"}, "Y"));
+        list.add(new RoutingObjects("A15", BASIC_CONNECTOR, new LatLng(51.589739, -0.229810), new String[]{"O", "P"}, "Y"));
+        list.add(new RoutingObjects("A16", BASIC_CONNECTOR, new LatLng(51.589754, -0.229946), new String[]{"P", "X"}, "Y"));
 
         return list;
     }
@@ -1472,8 +1449,33 @@ public class RoutingObjects {
         return list;
     }
 
+    private static RoutingObjects getBuilding(String building) {
+        ArrayList<RoutingObjects> list = new ArrayList<>();
+        list.add(new RoutingObjects(COLLEGE, true, true, true));
+        list.add(new RoutingObjects(HATHCROFT, true, true, true));
+        list.add(new RoutingObjects(WILLIAMS, true, true, true));
+        list.add(new RoutingObjects(SHEPPARDLIBRARY, true, true, true));
+        list.add(new RoutingObjects(VINE, true, false, true));
+        list.add(new RoutingObjects(BARN, false, false, true));
+        list.add(new RoutingObjects(GROVE_BLOCK_A, true, true, true));
+        list.add(new RoutingObjects(GROVE_BLOCK_B, true, true, true));
+        list.add(new RoutingObjects(GROVE_BLOCK_C, true, true, true));
+        list.add(new RoutingObjects(BUILDING9, false, false, true));
+        list.add(new RoutingObjects(MDXHOUSE, true, true, true));
+        list.add(new RoutingObjects(PORTACABIN_A, true, false, true));
+        list.add(new RoutingObjects(PORTACABIN_A_EXT, false, false, true));
+        list.add(new RoutingObjects(PORTACABIN_67, true, false, false));
+        list.add(new RoutingObjects(PORTACABIN_B, false, false, true));
+        list.add(new RoutingObjects(BUILDING10, true, false, false));
+        list.add(new RoutingObjects(CIRCLE_CAFE, false, false, true));
+
+        return list.parallelStream()
+                .filter(buildingObject -> buildingObject.getName().equals(building))
+                .findFirst().get();
+    }
+
     public int getGmapIntForGroundFloor(String building) {
-        return getConnectors(building, 0).get(0).gMapLevel;
+        return RoutingObjectsGetterUtilService.getConnectors(building, 0).get(0).gMapLevel;
     }
 
 

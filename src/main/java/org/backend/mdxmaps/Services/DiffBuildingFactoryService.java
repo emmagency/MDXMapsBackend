@@ -36,6 +36,8 @@ public class DiffBuildingFactoryService implements RouteCalculation {
 
     @Override
     public ResponseService getRoute() {
+
+        
         return null;
     }
 }

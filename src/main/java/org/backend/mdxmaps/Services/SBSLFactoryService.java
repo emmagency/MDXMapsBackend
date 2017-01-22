@@ -3,18 +3,18 @@ package org.backend.mdxmaps.Services;
 import com.google.common.collect.Multimap;
 import org.backend.mdxmaps.Model.Enums.MOT;
 import org.backend.mdxmaps.Model.LatLng;
+import org.backend.mdxmaps.Model.ResponseObjects.SBSLResponseObject;
 import org.backend.mdxmaps.Model.RouteCalculation;
 import org.backend.mdxmaps.Model.RoutingObjects;
-import org.backend.mdxmaps.Model.SBSLResponseObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.backend.mdxmaps.Model.Enums.MOT.DISABLED;
-import static org.backend.mdxmaps.Model.OperationTypes.SBSL;
+import static org.backend.mdxmaps.Model.Enums.OperationType.SBSL;
 import static org.backend.mdxmaps.Services.ResponseService.Status.OK;
-import static org.backend.mdxmaps.Services.SingleLevelSLOCalculator.performSingleLevelSLO;
+import static org.backend.mdxmaps.Services.RouteCalculators.SingleLevelSLOCalculator.performSingleLevelSLO;
 
 /**
  * Created by Emmanuel Keboh on 18/12/2016.

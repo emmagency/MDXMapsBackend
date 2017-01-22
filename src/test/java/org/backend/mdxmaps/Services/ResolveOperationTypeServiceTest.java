@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.backend.mdxmaps.Model.Enums.MOT.DISABLED;
 import static org.backend.mdxmaps.Model.Enums.MOT.ELEVATORS;

@@ -1,6 +1,7 @@
-package org.backend.mdxmaps.Model;
+package org.backend.mdxmaps.Model.ResponseObjects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.backend.mdxmaps.Model.Enums.OperationType;
 import org.backend.mdxmaps.Services.ResponseService.Status;
 
 import java.util.ArrayList;
@@ -12,22 +13,22 @@ import java.util.ArrayList;
 public class MainResponseObject<T extends ArrayList> {
 
     private Status status;
-    private OperationTypes type;
+    private OperationType type;
     private String message;
-    private String routeDescription;
+    private ArrayList<String> routeDescription;
     private T routes;
 
     public MainResponseObject() {
     }
 
-    private MainResponseObject(Status status, OperationTypes type, String message, T routes) {
+    private MainResponseObject(Status status, OperationType type, String message, T routes) {
         this.status = status;
         this.type = type;
         this.message = message;
         this.routes = routes;
     }
 
-    public MainResponseObject(Status status, OperationTypes type, String message, String routeDescription, T routes) {
+    public MainResponseObject(Status status, OperationType type, String message, ArrayList<String> routeDescription, T routes) {
         this.status = status;
         this.type = type;
         this.message = message;
@@ -47,7 +48,7 @@ public class MainResponseObject<T extends ArrayList> {
         return status;
     }
 
-    public OperationTypes getType() {
+    public OperationType getType() {
         return type;
     }
 
@@ -55,7 +56,7 @@ public class MainResponseObject<T extends ArrayList> {
         return message;
     }
 
-    public String getRouteDescription() {
+    public ArrayList<String> getRouteDescription() {
         return routeDescription;
     }
 
@@ -63,11 +64,11 @@ public class MainResponseObject<T extends ArrayList> {
         return routes;
     }
 
-    public static <T extends ArrayList> MainResponseObject createMainResponseObject(Status status, OperationTypes type, String message, T routes) {
+    public static <T extends ArrayList> MainResponseObject createMainResponseObject(Status status, OperationType type, String message, T routes) {
         return new MainResponseObject<>(status, type, message, routes);
     }
 
-    public static <T extends ArrayList> MainResponseObject createMainResponseObject(Status status, OperationTypes type, String routeDescription,
+    public static <T extends ArrayList> MainResponseObject createMainResponseObject(Status status, OperationType type, ArrayList<String> routeDescription,
                                                                                     String message, T routes) {
         return new MainResponseObject<>(status, type, message, routeDescription, routes);
     }

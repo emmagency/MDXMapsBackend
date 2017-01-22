@@ -1,18 +1,19 @@
 package org.backend.mdxmaps.Services;
 
 import com.google.common.collect.Multimap;
-import net.bytebuddy.utility.RandomString;
 import org.backend.mdxmaps.Model.LatLng;
 import org.backend.mdxmaps.Model.RoutingObjects;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.backend.mdxmaps.Model.Enums.ObjectType.BASIC_CONNECTOR;
+import static org.backend.mdxmaps.Model.Enums.ObjectType.STAIR;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -28,15 +29,14 @@ public class UtilServiceTest {
 
     @Test
     public void shouldFilterConnectorObjectsByType() {
-        String type = new RandomString(5).toString();
-        when(object1.getType()).thenReturn(type);
-        when(object2.getType()).thenReturn("");
-        when(object3.getType()).thenReturn(type);
-        when(object4.getType()).thenReturn(type);
+
+        when(object1.getType()).thenReturn(BASIC_CONNECTOR);
+        when(object2.getType()).thenReturn(STAIR);
+        when(object3.getType()).thenReturn(BASIC_CONNECTOR);
+        when(object4.getType()).thenReturn(BASIC_CONNECTOR);
 
         assertEquals(3, UtilService.filterConnectorObjectsByType(
-                new ArrayList<>(Arrays.asList(object1, object2, object3, object4)), type
-        ).size());
+                new ArrayList<>(Arrays.asList(object1, object2, object3, object4)), BASIC_CONNECTOR).size());
     }
 
     @Test

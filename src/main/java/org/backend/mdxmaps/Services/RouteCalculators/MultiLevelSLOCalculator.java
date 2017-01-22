@@ -1,9 +1,9 @@
-package org.backend.mdxmaps.Services;
+package org.backend.mdxmaps.Services.RouteCalculators;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import org.backend.mdxmaps.Model.Enums.MOT;
-import org.backend.mdxmaps.Model.Enums.ObjectTypes;
+import org.backend.mdxmaps.Model.Enums.ObjectType;
 import org.backend.mdxmaps.Model.LatLng;
 import org.backend.mdxmaps.Model.RoutingObjects;
 import org.backend.mdxmaps.Services.Algorithms.IndoorAlgorithm;
@@ -14,10 +14,14 @@ import java.util.Arrays;
 import static java.util.stream.Collectors.toList;
 import static org.backend.mdxmaps.Model.Enums.MOT.DISABLED;
 import static org.backend.mdxmaps.Model.Enums.MOT.STAIRS;
-import static org.backend.mdxmaps.Model.Enums.ObjectTypes.ROOM;
+import static org.backend.mdxmaps.Model.Enums.ObjectType.BASIC_CONNECTOR;
+import static org.backend.mdxmaps.Model.Enums.ObjectType.ELEVATOR;
+import static org.backend.mdxmaps.Model.Enums.ObjectType.ROOM;
+import static org.backend.mdxmaps.Model.Enums.ObjectType.STAIR;
 import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getAllPrimes;
 import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getBestRouteFromSortedMultiMap;
 import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getConnectorObjectFromName;
+import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getConnectors;
 import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getSameLanesBCForConnetorObject;
 import static org.backend.mdxmaps.Services.UtilService.calculateMultipleRoutesDistanceAndSort;
 import static org.backend.mdxmaps.Services.UtilService.calculateSingleRouteDistance;
@@ -37,7 +41,7 @@ import static org.backend.mdxmaps.Services.UtilService.validRouteObjectToLatLngT
 public final class MultiLevelSLOCalculator {
 
     public static Multimap<Double, ArrayList<ArrayList<LatLng>>> performMultiLevelSLO(RoutingObjects startObject, RoutingObjects destObject, MOT modeOfTravel,
-                                                                                      ObjectTypes startObjectType, ObjectTypes endObjectType) {
+                                                                                      ObjectType startObjectType, ObjectType endObjectType) {
 
         ArrayList<ArrayList<ArrayList<LatLng>>> allRoutes = new ArrayList<>();
         RoutingObjects currentEDConnector;
@@ -46,18 +50,15 @@ public final class MultiLevelSLOCalculator {
         ArrayList<ArrayList<RoutingObjects>> validRoutesObjects;
         ArrayList<ArrayList<LatLng>> validRoutesLatLng;
 
-        String temp = "stairs";
-        if (modeOfTravel != STAIRS) {
-            temp = "elevators";
-        }
+        ObjectType type = modeOfTravel != STAIRS ? ELEVATOR : STAIR;
 
         ArrayList<RoutingObjects> destinationEDConnectors =
-                filterConnectorObjectsByType(new RoutingObjects().getConnectors(destObject.getBuilding(), destObject.getActualLevel()),
-                        temp);
+                filterConnectorObjectsByType(getConnectors(destObject.getBuilding(), destObject.getActualLevel()),
+                        type);
 
         ArrayList<RoutingObjects> startEDConnectors =
-                (ArrayList<RoutingObjects>) filterConnectorObjectsByType(new RoutingObjects().getConnectors(building,
-                        startObject.getActualLevel()), temp).stream()
+                (ArrayList<RoutingObjects>) filterConnectorObjectsByType(getConnectors(building,
+                        startObject.getActualLevel()), type).stream()
                         .filter(startEDObject -> checkIfEDIsValid(destinationEDConnectors, startEDObject.getName()))
                         .collect(toList());
 
@@ -79,8 +80,8 @@ public final class MultiLevelSLOCalculator {
                         allRoutes.get(i).get(j).add(currentEDConnector.getLatLng());
                     } else {
                         ArrayList<RoutingObjects> basicConnectorObjects =
-                                filterConnectorObjectsByType(new RoutingObjects().getConnectors(building, startObject.getActualLevel()),
-                                        "Basic Connector");
+                                filterConnectorObjectsByType(getConnectors(building, startObject.getActualLevel()),
+                                        BASIC_CONNECTOR);
 
                         if (startObjectType == ROOM) {
                             validRoutesStrings = new IndoorAlgorithm().sameLevelOp(
@@ -142,8 +143,8 @@ public final class MultiLevelSLOCalculator {
                     } else {
 
                         ArrayList<RoutingObjects> basicConnectorObjects =
-                                filterConnectorObjectsByType(new RoutingObjects().getConnectors(building, destObject.getActualLevel()),
-                                        "Basic Connector");
+                                filterConnectorObjectsByType(getConnectors(building, destObject.getActualLevel()),
+                                        BASIC_CONNECTOR);
 
                         validRoutesStrings = new IndoorAlgorithm().sameLevelOp(
                                 getSameLanesBCForConnetorObject(basicConnectorObjects, currentEDConnector),
@@ -198,7 +199,7 @@ public final class MultiLevelSLOCalculator {
      *
      * @param destLevelEDPoints list of available ED points on destination level
      * @param edName            current start ED point
-     * @return
+     * @return boolean
      */
     private static boolean checkIfEDIsValid(ArrayList<RoutingObjects> destLevelEDPoints, String edName) {
         return destLevelEDPoints.parallelStream()

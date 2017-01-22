@@ -1,6 +1,7 @@
-package org.backend.mdxmaps.Model;
+package org.backend.mdxmaps.Model.ResponseObjects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.backend.mdxmaps.Model.LatLng;
 
 import java.util.ArrayList;
 

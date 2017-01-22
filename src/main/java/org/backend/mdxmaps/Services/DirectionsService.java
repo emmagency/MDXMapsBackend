@@ -1,7 +1,7 @@
 package org.backend.mdxmaps.Services;
 
 import org.backend.mdxmaps.Model.Enums.MOT;
-import org.backend.mdxmaps.Model.MainResponseObject;
+import org.backend.mdxmaps.Model.ResponseObjects.MainResponseObject;
 import org.backend.mdxmaps.Model.RouteCalculation;
 import org.backend.mdxmaps.Model.RoutingObjects;
 

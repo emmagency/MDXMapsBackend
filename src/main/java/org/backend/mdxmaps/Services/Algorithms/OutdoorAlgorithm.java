@@ -5,6 +5,7 @@ import org.backend.mdxmaps.Model.RoutingObjects;
 
 import java.util.ArrayList;
 
+import static org.backend.mdxmaps.Model.RoutingObjects.getOutsideConnectors;
 import static org.backend.mdxmaps.Services.UtilService.calculateDistance;
 
 /**
@@ -28,8 +29,7 @@ public class OutdoorAlgorithm {
 
     //ToDO Switch to static method and rename
     public ArrayList<ArrayList<String>> sameLevelOp(String startConnector, String destinationConnector, boolean wheelchair) {
-        //Log.d("Gency", "Start: "+startConnector+" to "+destinationConnector);
-        allOutdoorConnectors = new RoutingObjects().getConnectors("Outside", 0);
+        allOutdoorConnectors = getOutsideConnectors();
         previouslyUsedConnectors = new ArrayList<>();
         this.wheelchair = wheelchair;
         this.startConnector = startConnector;
@@ -39,8 +39,6 @@ public class OutdoorAlgorithm {
         destinationPoint = getConnectorObjectFromName(destinationConnector).getLatLng();
 
         CAQ.add(startConnector);
-//        int restart = 0;
-//        int drop = 0;
 
         acceptedDistanceFromLine =
                 calculateDistance(startPoint.latitude, startPoint.longitude, destinationPoint.latitude, destinationPoint.longitude) < 60 ?

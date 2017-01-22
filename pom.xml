@@ -51,19 +51,19 @@
             <version>${mockito.version}</version>
         </dependency>
 
-        <!--<dependency>-->
-        <!--<groupId>org.powermock</groupId>-->
-        <!--<artifactId>powermock-module-junit4-legacy</artifactId>-->
-        <!--<version>${powermock.version}</version>-->
-        <!--<scope>test</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4-legacy</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-        <!--<dependency>-->
-        <!--<groupId>org.powermock</groupId>-->
-        <!--<artifactId>powermock-api-mockito2</artifactId>-->
-        <!--<version>${powermock.version}</version>-->
-        <!--<scope>test</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
     <build>
@@ -96,7 +96,7 @@
         <jackson.version>2.22.1</jackson.version>
         <google.guava.version>21.0-rc1</google.guava.version>
         <junit.version>4.12</junit.version>
-        <mockito.version>2.4.3</mockito.version>
+        <mockito.version>2.0.42-beta</mockito.version>
         <project.build.sourceEndcoding>UTF-8</project.build.sourceEndcoding>
         <powermock.version>1.6.6</powermock.version>
     </properties>

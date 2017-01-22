@@ -1,4 +1,4 @@
-package org.backend.mdxmaps.Services;
+package org.backend.mdxmaps.Services.RouteCalculators;
 
 
 import com.google.common.collect.Multimap;
@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import static org.backend.mdxmaps.Model.Enums.MOT.DISABLED;
+import static org.backend.mdxmaps.Model.Enums.ObjectType.BASIC_CONNECTOR;
 import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getAllPrimes;
+import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getConnectors;
 import static org.backend.mdxmaps.Services.UtilService.calculateMultipleRoutesDistanceAndSort;
 import static org.backend.mdxmaps.Services.UtilService.filterConnectorObjectsByType;
 import static org.backend.mdxmaps.Services.UtilService.plugInStartAndEndObjects;
@@ -31,8 +33,8 @@ public final class SingleLevelSLOCalculator {
 
         //Get the actual connector objects and filter objects by type
         ArrayList<RoutingObjects> connectorObjects =
-                filterConnectorObjectsByType(new RoutingObjects().getConnectors(start.getBuilding(),
-                        start.getActualLevel()), "Basic Connector");
+                filterConnectorObjectsByType(getConnectors(start.getBuilding(),
+                        start.getActualLevel()), BASIC_CONNECTOR);
 
         //Run algorithm
         ArrayList<ArrayList<String>> validRoutes = new IndoorAlgorithm().sameLevelOp(
