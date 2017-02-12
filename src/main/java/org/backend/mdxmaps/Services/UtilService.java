@@ -6,49 +6,24 @@ package org.backend.mdxmaps.Services;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
-import org.backend.mdxmaps.Model.Enums.ObjectType;
 import org.backend.mdxmaps.Model.LatLng;
 import org.backend.mdxmaps.Model.RoutingObjects;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
+import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getRequiredConnectorObjectsForRoutes;
 
 /**
- * Provides helper methods to carry out trivial operations such as calculations, filtering, sorting, etc.
+ * Provides helper methods to carry out trivial operations such as calculations, object transformation, etc.
  */
 
 public final class UtilService {
 
     private UtilService() {
-    }
-
-    /**
-     * Method to filter connector objects by connector type
-     *
-     * @param connectors Arraylist of connecters to filter
-     * @param type       Connector type we want
-     * @return The filtered list.
-     */
-    public static ArrayList<RoutingObjects> filterConnectorObjectsByType(ArrayList<RoutingObjects> connectors, ObjectType type) {
-        return (ArrayList<RoutingObjects>) connectors.parallelStream()
-                .filter(connector -> connector.getType() == type)
-                .collect(toList());
-    }
-
-    public static ArrayList<ArrayList<RoutingObjects>> removeNonDisabledRoutes(ArrayList<ArrayList<RoutingObjects>> validRoutes) {
-        return (ArrayList<ArrayList<RoutingObjects>>) validRoutes.parallelStream()
-                .filter(route -> route.parallelStream()
-                        .noneMatch(connectorObject -> connectorObject.getIsWheelChairAccessible().equals("N")))
-                .collect(toList());
-    }
-
-    public static ArrayList<RoutingObjects> removeNonDisabledObjects(ArrayList<RoutingObjects> objects) {
-        return (ArrayList<RoutingObjects>) objects.parallelStream()
-                .filter(object -> !object.getIsWheelChairAccessible().equals("N"))
-                .collect(toList());
     }
 
     /**
@@ -72,6 +47,12 @@ public final class UtilService {
         return multimap;
     }
 
+    public static Double calculateOutsideRouteDistance(ArrayList<ArrayList<ArrayList<LatLng>>> route) {
+        return IntStream.range(0, route.size())
+                .mapToDouble(i -> calculateSingleRouteDistance(route.get(i)))
+                .sum();
+    }
+
     public static double calculateSingleRouteDistance(ArrayList<ArrayList<LatLng>> route) {
         return route.stream()
                 .mapToDouble(singleRoute -> IntStream.range(0, singleRoute.size() - 1)
@@ -85,33 +66,21 @@ public final class UtilService {
 
     public static ArrayList<ArrayList<RoutingObjects>> transformValidRoutesStringToObjects(ArrayList<ArrayList<String>> validRoutes,
                                                                                            ArrayList<RoutingObjects> connectorObjects) {
-        ArrayList<String> requiredConnectors = new ArrayList<>();
 
-        validRoutes.forEach(stringsArrayList -> stringsArrayList.forEach(string -> {
-            if (!requiredConnectors.contains(string)) {
-                requiredConnectors.add(string);
-            }
-        }));
-
-        ArrayList<RoutingObjects> requiredConnectorsObjects =
-                (ArrayList<RoutingObjects>) requiredConnectors.stream()
-                        .map(string -> connectorObjects.stream()
-                                .filter(connectorObject -> connectorObject.getName().equals(string))
-                                .findFirst().get())
-                        .collect(toList());
-
+        ArrayList<RoutingObjects> requiredConnectorsObjects = getRequiredConnectorObjectsForRoutes(validRoutes, connectorObjects);
 
         return (ArrayList<ArrayList<RoutingObjects>>) validRoutes.stream()
                 .map(stringRoute -> (ArrayList<RoutingObjects>) stringRoute.stream()
                         .map(string -> requiredConnectorsObjects.stream()
                                 .filter(connectorObject -> connectorObject.getName().equals(string))
-                                .findFirst().get())
+                                .findFirst().orElse(null))
+                        .filter(Objects::nonNull)
                         .collect(toList()))
                 .collect(toList());
 
     }
 
-    public static Function<ArrayList<RoutingObjects>, ArrayList<LatLng>> validRouteObjectToLatLngTransformer() {
+    public static Function<ArrayList<RoutingObjects>, ArrayList<LatLng>> validRouteObjectsToLatLngTransformer() {
         return validRoute -> (ArrayList<LatLng>) validRoute.stream()
                 .map(RoutingObjects::getLatLng)
                 .collect(toList());

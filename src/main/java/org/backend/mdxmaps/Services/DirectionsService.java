@@ -1,8 +1,8 @@
 package org.backend.mdxmaps.Services;
 
 import org.backend.mdxmaps.Model.Enums.MOT;
+import org.backend.mdxmaps.Model.OperationFactory;
 import org.backend.mdxmaps.Model.ResponseObjects.MainResponseObject;
-import org.backend.mdxmaps.Model.RouteCalculation;
 import org.backend.mdxmaps.Model.RoutingObjects;
 
 import java.util.concurrent.Callable;
@@ -78,7 +78,7 @@ public class DirectionsService implements Callable {
         }
 
         //Everything checked out, let's do some calculations!
-        ResponseService result = ((RouteCalculation) resolveOPType.getEntity()).getRoute();
+        ResponseService result = ((OperationFactory) resolveOPType.getEntity()).getRoute();
 
         if (resolveOPType.getStatus() == INFO && result.getEntity() != null) {
             ((MainResponseObject) result.getEntity()).setStatus(INFO);

@@ -6,17 +6,19 @@ import org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 
 import static org.backend.mdxmaps.Model.Enums.ObjectType.BASIC_CONNECTOR;
 import static org.backend.mdxmaps.Model.Enums.ObjectType.DOOR;
 import static org.backend.mdxmaps.Model.Enums.ObjectType.ELEVATOR;
+import static org.backend.mdxmaps.Model.Enums.ObjectType.ROOM;
 import static org.backend.mdxmaps.Model.Enums.ObjectType.STAIR;
 
 /**
  * Created by Emmanuel Keboh on 27/11/2016.
  */
 
-public class RoutingObjects {
+public class RoutingObjects implements Comparable<RoutingObjects> {
 
     //Connectors, room and buildings attribute
     String name;
@@ -44,7 +46,7 @@ public class RoutingObjects {
 
     /*Buildings*/
     public final static String COLLEGE = "College Building";
-    public final static String HATHCROFT = "Hathcroft Building";
+    public final static String HATHCROFT = "Hatchcroft Building";
     public final static String WILLIAMS = "Williams Building";
     public final static String SHEPPARDLIBRARY = "Sheppard Library";
     public final static String CIRCLE_CAFE = "Circle Cafe";
@@ -60,9 +62,6 @@ public class RoutingObjects {
     public final static String GROVE_BLOCK_B = "Grove Block B";
     public final static String GROVE_BLOCK_C = "Grove Block C";
     public final static String VINE = "The Vine";
-    private final static String OUTSIDE = "Outside";
-
-    //TODO Create constructor for outside connectors removing primeLanes, gMap and actual levels
 
     //Constructor for connectors, stairs, elevators & doors
     public RoutingObjects(String name, ObjectType type, int[] primeLanes, int gMapLevel,
@@ -87,8 +86,9 @@ public class RoutingObjects {
     }
 
     //Constructor for Rooms
-    public RoutingObjects(String name, int lane, String building, int gMapLevel, int actualLevel, LatLng latLng, String[] laneConnectors) {
+    public RoutingObjects(String name, ObjectType type, int lane, String building, int gMapLevel, int actualLevel, LatLng latLng, String[] laneConnectors) {
         this.name = name;
+        this.type = type;
         this.lane = lane;
         this.building = building;
         this.gMapLevel = gMapLevel;
@@ -939,513 +939,513 @@ public class RoutingObjects {
         ArrayList<RoutingObjects> list = new ArrayList<>();
 
         //College Ground Floor
-        list.add(new RoutingObjects("College Building", 2, COLLEGE, 2, 0, new LatLng(51.589825, -0.228839), new String[]{"O", "Q", "S", "W"}));
-        list.add(new RoutingObjects("Quad", 2, COLLEGE, 2, 0, new LatLng(51.589825, -0.228839), new String[]{"O", "Q", "S", "W"}));
-        list.add(new RoutingObjects("CG03", 3, COLLEGE, 2, 0, new LatLng(51.589594, -0.228487), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
-        list.add(new RoutingObjects("CG04", 3, COLLEGE, 2, 0, new LatLng(51.589605, -0.228577), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
-        list.add(new RoutingObjects("CG06", 3, COLLEGE, 2, 0, new LatLng(51.589614, -0.228666), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
-        list.add(new RoutingObjects("CG07", 3, COLLEGE, 2, 0, new LatLng(51.589618, -0.228698), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
-        list.add(new RoutingObjects("CG08", 3, COLLEGE, 2, 0, new LatLng(51.589633, -0.228832), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
-        list.add(new RoutingObjects("CG09", 3, COLLEGE, 2, 0, new LatLng(51.589643, -0.228925), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
-        list.add(new RoutingObjects("CG10", 3, COLLEGE, 2, 0, new LatLng(51.589653, -0.229011), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
-        list.add(new RoutingObjects("CG11", 3, COLLEGE, 2, 0, new LatLng(51.589658, -0.229049), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
-        list.add(new RoutingObjects("CG12A", 3, COLLEGE, 2, 0, new LatLng(51.589678, -0.229225), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
-        list.add(new RoutingObjects("CG12B", 3, COLLEGE, 2, 0, new LatLng(51.589682, -0.229284), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
-        list.add(new RoutingObjects("CG13", 3, COLLEGE, 2, 0, new LatLng(51.589705, -0.229462), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
-        list.add(new RoutingObjects("CG14", 3, COLLEGE, 2, 0, new LatLng(51.589719, -0.229596), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
-        list.add(new RoutingObjects("CG15", 3, COLLEGE, 2, 0, new LatLng(51.589678, -0.229225), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
-        list.add(new RoutingObjects("CG16", 9, COLLEGE, 2, 0, new LatLng(51.589763, -0.229446), new String[]{"K", "L"}));
-        list.add(new RoutingObjects("CG30", 17, COLLEGE, 2, 0, new LatLng(51.589753, -0.229059), new String[]{"W", "X"}));
-        list.add(new RoutingObjects("CG36", 16, COLLEGE, 2, 0, new LatLng(51.589957, -0.228998), new String[]{"W", "V"}));
-        list.add(new RoutingObjects("CG37", 16, COLLEGE, 2, 0, new LatLng(51.589920, -0.229009), new String[]{"W", "V"}));
-        list.add(new RoutingObjects("CG41", 1, COLLEGE, 2, 0, new LatLng(51.590062, -0.229314), new String[]{"C", "D", "B", "A", "E", "V", "Z"}));
-        list.add(new RoutingObjects("CG43", 1, COLLEGE, 2, 0, new LatLng(51.590052, -0.229228), new String[]{"C", "D", "B", "A", "E", "V", "Z"}));
-        list.add(new RoutingObjects("CG45", 1, COLLEGE, 2, 0, new LatLng(51.590043, -0.229142), new String[]{"C", "D", "B", "A", "E", "V", "Z"}));
-        list.add(new RoutingObjects("CG47", 1, COLLEGE, 2, 0, new LatLng(51.590003, -0.228806), new String[]{"C", "D", "B", "A", "E", "V", "Z"}));
-        list.add(new RoutingObjects("CG48", 1, COLLEGE, 2, 0, new LatLng(51.589984, -0.228639), new String[]{"B", "C", "D", "A", "E", "V", "Z"}));
-        list.add(new RoutingObjects("CG49", 1, COLLEGE, 2, 0, new LatLng(51.589974, -0.228544), new String[]{"B", "C", "D", "A", "E", "V", "Z"}));
-        list.add(new RoutingObjects("CG51", 1, COLLEGE, 2, 0, new LatLng(51.589964, -0.228452), new String[]{"B", "C", "D", "A", "E", "V", "Z"}));
+        list.add(new RoutingObjects("College Building", ROOM, 2, COLLEGE, 2, 0, new LatLng(51.589825, -0.228839), new String[]{"O", "Q", "S", "W"}));
+        list.add(new RoutingObjects("Quad", ROOM, 2, COLLEGE, 2, 0, new LatLng(51.589825, -0.228839), new String[]{"O", "Q", "S", "W"}));
+        list.add(new RoutingObjects("CG03", ROOM, 3, COLLEGE, 2, 0, new LatLng(51.589594, -0.228487), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
+        list.add(new RoutingObjects("CG04", ROOM, 3, COLLEGE, 2, 0, new LatLng(51.589605, -0.228577), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
+        list.add(new RoutingObjects("CG06", ROOM, 3, COLLEGE, 2, 0, new LatLng(51.589614, -0.228666), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
+        list.add(new RoutingObjects("CG07", ROOM, 3, COLLEGE, 2, 0, new LatLng(51.589618, -0.228698), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
+        list.add(new RoutingObjects("CG08", ROOM, 3, COLLEGE, 2, 0, new LatLng(51.589633, -0.228832), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
+        list.add(new RoutingObjects("CG09", ROOM, 3, COLLEGE, 2, 0, new LatLng(51.589643, -0.228925), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
+        list.add(new RoutingObjects("CG10", ROOM, 3, COLLEGE, 2, 0, new LatLng(51.589653, -0.229011), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
+        list.add(new RoutingObjects("CG11", ROOM, 3, COLLEGE, 2, 0, new LatLng(51.589658, -0.229049), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
+        list.add(new RoutingObjects("CG12A", ROOM, 3, COLLEGE, 2, 0, new LatLng(51.589678, -0.229225), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
+        list.add(new RoutingObjects("CG12B", ROOM, 3, COLLEGE, 2, 0, new LatLng(51.589682, -0.229284), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
+        list.add(new RoutingObjects("CG13", ROOM, 3, COLLEGE, 2, 0, new LatLng(51.589705, -0.229462), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
+        list.add(new RoutingObjects("CG14", ROOM, 3, COLLEGE, 2, 0, new LatLng(51.589719, -0.229596), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
+        list.add(new RoutingObjects("CG15", ROOM, 3, COLLEGE, 2, 0, new LatLng(51.589678, -0.229225), new String[]{"R", "P", "T", "N", "K", "X", "Y"}));
+        list.add(new RoutingObjects("CG16", ROOM, 9, COLLEGE, 2, 0, new LatLng(51.589763, -0.229446), new String[]{"K", "L"}));
+        list.add(new RoutingObjects("CG30", ROOM, 17, COLLEGE, 2, 0, new LatLng(51.589753, -0.229059), new String[]{"W", "X"}));
+        list.add(new RoutingObjects("CG36", ROOM, 16, COLLEGE, 2, 0, new LatLng(51.589957, -0.228998), new String[]{"W", "V"}));
+        list.add(new RoutingObjects("CG37", ROOM, 16, COLLEGE, 2, 0, new LatLng(51.589920, -0.229009), new String[]{"W", "V"}));
+        list.add(new RoutingObjects("CG41", ROOM, 1, COLLEGE, 2, 0, new LatLng(51.590062, -0.229314), new String[]{"C", "D", "B", "A", "E", "V", "Z"}));
+        list.add(new RoutingObjects("CG43", ROOM, 1, COLLEGE, 2, 0, new LatLng(51.590052, -0.229228), new String[]{"C", "D", "B", "A", "E", "V", "Z"}));
+        list.add(new RoutingObjects("CG45", ROOM, 1, COLLEGE, 2, 0, new LatLng(51.590043, -0.229142), new String[]{"C", "D", "B", "A", "E", "V", "Z"}));
+        list.add(new RoutingObjects("CG47", ROOM, 1, COLLEGE, 2, 0, new LatLng(51.590003, -0.228806), new String[]{"C", "D", "B", "A", "E", "V", "Z"}));
+        list.add(new RoutingObjects("CG48", ROOM, 1, COLLEGE, 2, 0, new LatLng(51.589984, -0.228639), new String[]{"B", "C", "D", "A", "E", "V", "Z"}));
+        list.add(new RoutingObjects("CG49", ROOM, 1, COLLEGE, 2, 0, new LatLng(51.589974, -0.228544), new String[]{"B", "C", "D", "A", "E", "V", "Z"}));
+        list.add(new RoutingObjects("CG51", ROOM, 1, COLLEGE, 2, 0, new LatLng(51.589964, -0.228452), new String[]{"B", "C", "D", "A", "E", "V", "Z"}));
 
-        list.add(new RoutingObjects("CG60", 8, COLLEGE, 2, 0, new LatLng(51.589930, -0.229445), new String[]{"J", "G"}));
-        list.add(new RoutingObjects("CG62", 1, COLLEGE, 2, 0, new LatLng(51.590062, -0.229314), new String[]{"C", "D", "B", "A", "E", "V", "Z"}));
-        list.add(new RoutingObjects("CG62 (Disabled)", 8, COLLEGE, 2, 0, new LatLng(51.589925, -0.229401), new String[]{"J", "G"}));
-        list.add(new RoutingObjects("CG76", 6, COLLEGE, 2, 0, new LatLng(51.589921, -0.229081), new String[]{"D", "O", "N"}));
-        list.add(new RoutingObjects("CG77", 6, COLLEGE, 2, 0, new LatLng(51.589864, -0.229097), new String[]{"O", "N", "D"}));
-        list.add(new RoutingObjects("Costa", 5, COLLEGE, 2, 0, new LatLng(51.589755, -0.228960), new String[]{"P", "Q", "C"}));
+        list.add(new RoutingObjects("CG60", ROOM, 8, COLLEGE, 2, 0, new LatLng(51.589930, -0.229445), new String[]{"J", "G"}));
+        list.add(new RoutingObjects("CG62", ROOM, 1, COLLEGE, 2, 0, new LatLng(51.590062, -0.229314), new String[]{"C", "D", "B", "A", "E", "V", "Z"}));
+        list.add(new RoutingObjects("CG62 (Disabled)", ROOM, 8, COLLEGE, 2, 0, new LatLng(51.589925, -0.229401), new String[]{"J", "G"}));
+        list.add(new RoutingObjects("CG76", ROOM, 6, COLLEGE, 2, 0, new LatLng(51.589921, -0.229081), new String[]{"D", "O", "N"}));
+        list.add(new RoutingObjects("CG77", ROOM, 6, COLLEGE, 2, 0, new LatLng(51.589864, -0.229097), new String[]{"O", "N", "D"}));
+        list.add(new RoutingObjects("Costa", ROOM, 5, COLLEGE, 2, 0, new LatLng(51.589755, -0.228960), new String[]{"P", "Q", "C"}));
 
 
         //College First Floor
-        list.add(new RoutingObjects("C101", 3, COLLEGE, 1, 1, new LatLng(51.589676, -0.228350), new String[]{"G", "A"}));
-        list.add(new RoutingObjects("C104", 2, COLLEGE, 1, 1, new LatLng(51.589593, -0.228483), new String[]{"G", "H", "J", "K", "E"}));
-        list.add(new RoutingObjects("C105", 2, COLLEGE, 1, 1, new LatLng(51.589597, -0.228529), new String[]{"G", "H", "J", "K", "E"}));
-        list.add(new RoutingObjects("C106", 2, COLLEGE, 1, 1, new LatLng(51.589615, -0.228697), new String[]{"G", "H", "J", "K", "E"}));
-        list.add(new RoutingObjects("C107", 2, COLLEGE, 1, 1, new LatLng(51.589643, -0.228925), new String[]{"G", "H", "J", "K", "E"}));
-        list.add(new RoutingObjects("C109", 2, COLLEGE, 1, 1, new LatLng(51.589653, -0.229016), new String[]{"G", "H", "J", "K", "E"}));
-        list.add(new RoutingObjects("C110", 2, COLLEGE, 1, 1, new LatLng(51.589685, -0.229287), new String[]{"G", "H", "J", "K", "E"}));
-        list.add(new RoutingObjects("C111", 2, COLLEGE, 1, 1, new LatLng(51.589689, -0.229335), new String[]{"G", "H", "J", "K", "E"}));
-        list.add(new RoutingObjects("C113", 2, COLLEGE, 1, 1, new LatLng(51.589703, -0.229463), new String[]{"G", "H", "J", "K", "E"}));
-        list.add(new RoutingObjects("C114", 2, COLLEGE, 1, 1, new LatLng(51.589659, -0.229051), new String[]{"G", "H", "J", "K", "E"}));
-        list.add(new RoutingObjects("C115", 1, COLLEGE, 1, 1, new LatLng(51.590018, -0.228946), new String[]{"A", "B", "C", "N", "O"}));
-        list.add(new RoutingObjects("C117", 11, COLLEGE, 1, 1, new LatLng(51.589771, -0.229396), new String[]{"E", "P"}));
-        list.add(new RoutingObjects("C118", 11, COLLEGE, 1, 1, new LatLng(51.589793, -0.229392), new String[]{"E", "P"}));
-        list.add(new RoutingObjects("C120", 11, COLLEGE, 1, 1, new LatLng(51.589906, -0.229359), new String[]{"E", "P"}));
-        list.add(new RoutingObjects("C121", 12, COLLEGE, 1, 1, new LatLng(51.590037, -0.229370), new String[]{"P", "Q"}));
-        list.add(new RoutingObjects("C122", 1, COLLEGE, 1, 1, new LatLng(51.590066, -0.229359), new String[]{"A", "B", "C", "N", "O"}));
-        list.add(new RoutingObjects("C126", 1, COLLEGE, 1, 1, new LatLng(51.590062, -0.229321), new String[]{"A", "B", "C", "N", "O"}));
-        list.add(new RoutingObjects("C127", 1, COLLEGE, 1, 1, new LatLng(51.590048, -0.229176), new String[]{"A", "B", "C", "N", "O"}));
-        list.add(new RoutingObjects("C128", 1, COLLEGE, 1, 1, new LatLng(51.590044, -0.229137), new String[]{"A", "B", "C", "N", "O"}));
-        list.add(new RoutingObjects("C131", 1, COLLEGE, 1, 1, new LatLng(51.590011, -0.228863), new String[]{"A", "B", "C", "N", "O"}));
-        list.add(new RoutingObjects("C132", 1, COLLEGE, 1, 1, new LatLng(51.590001, -0.228770), new String[]{"A", "B", "C", "N", "O"}));
-        list.add(new RoutingObjects("C135", 1, COLLEGE, 1, 1, new LatLng(51.589966, -0.228461), new String[]{"A", "B", "C", "N", "O"}));
-        list.add(new RoutingObjects("C136", 1, COLLEGE, 1, 1, new LatLng(51.589951, -0.228320), new String[]{"A", "B", "C", "N", "O"}));
-        list.add(new RoutingObjects("C138", 3, COLLEGE, 1, 1, new LatLng(51.589849, -0.228304), new String[]{"G", "A"}));
+        list.add(new RoutingObjects("C101", ROOM, 3, COLLEGE, 1, 1, new LatLng(51.589676, -0.228350), new String[]{"G", "A"}));
+        list.add(new RoutingObjects("C104", ROOM, 2, COLLEGE, 1, 1, new LatLng(51.589593, -0.228483), new String[]{"G", "H", "J", "K", "E"}));
+        list.add(new RoutingObjects("C105", ROOM, 2, COLLEGE, 1, 1, new LatLng(51.589597, -0.228529), new String[]{"G", "H", "J", "K", "E"}));
+        list.add(new RoutingObjects("C106", ROOM, 2, COLLEGE, 1, 1, new LatLng(51.589615, -0.228697), new String[]{"G", "H", "J", "K", "E"}));
+        list.add(new RoutingObjects("C107", ROOM, 2, COLLEGE, 1, 1, new LatLng(51.589643, -0.228925), new String[]{"G", "H", "J", "K", "E"}));
+        list.add(new RoutingObjects("C109", ROOM, 2, COLLEGE, 1, 1, new LatLng(51.589653, -0.229016), new String[]{"G", "H", "J", "K", "E"}));
+        list.add(new RoutingObjects("C110", ROOM, 2, COLLEGE, 1, 1, new LatLng(51.589685, -0.229287), new String[]{"G", "H", "J", "K", "E"}));
+        list.add(new RoutingObjects("C111", ROOM, 2, COLLEGE, 1, 1, new LatLng(51.589689, -0.229335), new String[]{"G", "H", "J", "K", "E"}));
+        list.add(new RoutingObjects("C113", ROOM, 2, COLLEGE, 1, 1, new LatLng(51.589703, -0.229463), new String[]{"G", "H", "J", "K", "E"}));
+        list.add(new RoutingObjects("C114", ROOM, 2, COLLEGE, 1, 1, new LatLng(51.589659, -0.229051), new String[]{"G", "H", "J", "K", "E"}));
+        list.add(new RoutingObjects("C115", ROOM, 1, COLLEGE, 1, 1, new LatLng(51.590018, -0.228946), new String[]{"A", "B", "C", "N", "O"}));
+        list.add(new RoutingObjects("C117", ROOM, 11, COLLEGE, 1, 1, new LatLng(51.589771, -0.229396), new String[]{"E", "P"}));
+        list.add(new RoutingObjects("C118", ROOM, 11, COLLEGE, 1, 1, new LatLng(51.589793, -0.229392), new String[]{"E", "P"}));
+        list.add(new RoutingObjects("C120", ROOM, 11, COLLEGE, 1, 1, new LatLng(51.589906, -0.229359), new String[]{"E", "P"}));
+        list.add(new RoutingObjects("C121", ROOM, 12, COLLEGE, 1, 1, new LatLng(51.590037, -0.229370), new String[]{"P", "Q"}));
+        list.add(new RoutingObjects("C122", ROOM, 1, COLLEGE, 1, 1, new LatLng(51.590066, -0.229359), new String[]{"A", "B", "C", "N", "O"}));
+        list.add(new RoutingObjects("C126", ROOM, 1, COLLEGE, 1, 1, new LatLng(51.590062, -0.229321), new String[]{"A", "B", "C", "N", "O"}));
+        list.add(new RoutingObjects("C127", ROOM, 1, COLLEGE, 1, 1, new LatLng(51.590048, -0.229176), new String[]{"A", "B", "C", "N", "O"}));
+        list.add(new RoutingObjects("C128", ROOM, 1, COLLEGE, 1, 1, new LatLng(51.590044, -0.229137), new String[]{"A", "B", "C", "N", "O"}));
+        list.add(new RoutingObjects("C131", ROOM, 1, COLLEGE, 1, 1, new LatLng(51.590011, -0.228863), new String[]{"A", "B", "C", "N", "O"}));
+        list.add(new RoutingObjects("C132", ROOM, 1, COLLEGE, 1, 1, new LatLng(51.590001, -0.228770), new String[]{"A", "B", "C", "N", "O"}));
+        list.add(new RoutingObjects("C135", ROOM, 1, COLLEGE, 1, 1, new LatLng(51.589966, -0.228461), new String[]{"A", "B", "C", "N", "O"}));
+        list.add(new RoutingObjects("C136", ROOM, 1, COLLEGE, 1, 1, new LatLng(51.589951, -0.228320), new String[]{"A", "B", "C", "N", "O"}));
+        list.add(new RoutingObjects("C138", ROOM, 3, COLLEGE, 1, 1, new LatLng(51.589849, -0.228304), new String[]{"G", "A"}));
 
         //College Second Floor
-        list.add(new RoutingObjects("C204", 2, COLLEGE, 0, 2, new LatLng(51.589597, -0.228527), new String[]{"A", "B", "C", "D", "F"}));
-        list.add(new RoutingObjects("C205", 2, COLLEGE, 0, 2, new LatLng(51.589614, -0.228658), new String[]{"A", "B", "C", "D", "F"}));
-        list.add(new RoutingObjects("C206", 2, COLLEGE, 0, 2, new LatLng(51.589618, -0.228699), new String[]{"A", "B", "C", "D", "F"}));
-        list.add(new RoutingObjects("C207", 2, COLLEGE, 0, 2, new LatLng(51.589641, -0.228921), new String[]{"A", "B", "C", "D", "F"}));
-        list.add(new RoutingObjects("C208", 2, COLLEGE, 0, 2, new LatLng(51.589652, -0.229013), new String[]{"A", "B", "C", "D", "F"}));
-        list.add(new RoutingObjects("C210", 6, COLLEGE, 0, 2, new LatLng(51.589693, -0.229043), new String[]{"D", "G"}));
-        list.add(new RoutingObjects("C211", 11, COLLEGE, 0, 2, new LatLng(51.590017, -0.228938), new String[]{"K", "L", "M"}));
-        list.add(new RoutingObjects("C212", 10, COLLEGE, 0, 2, new LatLng(51.589702, -0.229186), new String[]{"F", "J", "K"}));
-        list.add(new RoutingObjects("C213A", 10, COLLEGE, 0, 2, new LatLng(51.589785, -0.229163), new String[]{"F", "J", "K"}));
-        list.add(new RoutingObjects("C213B", 10, COLLEGE, 0, 2, new LatLng(51.589812, -0.229153), new String[]{"F", "J", "K"}));
-        list.add(new RoutingObjects("C214", 10, COLLEGE, 0, 2, new LatLng(51.589903, -0.229131), new String[]{"F", "J", "K"}));
-        list.add(new RoutingObjects("C215", 10, COLLEGE, 0, 2, new LatLng(51.589957, -0.229114), new String[]{"F", "J", "K"}));
-        list.add(new RoutingObjects("C216B", 10, COLLEGE, 0, 2, new LatLng(51.589989, -0.229107), new String[]{"F", "J", "K"}));
-        list.add(new RoutingObjects("C217", 11, COLLEGE, 0, 2, new LatLng(51.590015, -0.228898), new String[]{"K", "L", "M"}));
-        list.add(new RoutingObjects("C218", 11, COLLEGE, 0, 2, new LatLng(51.590012, -0.228858), new String[]{"K", "L", "M"}));
+        list.add(new RoutingObjects("C204", ROOM, 2, COLLEGE, 0, 2, new LatLng(51.589597, -0.228527), new String[]{"A", "B", "C", "D", "F"}));
+        list.add(new RoutingObjects("C205", ROOM, 2, COLLEGE, 0, 2, new LatLng(51.589614, -0.228658), new String[]{"A", "B", "C", "D", "F"}));
+        list.add(new RoutingObjects("C206", ROOM, 2, COLLEGE, 0, 2, new LatLng(51.589618, -0.228699), new String[]{"A", "B", "C", "D", "F"}));
+        list.add(new RoutingObjects("C207", ROOM, 2, COLLEGE, 0, 2, new LatLng(51.589641, -0.228921), new String[]{"A", "B", "C", "D", "F"}));
+        list.add(new RoutingObjects("C208", ROOM, 2, COLLEGE, 0, 2, new LatLng(51.589652, -0.229013), new String[]{"A", "B", "C", "D", "F"}));
+        list.add(new RoutingObjects("C210", ROOM, 6, COLLEGE, 0, 2, new LatLng(51.589693, -0.229043), new String[]{"D", "G"}));
+        list.add(new RoutingObjects("C211", ROOM, 11, COLLEGE, 0, 2, new LatLng(51.590017, -0.228938), new String[]{"K", "L", "M"}));
+        list.add(new RoutingObjects("C212", ROOM, 10, COLLEGE, 0, 2, new LatLng(51.589702, -0.229186), new String[]{"F", "J", "K"}));
+        list.add(new RoutingObjects("C213A", ROOM, 10, COLLEGE, 0, 2, new LatLng(51.589785, -0.229163), new String[]{"F", "J", "K"}));
+        list.add(new RoutingObjects("C213B", ROOM, 10, COLLEGE, 0, 2, new LatLng(51.589812, -0.229153), new String[]{"F", "J", "K"}));
+        list.add(new RoutingObjects("C214", ROOM, 10, COLLEGE, 0, 2, new LatLng(51.589903, -0.229131), new String[]{"F", "J", "K"}));
+        list.add(new RoutingObjects("C215", ROOM, 10, COLLEGE, 0, 2, new LatLng(51.589957, -0.229114), new String[]{"F", "J", "K"}));
+        list.add(new RoutingObjects("C216B", ROOM, 10, COLLEGE, 0, 2, new LatLng(51.589989, -0.229107), new String[]{"F", "J", "K"}));
+        list.add(new RoutingObjects("C217", ROOM, 11, COLLEGE, 0, 2, new LatLng(51.590015, -0.228898), new String[]{"K", "L", "M"}));
+        list.add(new RoutingObjects("C218", ROOM, 11, COLLEGE, 0, 2, new LatLng(51.590012, -0.228858), new String[]{"K", "L", "M"}));
 
 
         //Williams Ground Floor
-        list.add(new RoutingObjects("Williams Building", 4, WILLIAMS, 1, 0, new LatLng(51.590479, -0.228873), new String[]{"E", "H"}));
-        list.add(new RoutingObjects("Library @ Williams", 3, WILLIAMS, 1, 0, new LatLng(51.590630, -0.228110), new String[]{"C", "B"}));
-        list.add(new RoutingObjects("WG07", 4, WILLIAMS, 1, 0, new LatLng(51.590479, -0.228873), new String[]{"E", "H"}));
-        list.add(new RoutingObjects("WG32", 8, WILLIAMS, 1, 0, new LatLng(51.590511, -0.228757), new String[]{"G", "I"}));
-        list.add(new RoutingObjects("WG33", 5, WILLIAMS, 1, 0, new LatLng(51.590505, -0.228718), new String[]{"G", "E"}));
-        list.add(new RoutingObjects("WG35", 4, WILLIAMS, 1, 0, new LatLng(51.590435, -0.228471), new String[]{"D", "L"}));
-        list.add(new RoutingObjects("WG37", 3, WILLIAMS, 1, 0, new LatLng(51.590417, -0.228166), new String[]{"C", "B"}));
-        list.add(new RoutingObjects("WG38", 3, WILLIAMS, 1, 0, new LatLng(51.590437, -0.228161), new String[]{"C", "B"}));
-        list.add(new RoutingObjects("WG39", 3, WILLIAMS, 1, 0, new LatLng(51.590449, -0.228157), new String[]{"C", "B"}));
-        list.add(new RoutingObjects("WG42", 3, WILLIAMS, 1, 0, new LatLng(51.590535, -0.228132), new String[]{"C", "B"}));
-        list.add(new RoutingObjects("WG44", 3, WILLIAMS, 1, 0, new LatLng(51.590562, -0.228125), new String[]{"C", "B"}));
-        list.add(new RoutingObjects("WG45", 3, WILLIAMS, 1, 0, new LatLng(51.590594, -0.228121), new String[]{"C", "B"}));
-        list.add(new RoutingObjects("WG46", 3, WILLIAMS, 1, 0, new LatLng(51.590621, -0.228117), new String[]{"C", "B"}));
-        list.add(new RoutingObjects("WG47", 1, WILLIAMS, 1, 0, new LatLng(51.590628, -0.228268), new String[]{"A", "J", "M"}));
-        list.add(new RoutingObjects("WG48", 1, WILLIAMS, 1, 0, new LatLng(51.590628, -0.228268), new String[]{"A", "J", "M"}));
-        list.add(new RoutingObjects("WG49", 1, WILLIAMS, 1, 0, new LatLng(51.590652, -0.228263), new String[]{"A", "J", "M"}));
-        list.add(new RoutingObjects("WG50", 1, WILLIAMS, 1, 0, new LatLng(51.590703, -0.228250), new String[]{"A", "J", "M"}));
-        list.add(new RoutingObjects("WG51", 1, WILLIAMS, 1, 0, new LatLng(51.590703, -0.228250), new String[]{"A", "J", "M"}));
+        list.add(new RoutingObjects("Williams Building", ROOM, 4, WILLIAMS, 1, 0, new LatLng(51.590479, -0.228873), new String[]{"E", "H"}));
+        list.add(new RoutingObjects("Library @ Williams", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590630, -0.228110), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("WG07", ROOM, 4, WILLIAMS, 1, 0, new LatLng(51.590479, -0.228873), new String[]{"E", "H"}));
+        list.add(new RoutingObjects("WG32", ROOM, 8, WILLIAMS, 1, 0, new LatLng(51.590511, -0.228757), new String[]{"G", "I"}));
+        list.add(new RoutingObjects("WG33", ROOM, 5, WILLIAMS, 1, 0, new LatLng(51.590505, -0.228718), new String[]{"G", "E"}));
+        list.add(new RoutingObjects("WG35", ROOM, 4, WILLIAMS, 1, 0, new LatLng(51.590435, -0.228471), new String[]{"D", "L"}));
+        list.add(new RoutingObjects("WG37", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590417, -0.228166), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("WG38", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590437, -0.228161), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("WG39", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590449, -0.228157), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("WG42", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590535, -0.228132), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("WG44", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590562, -0.228125), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("WG45", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590594, -0.228121), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("WG46", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590621, -0.228117), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("WG47", ROOM, 1, WILLIAMS, 1, 0, new LatLng(51.590628, -0.228268), new String[]{"A", "J", "M"}));
+        list.add(new RoutingObjects("WG48", ROOM, 1, WILLIAMS, 1, 0, new LatLng(51.590628, -0.228268), new String[]{"A", "J", "M"}));
+        list.add(new RoutingObjects("WG49", ROOM, 1, WILLIAMS, 1, 0, new LatLng(51.590652, -0.228263), new String[]{"A", "J", "M"}));
+        list.add(new RoutingObjects("WG50", ROOM, 1, WILLIAMS, 1, 0, new LatLng(51.590703, -0.228250), new String[]{"A", "J", "M"}));
+        list.add(new RoutingObjects("WG51", ROOM, 1, WILLIAMS, 1, 0, new LatLng(51.590703, -0.228250), new String[]{"A", "J", "M"}));
 
         //Williams First Floor
-        list.add(new RoutingObjects("W142", 5, WILLIAMS, 0, 1, new LatLng(51.590437, -0.228342), new String[]{"E", "F", "D"}));
-        list.add(new RoutingObjects("W143", 4, WILLIAMS, 0, 1, new LatLng(51.590433, -0.228150), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("W144", 4, WILLIAMS, 0, 1, new LatLng(51.590457, -0.228145), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("W145", 4, WILLIAMS, 0, 1, new LatLng(51.590473, -0.228142), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("W147", 4, WILLIAMS, 0, 1, new LatLng(51.590589, -0.228099), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("W148", 1, WILLIAMS, 0, 1, new LatLng(51.590666, -0.228269), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("W149", 1, WILLIAMS, 0, 1, new LatLng(51.590682, -0.228266), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("W150", 1, WILLIAMS, 0, 1, new LatLng(51.590712, -0.228257), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("W151", 4, WILLIAMS, 0, 1, new LatLng(51.590707, -0.228064), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("W152", 4, WILLIAMS, 0, 1, new LatLng(51.590731, -0.228057), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("W153", 4, WILLIAMS, 0, 1, new LatLng(51.590799, -0.228039), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("W154", 4, WILLIAMS, 0, 1, new LatLng(51.590731, -0.228057), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("W155", 4, WILLIAMS, 0, 1, new LatLng(51.590707, -0.228064), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("W156", 4, WILLIAMS, 0, 1, new LatLng(51.590612, -0.228093), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("W157", 4, WILLIAMS, 0, 1, new LatLng(51.590589, -0.228099), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("W158", 4, WILLIAMS, 0, 1, new LatLng(51.590492, -0.228129), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("W159", 4, WILLIAMS, 0, 1, new LatLng(51.590453, -0.228141), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("W160", 4, WILLIAMS, 0, 1, new LatLng(51.590350, -0.228169), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("W142", ROOM, 5, WILLIAMS, 0, 1, new LatLng(51.590437, -0.228342), new String[]{"E", "F", "D"}));
+        list.add(new RoutingObjects("W143", ROOM, 4, WILLIAMS, 0, 1, new LatLng(51.590433, -0.228150), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("W144", ROOM, 4, WILLIAMS, 0, 1, new LatLng(51.590457, -0.228145), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("W145", ROOM, 4, WILLIAMS, 0, 1, new LatLng(51.590473, -0.228142), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("W147", ROOM, 4, WILLIAMS, 0, 1, new LatLng(51.590589, -0.228099), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("W148", ROOM, 1, WILLIAMS, 0, 1, new LatLng(51.590666, -0.228269), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("W149", ROOM, 1, WILLIAMS, 0, 1, new LatLng(51.590682, -0.228266), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("W150", ROOM, 1, WILLIAMS, 0, 1, new LatLng(51.590712, -0.228257), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("W151", ROOM, 4, WILLIAMS, 0, 1, new LatLng(51.590707, -0.228064), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("W152", ROOM, 4, WILLIAMS, 0, 1, new LatLng(51.590731, -0.228057), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("W153", ROOM, 4, WILLIAMS, 0, 1, new LatLng(51.590799, -0.228039), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("W154", ROOM, 4, WILLIAMS, 0, 1, new LatLng(51.590731, -0.228057), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("W155", ROOM, 4, WILLIAMS, 0, 1, new LatLng(51.590707, -0.228064), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("W156", ROOM, 4, WILLIAMS, 0, 1, new LatLng(51.590612, -0.228093), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("W157", ROOM, 4, WILLIAMS, 0, 1, new LatLng(51.590589, -0.228099), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("W158", ROOM, 4, WILLIAMS, 0, 1, new LatLng(51.590492, -0.228129), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("W159", ROOM, 4, WILLIAMS, 0, 1, new LatLng(51.590453, -0.228141), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("W160", ROOM, 4, WILLIAMS, 0, 1, new LatLng(51.590350, -0.228169), new String[]{"D", "C"}));
 
 
         //Hatchcroft Ground Floor
-        list.add(new RoutingObjects("Hatchcroft Building", 1, HATHCROFT, 2, 0, new LatLng(51.589154, -0.229178), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG01", 1, HATHCROFT, 2, 0, new LatLng(51.589138, -0.229016), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG02", 1, HATHCROFT, 2, 0, new LatLng(51.589122, -0.228864), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG03", 1, HATHCROFT, 2, 0, new LatLng(51.589103, -0.228762), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG04", 5, HATHCROFT, 2, 0, new LatLng(51.589088, -0.228738), new String[]{"D", "F"}));
-        list.add(new RoutingObjects("HG05", 6, HATHCROFT, 2, 0, new LatLng(51.589100, -0.228649), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("HG06", 7, HATHCROFT, 2, 0, new LatLng(51.589085, -0.228600), new String[]{"E"}));
-        list.add(new RoutingObjects("HG07", 7, HATHCROFT, 2, 0, new LatLng(51.589085, -0.228600), new String[]{"E"}));
+        list.add(new RoutingObjects("Hatchcroft Building", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589154, -0.229178), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG01", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589138, -0.229016), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG02", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589122, -0.228864), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG03", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589103, -0.228762), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG04", ROOM, 5, HATHCROFT, 2, 0, new LatLng(51.589088, -0.228738), new String[]{"D", "F"}));
+        list.add(new RoutingObjects("HG05", ROOM, 6, HATHCROFT, 2, 0, new LatLng(51.589100, -0.228649), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("HG06", ROOM, 7, HATHCROFT, 2, 0, new LatLng(51.589085, -0.228600), new String[]{"E"}));
+        list.add(new RoutingObjects("HG07", ROOM, 7, HATHCROFT, 2, 0, new LatLng(51.589085, -0.228600), new String[]{"E"}));
         //HG08 Toilet
-        list.add(new RoutingObjects("HG08", 5, HATHCROFT, 2, 0, new LatLng(51.589077, -0.228653), new String[]{"D", "F"}));
-        list.add(new RoutingObjects("HG09", 5, HATHCROFT, 2, 0, new LatLng(51.589078, -0.228689), new String[]{"D", "F"}));
-        list.add(new RoutingObjects("HG10", 1, HATHCROFT, 2, 0, new LatLng(51.589109, -0.228809), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG11", 1, HATHCROFT, 2, 0, new LatLng(51.589122, -0.228864), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG12", 1, HATHCROFT, 2, 0, new LatLng(51.589122, -0.228864), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG13", 1, HATHCROFT, 2, 0, new LatLng(51.589138, -0.229016), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG14", 2, HATHCROFT, 2, 0, new LatLng(51.589105, -0.229233), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("HG19", 2, HATHCROFT, 2, 0, new LatLng(51.589054, -0.229264), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("HG08", ROOM, 5, HATHCROFT, 2, 0, new LatLng(51.589077, -0.228653), new String[]{"D", "F"}));
+        list.add(new RoutingObjects("HG09", ROOM, 5, HATHCROFT, 2, 0, new LatLng(51.589078, -0.228689), new String[]{"D", "F"}));
+        list.add(new RoutingObjects("HG10", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589109, -0.228809), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG11", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589122, -0.228864), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG12", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589122, -0.228864), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG13", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589138, -0.229016), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG14", ROOM, 2, HATHCROFT, 2, 0, new LatLng(51.589105, -0.229233), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("HG19", ROOM, 2, HATHCROFT, 2, 0, new LatLng(51.589054, -0.229264), new String[]{"A", "B"}));
         //HG20 & HG21 Toilet
-        list.add(new RoutingObjects("HG20", 2, HATHCROFT, 2, 0, new LatLng(51.589140, -0.229230), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("HG21", 2, HATHCROFT, 2, 0, new LatLng(51.589140, -0.229230), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("HG24", 1, HATHCROFT, 2, 0, new LatLng(51.589200, -0.229583), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG27", 1, HATHCROFT, 2, 0, new LatLng(51.589200, -0.229583), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG28", 1, HATHCROFT, 2, 0, new LatLng(51.589200, -0.229583), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG29", 1, HATHCROFT, 2, 0, new LatLng(51.589209, -0.229642), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG30", 1, HATHCROFT, 2, 0, new LatLng(51.589196, -0.229521), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG31", 1, HATHCROFT, 2, 0, new LatLng(51.589182, -0.229423), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG33", 1, HATHCROFT, 2, 0, new LatLng(51.589175, -0.229333), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG20", ROOM, 2, HATHCROFT, 2, 0, new LatLng(51.589140, -0.229230), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("HG21", ROOM, 2, HATHCROFT, 2, 0, new LatLng(51.589140, -0.229230), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("HG24", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589200, -0.229583), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG27", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589200, -0.229583), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG28", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589200, -0.229583), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG29", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589209, -0.229642), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG30", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589196, -0.229521), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG31", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589182, -0.229423), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG33", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589175, -0.229333), new String[]{"A", "C", "G", "H"}));
 
         //Hatchcroft First Floor
-        list.add(new RoutingObjects("H101", 1, HATHCROFT, 1, 1, new LatLng(51.589136, -0.229010), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H102", 1, HATHCROFT, 1, 1, new LatLng(51.589122, -0.228895), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H104", 1, HATHCROFT, 1, 1, new LatLng(51.589107, -0.228772), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H105", 1, HATHCROFT, 1, 1, new LatLng(51.589092, -0.228649), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H106", 1, HATHCROFT, 1, 1, new LatLng(51.589095, -0.228680), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H106", 1, HATHCROFT, 1, 1, new LatLng(51.589095, -0.228680), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H109", 1, HATHCROFT, 1, 1, new LatLng(51.589109, -0.228814), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H110", 1, HATHCROFT, 1, 1, new LatLng(51.589109, -0.228814), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H111", 1, HATHCROFT, 1, 1, new LatLng(51.589109, -0.228814), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H113", 1, HATHCROFT, 1, 1, new LatLng(51.589143, -0.229093), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H116", 3, HATHCROFT, 1, 1, new LatLng(51.589059, -0.229254), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("H117", 4, HATHCROFT, 1, 1, new LatLng(51.588980, -0.229334), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("H118", 4, HATHCROFT, 1, 1, new LatLng(51.588985, -0.229385), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("H119", 4, HATHCROFT, 1, 1, new LatLng(51.588991, -0.229434), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("H120", 4, HATHCROFT, 1, 1, new LatLng(51.588996, -0.229479), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("H121", 4, HATHCROFT, 1, 1, new LatLng(51.589003, -0.229523), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("H122", 4, HATHCROFT, 1, 1, new LatLng(51.589003, -0.229523), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("H123", 5, HATHCROFT, 1, 1, new LatLng(51.589033, -0.229516), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("H124", 5, HATHCROFT, 1, 1, new LatLng(51.589063, -0.229507), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("H125", 5, HATHCROFT, 1, 1, new LatLng(51.589096, -0.229496), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("H128", 3, HATHCROFT, 1, 1, new LatLng(51.589141, -0.229233), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("H129", 3, HATHCROFT, 1, 1, new LatLng(51.589141, -0.229233), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("H133", 1, HATHCROFT, 1, 1, new LatLng(51.589195, -0.229554), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H135", 6, HATHCROFT, 1, 1, new LatLng(51.589179, -0.229660), new String[]{"A"}));
-        list.add(new RoutingObjects("H136", 6, HATHCROFT, 1, 1, new LatLng(51.589179, -0.229660), new String[]{"A"}));
-        list.add(new RoutingObjects("H137", 1, HATHCROFT, 1, 1, new LatLng(51.589179, -0.229660), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H139", 1, HATHCROFT, 1, 1, new LatLng(51.589200, -0.229558), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H141A", 1, HATHCROFT, 1, 1, new LatLng(51.589194, -0.229501), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H141B", 1, HATHCROFT, 1, 1, new LatLng(51.589167, -0.229286), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H101", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589136, -0.229010), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H102", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589122, -0.228895), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H104", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589107, -0.228772), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H105", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589092, -0.228649), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H106", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589095, -0.228680), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H106", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589095, -0.228680), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H109", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589109, -0.228814), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H110", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589109, -0.228814), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H111", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589109, -0.228814), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H113", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589143, -0.229093), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H116", ROOM, 3, HATHCROFT, 1, 1, new LatLng(51.589059, -0.229254), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("H117", ROOM, 4, HATHCROFT, 1, 1, new LatLng(51.588980, -0.229334), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("H118", ROOM, 4, HATHCROFT, 1, 1, new LatLng(51.588985, -0.229385), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("H119", ROOM, 4, HATHCROFT, 1, 1, new LatLng(51.588991, -0.229434), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("H120", ROOM, 4, HATHCROFT, 1, 1, new LatLng(51.588996, -0.229479), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("H121", ROOM, 4, HATHCROFT, 1, 1, new LatLng(51.589003, -0.229523), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("H122", ROOM, 4, HATHCROFT, 1, 1, new LatLng(51.589003, -0.229523), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("H123", ROOM, 5, HATHCROFT, 1, 1, new LatLng(51.589033, -0.229516), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("H124", ROOM, 5, HATHCROFT, 1, 1, new LatLng(51.589063, -0.229507), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("H125", ROOM, 5, HATHCROFT, 1, 1, new LatLng(51.589096, -0.229496), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("H128", ROOM, 3, HATHCROFT, 1, 1, new LatLng(51.589141, -0.229233), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("H129", ROOM, 3, HATHCROFT, 1, 1, new LatLng(51.589141, -0.229233), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("H133", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589195, -0.229554), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H135", ROOM, 6, HATHCROFT, 1, 1, new LatLng(51.589179, -0.229660), new String[]{"A"}));
+        list.add(new RoutingObjects("H136", ROOM, 6, HATHCROFT, 1, 1, new LatLng(51.589179, -0.229660), new String[]{"A"}));
+        list.add(new RoutingObjects("H137", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589179, -0.229660), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H139", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589200, -0.229558), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H141A", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589194, -0.229501), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H141B", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589167, -0.229286), new String[]{"A", "B", "C", "F", "G"}));
 
         //Hatchcroft Second Floor
-        list.add(new RoutingObjects("H201", 1, HATHCROFT, 0, 2, new LatLng(51.589131, -0.228970), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H202", 1, HATHCROFT, 0, 2, new LatLng(51.589126, -0.228912), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H203", 1, HATHCROFT, 0, 2, new LatLng(51.589110, -0.228769), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H205", 1, HATHCROFT, 0, 2, new LatLng(51.589099, -0.228650), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H206", 1, HATHCROFT, 0, 2, new LatLng(51.589087, -0.228617), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H207", 1, HATHCROFT, 0, 2, new LatLng(51.589096, -0.228693), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H208", 1, HATHCROFT, 0, 2, new LatLng(51.589105, -0.228761), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H211", 1, HATHCROFT, 0, 2, new LatLng(51.589142, -0.229133), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H216", 3, HATHCROFT, 0, 2, new LatLng(51.589156, -0.229398), new String[]{"B"}));
-        list.add(new RoutingObjects("H217", 3, HATHCROFT, 0, 2, new LatLng(51.589156, -0.229398), new String[]{"B"}));
-        list.add(new RoutingObjects("H219", 1, HATHCROFT, 0, 2, new LatLng(51.589193, -0.229510), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H220", 1, HATHCROFT, 0, 2, new LatLng(51.589200, -0.229580), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H221", 1, HATHCROFT, 0, 2, new LatLng(51.589210, -0.229636), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H222", 1, HATHCROFT, 0, 2, new LatLng(51.589200, -0.229580), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H223", 1, HATHCROFT, 0, 2, new LatLng(51.589187, -0.229450), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H224", 1, HATHCROFT, 0, 2, new LatLng(51.589167, -0.229274), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H201", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589131, -0.228970), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H202", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589126, -0.228912), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H203", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589110, -0.228769), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H205", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589099, -0.228650), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H206", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589087, -0.228617), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H207", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589096, -0.228693), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H208", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589105, -0.228761), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H211", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589142, -0.229133), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H216", ROOM, 3, HATHCROFT, 0, 2, new LatLng(51.589156, -0.229398), new String[]{"B"}));
+        list.add(new RoutingObjects("H217", ROOM, 3, HATHCROFT, 0, 2, new LatLng(51.589156, -0.229398), new String[]{"B"}));
+        list.add(new RoutingObjects("H219", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589193, -0.229510), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H220", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589200, -0.229580), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H221", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589210, -0.229636), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H222", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589200, -0.229580), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H223", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589187, -0.229450), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H224", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589167, -0.229274), new String[]{"A", "B"}));
 
         //MDX HOUSE GROUND FLOOR
-        list.add(new RoutingObjects("MDX House", 3, MDXHOUSE, 0, 0, new LatLng(51.589925, -0.230887), new String[]{"B"}));
+        list.add(new RoutingObjects("MDX House", ROOM, 3, MDXHOUSE, 0, 0, new LatLng(51.589925, -0.230887), new String[]{"B"}));
 
         //MDX BASEMENT
-        list.add(new RoutingObjects("Gym", 2, MDXHOUSE, 1, -1, new LatLng(51.589951, -0.230764), new String[]{"B", "C"}));
-        list.add(new RoutingObjects("Student Union", 2, MDXHOUSE, 1, -1, new LatLng(51.590135, -0.230729), new String[]{"B", "C"}));
-        list.add(new RoutingObjects("Real Tennis Club", 3, MDXHOUSE, 1, -1, new LatLng(51.589809, -0.230640), new String[]{"C"}));
-        list.add(new RoutingObjects("Sports-Dance Studio", 3, MDXHOUSE, 1, -1, new LatLng(51.589812, -0.230558), new String[]{"C"}));
+        list.add(new RoutingObjects("Gym", ROOM, 2, MDXHOUSE, 1, -1, new LatLng(51.589951, -0.230764), new String[]{"B", "C"}));
+        list.add(new RoutingObjects("Student Union", ROOM, 2, MDXHOUSE, 1, -1, new LatLng(51.590135, -0.230729), new String[]{"B", "C"}));
+        list.add(new RoutingObjects("Real Tennis Club", ROOM, 3, MDXHOUSE, 1, -1, new LatLng(51.589809, -0.230640), new String[]{"C"}));
+        list.add(new RoutingObjects("Sports-Dance Studio", ROOM, 3, MDXHOUSE, 1, -1, new LatLng(51.589812, -0.230558), new String[]{"C"}));
 
         //Building 9
-        list.add(new RoutingObjects("Building 9", 3, BUILDING9, 0, 0, new LatLng(51.588683, -0.229511), new String[]{"B", "D"}));
-        list.add(new RoutingObjects("BG01", 3, BUILDING9, 0, 0, new LatLng(51.588683, -0.229511), new String[]{"B", "D"}));
-        list.add(new RoutingObjects("BG02", 3, BUILDING9, 0, 0, new LatLng(51.588737, -0.229469), new String[]{"B", "D"}));
-        list.add(new RoutingObjects("BG03", 3, BUILDING9, 0, 0, new LatLng(51.588724, -0.229476), new String[]{"B", "D"}));
-        list.add(new RoutingObjects("BG04", 3, BUILDING9, 0, 0, new LatLng(51.588739, -0.229466), new String[]{"B", "D"}));
-        list.add(new RoutingObjects("BG05", 2, BUILDING9, 0, 0, new LatLng(51.588758, -0.229413), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("BG07", 2, BUILDING9, 0, 0, new LatLng(51.588725, -0.229312), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("BG10", 1, BUILDING9, 0, 0, new LatLng(51.588639, -0.229341), new String[]{"A", "C"}));
-        list.add(new RoutingObjects("BG11", 1, BUILDING9, 0, 0, new LatLng(51.588639, -0.229341), new String[]{"A", "C"}));
+        list.add(new RoutingObjects("Building 9", ROOM, 3, BUILDING9, 0, 0, new LatLng(51.588683, -0.229511), new String[]{"B", "D"}));
+        list.add(new RoutingObjects("BG01", ROOM, 3, BUILDING9, 0, 0, new LatLng(51.588683, -0.229511), new String[]{"B", "D"}));
+        list.add(new RoutingObjects("BG02", ROOM, 3, BUILDING9, 0, 0, new LatLng(51.588737, -0.229469), new String[]{"B", "D"}));
+        list.add(new RoutingObjects("BG03", ROOM, 3, BUILDING9, 0, 0, new LatLng(51.588724, -0.229476), new String[]{"B", "D"}));
+        list.add(new RoutingObjects("BG04", ROOM, 3, BUILDING9, 0, 0, new LatLng(51.588739, -0.229466), new String[]{"B", "D"}));
+        list.add(new RoutingObjects("BG05", ROOM, 2, BUILDING9, 0, 0, new LatLng(51.588758, -0.229413), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("BG07", ROOM, 2, BUILDING9, 0, 0, new LatLng(51.588725, -0.229312), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("BG10", ROOM, 1, BUILDING9, 0, 0, new LatLng(51.588639, -0.229341), new String[]{"A", "C"}));
+        list.add(new RoutingObjects("BG11", ROOM, 1, BUILDING9, 0, 0, new LatLng(51.588639, -0.229341), new String[]{"A", "C"}));
 
         //Building 10 Ground Floor
-        list.add(new RoutingObjects("Building 10", 1, BUILDING10, 1, 0, new LatLng(51.589824, -0.229877), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("BTG01", 1, BUILDING10, 1, 0, new LatLng(51.589824, -0.229877), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("BTG02", 1, BUILDING10, 1, 0, new LatLng(51.589842, -0.229873), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("BTG04", 2, BUILDING10, 1, 0, new LatLng(51.589840, -0.229819), new String[]{"B"}));
+        list.add(new RoutingObjects("Building 10", ROOM, 1, BUILDING10, 1, 0, new LatLng(51.589824, -0.229877), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("BTG01", ROOM, 1, BUILDING10, 1, 0, new LatLng(51.589824, -0.229877), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("BTG02", ROOM, 1, BUILDING10, 1, 0, new LatLng(51.589842, -0.229873), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("BTG04", ROOM, 2, BUILDING10, 1, 0, new LatLng(51.589840, -0.229819), new String[]{"B"}));
 
         //Building 10 First Floor
-        list.add(new RoutingObjects("BT101", 1, BUILDING10, 0, 1, new LatLng(51.589832, -0.229867), new String[]{"A"}));
-        list.add(new RoutingObjects("BT103", 1, BUILDING10, 0, 1, new LatLng(51.589832, -0.229867), new String[]{"A"}));
+        list.add(new RoutingObjects("BT101", ROOM, 1, BUILDING10, 0, 1, new LatLng(51.589832, -0.229867), new String[]{"A"}));
+        list.add(new RoutingObjects("BT103", ROOM, 1, BUILDING10, 0, 1, new LatLng(51.589832, -0.229867), new String[]{"A"}));
 
         //SHEPPARD BASEMENT
-        list.add(new RoutingObjects("SB01", 3, SHEPPARDLIBRARY, 4, -1, new LatLng(51.590649, -0.229524), new String[]{"C", "D"}));
-        list.add(new RoutingObjects("SB03", 3, SHEPPARDLIBRARY, 4, -1, new LatLng(51.590743, -0.229495), new String[]{"C", "D"}));
-        list.add(new RoutingObjects("SB05", 1, SHEPPARDLIBRARY, 4, -1, new LatLng(51.590373, -0.229460), new String[]{"A"}));
-        list.add(new RoutingObjects("SB12A", 1, SHEPPARDLIBRARY, 4, -1, new LatLng(51.590285, -0.229563), new String[]{"A"}));
-        list.add(new RoutingObjects("SB16", 2, SHEPPARDLIBRARY, 4, -1, new LatLng(51.590464, -0.229512), new String[]{"A", "B", "C"}));
+        list.add(new RoutingObjects("SB01", ROOM, 3, SHEPPARDLIBRARY, 4, -1, new LatLng(51.590649, -0.229524), new String[]{"C", "D"}));
+        list.add(new RoutingObjects("SB03", ROOM, 3, SHEPPARDLIBRARY, 4, -1, new LatLng(51.590743, -0.229495), new String[]{"C", "D"}));
+        list.add(new RoutingObjects("SB05", ROOM, 1, SHEPPARDLIBRARY, 4, -1, new LatLng(51.590373, -0.229460), new String[]{"A"}));
+        list.add(new RoutingObjects("SB12A", ROOM, 1, SHEPPARDLIBRARY, 4, -1, new LatLng(51.590285, -0.229563), new String[]{"A"}));
+        list.add(new RoutingObjects("SB16", ROOM, 2, SHEPPARDLIBRARY, 4, -1, new LatLng(51.590464, -0.229512), new String[]{"A", "B", "C"}));
 
         //SHEPPARD GROUND FLOOR
-        list.add(new RoutingObjects("Sheppard Library", 1, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590360, -0.229605), new String[]{"B"}));
-        list.add(new RoutingObjects("SG01", 1, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590360, -0.229605), new String[]{"B"}));
-        list.add(new RoutingObjects("SG02", 2, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590319, -0.229392), new String[]{"A", "B", "C"}));
-        list.add(new RoutingObjects("SG09", 6, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590768, -0.229416), new String[]{"F"}));
-        list.add(new RoutingObjects("SG10", 6, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590768, -0.229416), new String[]{"F"}));
-        list.add(new RoutingObjects("SG11", 6, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590772, -0.229454), new String[]{"F"}));
-        list.add(new RoutingObjects("SG12A", 5, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590720, -0.229506), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("SG12B", 5, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590634, -0.229532), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("SG13A", 5, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590615, -0.229539), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("SG13B", 5, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590530, -0.229562), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("Sheppard Library", ROOM, 1, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590360, -0.229605), new String[]{"B"}));
+        list.add(new RoutingObjects("SG01", ROOM, 1, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590360, -0.229605), new String[]{"B"}));
+        list.add(new RoutingObjects("SG02", ROOM, 2, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590319, -0.229392), new String[]{"A", "B", "C"}));
+        list.add(new RoutingObjects("SG09", ROOM, 6, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590768, -0.229416), new String[]{"F"}));
+        list.add(new RoutingObjects("SG10", ROOM, 6, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590768, -0.229416), new String[]{"F"}));
+        list.add(new RoutingObjects("SG11", ROOM, 6, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590772, -0.229454), new String[]{"F"}));
+        list.add(new RoutingObjects("SG12A", ROOM, 5, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590720, -0.229506), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("SG12B", ROOM, 5, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590634, -0.229532), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("SG13A", ROOM, 5, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590615, -0.229539), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("SG13B", ROOM, 5, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590530, -0.229562), new String[]{"E", "F"}));
 
-        list.add(new RoutingObjects("Circle Café", 2, CIRCLE_CAFE, 3, 0, new LatLng(51.590508, -0.229859), new String[]{"A"}));
+        list.add(new RoutingObjects("Circle Café", ROOM, 2, CIRCLE_CAFE, 3, 0, new LatLng(51.590508, -0.229859), new String[]{"A"}));
 
         //SHEPPARD FIRST FLOOR
-        list.add(new RoutingObjects("S101", 3, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590571, -0.229627), new String[]{"B", "C"}));
-        list.add(new RoutingObjects("S103", 1, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590766, -0.229407), new String[]{"A"}));
-        list.add(new RoutingObjects("S104", 1, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590766, -0.229407), new String[]{"A"}));
-        list.add(new RoutingObjects("S105", 1, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590773, -0.229463), new String[]{"A"}));
-        list.add(new RoutingObjects("S106", 2, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590627, -0.229531), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("S107", 3, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590563, -0.229552), new String[]{"B", "C"}));
-        list.add(new RoutingObjects("S112", 5, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590473, -0.229780), new String[]{"D", "E", "F"}));
-        list.add(new RoutingObjects("S119", 5, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590412, -0.229637), new String[]{"D", "E", "F"}));
-        list.add(new RoutingObjects("S110", 6, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590419, -0.229508), new String[]{"E"}));
-        list.add(new RoutingObjects("S111", 5, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590311, -0.229404), new String[]{"E", "F", "D"}));
-        list.add(new RoutingObjects("S112", 5, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590311, -0.229404), new String[]{"E", "F", "D"}));
+        list.add(new RoutingObjects("S101", ROOM, 3, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590571, -0.229627), new String[]{"B", "C"}));
+        list.add(new RoutingObjects("S103", ROOM, 1, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590766, -0.229407), new String[]{"A"}));
+        list.add(new RoutingObjects("S104", ROOM, 1, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590766, -0.229407), new String[]{"A"}));
+        list.add(new RoutingObjects("S105", ROOM, 1, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590773, -0.229463), new String[]{"A"}));
+        list.add(new RoutingObjects("S106", ROOM, 2, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590627, -0.229531), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("S107", ROOM, 3, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590563, -0.229552), new String[]{"B", "C"}));
+        list.add(new RoutingObjects("S112", ROOM, 5, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590473, -0.229780), new String[]{"D", "E", "F"}));
+        list.add(new RoutingObjects("S119", ROOM, 5, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590412, -0.229637), new String[]{"D", "E", "F"}));
+        list.add(new RoutingObjects("S110", ROOM, 6, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590419, -0.229508), new String[]{"E"}));
+        list.add(new RoutingObjects("S111", ROOM, 5, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590311, -0.229404), new String[]{"E", "F", "D"}));
+        list.add(new RoutingObjects("S112", ROOM, 5, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590311, -0.229404), new String[]{"E", "F", "D"}));
 
         //SHEPPARD SECOND FLOOR
-        list.add(new RoutingObjects("S201", 3, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590571, -0.229627), new String[]{"B", "C"}));
-        list.add(new RoutingObjects("S203", 1, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590767, -0.229409), new String[]{"A"}));
-        list.add(new RoutingObjects("S204", 1, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590767, -0.229409), new String[]{"A"}));
-        list.add(new RoutingObjects("S205", 1, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590773, -0.229461), new String[]{"A"}));
-        list.add(new RoutingObjects("S206", 2, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590725, -0.229501), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("S215", 5, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590412, -0.229635), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("S216", 5, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590309, -0.229406), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("S217", 5, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590309, -0.229406), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("S218", 5, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590466, -0.229790), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("S219", 5, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590466, -0.229790), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("S201", ROOM, 3, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590571, -0.229627), new String[]{"B", "C"}));
+        list.add(new RoutingObjects("S203", ROOM, 1, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590767, -0.229409), new String[]{"A"}));
+        list.add(new RoutingObjects("S204", ROOM, 1, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590767, -0.229409), new String[]{"A"}));
+        list.add(new RoutingObjects("S205", ROOM, 1, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590773, -0.229461), new String[]{"A"}));
+        list.add(new RoutingObjects("S206", ROOM, 2, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590725, -0.229501), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("S215", ROOM, 5, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590412, -0.229635), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("S216", ROOM, 5, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590309, -0.229406), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("S217", ROOM, 5, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590309, -0.229406), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("S218", ROOM, 5, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590466, -0.229790), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("S219", ROOM, 5, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590466, -0.229790), new String[]{"D", "E"}));
 
         //SHEPPARD THIRD FLOOR
-        list.add(new RoutingObjects("S302", 2, SHEPPARDLIBRARY, 0, 3, new LatLng(51.590403, -0.229620), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("S303", 2, SHEPPARDLIBRARY, 0, 3, new LatLng(51.590307, -0.229403), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("S304", 2, SHEPPARDLIBRARY, 0, 3, new LatLng(51.590307, -0.229403), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("S306", 2, SHEPPARDLIBRARY, 0, 3, new LatLng(51.590473, -0.229781), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("S302", ROOM, 2, SHEPPARDLIBRARY, 0, 3, new LatLng(51.590403, -0.229620), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("S303", ROOM, 2, SHEPPARDLIBRARY, 0, 3, new LatLng(51.590307, -0.229403), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("S304", ROOM, 2, SHEPPARDLIBRARY, 0, 3, new LatLng(51.590307, -0.229403), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("S306", ROOM, 2, SHEPPARDLIBRARY, 0, 3, new LatLng(51.590473, -0.229781), new String[]{"B", "A"}));
 
         //VINE GROUND FLOOR
 
-        list.add(new RoutingObjects("Vine building", 2, VINE, 1, 0, new LatLng(51.590621, -0.230778), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("VG01", 2, VINE, 1, 0, new LatLng(51.590621, -0.230778), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("VG04", 3, VINE, 1, 0, new LatLng(51.590708, -0.230891), new String[]{"B"}));
-        list.add(new RoutingObjects("VG08", 1, VINE, 1, 0, new LatLng(51.590678, -0.230613), new String[]{"A"}));
-        list.add(new RoutingObjects("VG02", 2, VINE, 1, 0, new LatLng(51.590626, -0.230808), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("VG05", 2, VINE, 1, 0, new LatLng(51.590630, -0.230825), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("VG06", 2, VINE, 1, 0, new LatLng(51.590621, -0.230736), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("VG07", 2, VINE, 1, 0, new LatLng(51.590619, -0.230715), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("Vine building", ROOM, 2, VINE, 1, 0, new LatLng(51.590621, -0.230778), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("VG01", ROOM, 2, VINE, 1, 0, new LatLng(51.590621, -0.230778), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("VG04", ROOM, 3, VINE, 1, 0, new LatLng(51.590708, -0.230891), new String[]{"B"}));
+        list.add(new RoutingObjects("VG08", ROOM, 1, VINE, 1, 0, new LatLng(51.590678, -0.230613), new String[]{"A"}));
+        list.add(new RoutingObjects("VG02", ROOM, 2, VINE, 1, 0, new LatLng(51.590626, -0.230808), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("VG05", ROOM, 2, VINE, 1, 0, new LatLng(51.590630, -0.230825), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("VG06", ROOM, 2, VINE, 1, 0, new LatLng(51.590621, -0.230736), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("VG07", ROOM, 2, VINE, 1, 0, new LatLng(51.590619, -0.230715), new String[]{"B", "A"}));
 
         //VINE FIRST FLOOR
-        list.add(new RoutingObjects("V101", 2, VINE, 0, 1, new LatLng(51.590621, -0.230778), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("V102", 2, VINE, 0, 1, new LatLng(51.590626, -0.230808), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("V103", 2, VINE, 0, 1, new LatLng(51.590630, -0.230825), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("V104", 2, VINE, 0, 1, new LatLng(51.590621, -0.230736), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("V105", 2, VINE, 0, 1, new LatLng(51.590619, -0.230715), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("V101", ROOM, 2, VINE, 0, 1, new LatLng(51.590621, -0.230778), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("V102", ROOM, 2, VINE, 0, 1, new LatLng(51.590626, -0.230808), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("V103", ROOM, 2, VINE, 0, 1, new LatLng(51.590630, -0.230825), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("V104", ROOM, 2, VINE, 0, 1, new LatLng(51.590621, -0.230736), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("V105", ROOM, 2, VINE, 0, 1, new LatLng(51.590619, -0.230715), new String[]{"B", "A"}));
 
-        list.add(new RoutingObjects("Grove Building", 4, GROVE_BLOCK_A, 4, 0, new LatLng(51.588695, -0.230596), new String[]{"C", "D", "E"}));
+        list.add(new RoutingObjects("Grove Building", ROOM, 4, GROVE_BLOCK_A, 4, 0, new LatLng(51.588695, -0.230596), new String[]{"C", "D", "E"}));
 
         //GROVE BLOCK A BASEMENT
-        list.add(new RoutingObjects("GB01", 1, GROVE_BLOCK_A, 5, -1, new LatLng(51.588857, -0.230609), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("GB04", 2, GROVE_BLOCK_A, 5, -1, new LatLng(51.588690, -0.230542), new String[]{"C", "B"}));
-        list.add(new RoutingObjects("GB05", 3, GROVE_BLOCK_A, 5, -1, new LatLng(51.588684, -0.230601), new String[]{"C", "D"}));
-        list.add(new RoutingObjects("GB07", 3, GROVE_BLOCK_A, 5, -1, new LatLng(51.588660, -0.230613), new String[]{"C", "D"}));
-        list.add(new RoutingObjects("GB09", 4, GROVE_BLOCK_A, 5, -1, new LatLng(51.588611, -0.230608), new String[]{"E", "D"}));
-        list.add(new RoutingObjects("GB10", 4, GROVE_BLOCK_A, 5, -1, new LatLng(51.588591, -0.230534), new String[]{"E", "D"}));
-        list.add(new RoutingObjects("GB12", 4, GROVE_BLOCK_A, 5, -1, new LatLng(51.588573, -0.230539), new String[]{"E", "D"}));
-        list.add(new RoutingObjects("GB17A", 7, GROVE_BLOCK_A, 5, -1, new LatLng(51.588548, -0.230800), new String[]{"F", "G"}));
-        list.add(new RoutingObjects("GB17B", 3, GROVE_BLOCK_A, 5, -1, new LatLng(51.588591, -0.230645), new String[]{"C", "D"}));
-        list.add(new RoutingObjects("GB19A", 3, GROVE_BLOCK_A, 5, -1, new LatLng(51.588628, -0.230627), new String[]{"C", "D"}));
-        list.add(new RoutingObjects("GB19B", 3, GROVE_BLOCK_A, 5, -1, new LatLng(51.588660, -0.230613), new String[]{"C", "D"}));
-        list.add(new RoutingObjects("GB21", 2, GROVE_BLOCK_A, 5, -1, new LatLng(51.588721, -0.230703), new String[]{"C", "B"}));
-        list.add(new RoutingObjects("GB22", 1, GROVE_BLOCK_A, 5, -1, new LatLng(51.588729, -0.230639), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("GB23", 1, GROVE_BLOCK_A, 5, -1, new LatLng(51.588770, -0.230635), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("GB01", ROOM, 1, GROVE_BLOCK_A, 5, -1, new LatLng(51.588857, -0.230609), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("GB04", ROOM, 2, GROVE_BLOCK_A, 5, -1, new LatLng(51.588690, -0.230542), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("GB05", ROOM, 3, GROVE_BLOCK_A, 5, -1, new LatLng(51.588684, -0.230601), new String[]{"C", "D"}));
+        list.add(new RoutingObjects("GB07", ROOM, 3, GROVE_BLOCK_A, 5, -1, new LatLng(51.588660, -0.230613), new String[]{"C", "D"}));
+        list.add(new RoutingObjects("GB09", ROOM, 4, GROVE_BLOCK_A, 5, -1, new LatLng(51.588611, -0.230608), new String[]{"E", "D"}));
+        list.add(new RoutingObjects("GB10", ROOM, 4, GROVE_BLOCK_A, 5, -1, new LatLng(51.588591, -0.230534), new String[]{"E", "D"}));
+        list.add(new RoutingObjects("GB12", ROOM, 4, GROVE_BLOCK_A, 5, -1, new LatLng(51.588573, -0.230539), new String[]{"E", "D"}));
+        list.add(new RoutingObjects("GB17A", ROOM, 7, GROVE_BLOCK_A, 5, -1, new LatLng(51.588548, -0.230800), new String[]{"F", "G"}));
+        list.add(new RoutingObjects("GB17B", ROOM, 3, GROVE_BLOCK_A, 5, -1, new LatLng(51.588591, -0.230645), new String[]{"C", "D"}));
+        list.add(new RoutingObjects("GB19A", ROOM, 3, GROVE_BLOCK_A, 5, -1, new LatLng(51.588628, -0.230627), new String[]{"C", "D"}));
+        list.add(new RoutingObjects("GB19B", ROOM, 3, GROVE_BLOCK_A, 5, -1, new LatLng(51.588660, -0.230613), new String[]{"C", "D"}));
+        list.add(new RoutingObjects("GB21", ROOM, 2, GROVE_BLOCK_A, 5, -1, new LatLng(51.588721, -0.230703), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("GB22", ROOM, 1, GROVE_BLOCK_A, 5, -1, new LatLng(51.588729, -0.230639), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("GB23", ROOM, 1, GROVE_BLOCK_A, 5, -1, new LatLng(51.588770, -0.230635), new String[]{"A", "B"}));
 
 
         //GROVE BLOCK A GROUND FLOOR
-        list.add(new RoutingObjects("GG01", 4, GROVE_BLOCK_A, 4, 0, new LatLng(51.588695, -0.230596), new String[]{"C", "D", "E"}));
-        list.add(new RoutingObjects("GG04", 4, GROVE_BLOCK_A, 4, 0, new LatLng(51.588637, -0.230321), new String[]{"C", "D", "E"}));
-        list.add(new RoutingObjects("GG07", 8, GROVE_BLOCK_A, 4, 0, new LatLng(51.588598, -0.230581), new String[]{"H"}));
-        list.add(new RoutingObjects("GG11", 1, GROVE_BLOCK_A, 4, 0, new LatLng(51.588549, -0.230636), new String[]{"A", "B", "C", "H", "G"}));
-        list.add(new RoutingObjects("GG12", 1, GROVE_BLOCK_A, 4, 0, new LatLng(51.588549, -0.230636), new String[]{"A", "B", "C", "H", "G"}));
-        list.add(new RoutingObjects("GG13", 1, GROVE_BLOCK_A, 4, 0, new LatLng(51.588549, -0.230636), new String[]{"A", "B", "C", "H", "G"}));
-        list.add(new RoutingObjects("GG14", 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588471, -0.230401), new String[]{"G"}));
-        list.add(new RoutingObjects("GG15", 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588471, -0.230401), new String[]{"G"}));
-        list.add(new RoutingObjects("GG18", 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588489, -0.230567), new String[]{"G"}));
-        list.add(new RoutingObjects("GG20", 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588489, -0.230567), new String[]{"G"}));
-        list.add(new RoutingObjects("GG21", 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588489, -0.230567), new String[]{"G"}));
-        list.add(new RoutingObjects("GG22", 10, GROVE_BLOCK_A, 4, 0, new LatLng(51.588487, -0.230657), new String[]{"G"}));
-        list.add(new RoutingObjects("GG23", 10, GROVE_BLOCK_A, 4, 0, new LatLng(51.588487, -0.230657), new String[]{"G"}));
-        list.add(new RoutingObjects("GG25", 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588536, -0.230798), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("GG28", 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588536, -0.230798), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("GG29", 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588536, -0.230798), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("GG30", 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588536, -0.230798), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("GG31", 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588589, -0.231001), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("GG33", 6, GROVE_BLOCK_A, 4, 0, new LatLng(51.588610, -0.230999), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("GG34", 6, GROVE_BLOCK_A, 4, 0, new LatLng(51.588643, -0.230975), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("GG35", 6, GROVE_BLOCK_A, 4, 0, new LatLng(51.588683, -0.230950), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("GG36", 6, GROVE_BLOCK_A, 4, 0, new LatLng(51.588735, -0.230904), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("GG37", 5, GROVE_BLOCK_A, 4, 0, new LatLng(51.588728, -0.230820), new String[]{"E", "D", "C"}));
-        list.add(new RoutingObjects("GG38", 11, GROVE_BLOCK_A, 4, 0, new LatLng(51.588758, -0.230773), new String[]{"D"}));
-        list.add(new RoutingObjects("GG39", 11, GROVE_BLOCK_A, 4, 0, new LatLng(51.588758, -0.230773), new String[]{"D"}));
-        list.add(new RoutingObjects("GG41", 11, GROVE_BLOCK_A, 4, 0, new LatLng(51.588685, -0.230764), new String[]{"D"}));
-        list.add(new RoutingObjects("GG44", 11, GROVE_BLOCK_A, 4, 0, new LatLng(51.588662, -0.230768), new String[]{"D"}));
-        list.add(new RoutingObjects("GG45", 11, GROVE_BLOCK_A, 4, 0, new LatLng(51.588685, -0.230764), new String[]{"D"}));
-        list.add(new RoutingObjects("GG46", 5, GROVE_BLOCK_A, 4, 0, new LatLng(51.588732, -0.230880), new String[]{"E", "D", "C"}));
-        list.add(new RoutingObjects("GG47", 5, GROVE_BLOCK_A, 4, 0, new LatLng(51.588713, -0.230706), new String[]{"E", "D", "C"}));
-        list.add(new RoutingObjects("GG48", 5, GROVE_BLOCK_A, 4, 0, new LatLng(51.588707, -0.230670), new String[]{"E", "D", "C"}));
+        list.add(new RoutingObjects("GG01", ROOM, 4, GROVE_BLOCK_A, 4, 0, new LatLng(51.588695, -0.230596), new String[]{"C", "D", "E"}));
+        list.add(new RoutingObjects("GG04", ROOM, 4, GROVE_BLOCK_A, 4, 0, new LatLng(51.588637, -0.230321), new String[]{"C", "D", "E"}));
+        list.add(new RoutingObjects("GG07", ROOM, 8, GROVE_BLOCK_A, 4, 0, new LatLng(51.588598, -0.230581), new String[]{"H"}));
+        list.add(new RoutingObjects("GG11", ROOM, 1, GROVE_BLOCK_A, 4, 0, new LatLng(51.588549, -0.230636), new String[]{"A", "B", "C", "H", "G"}));
+        list.add(new RoutingObjects("GG12", ROOM, 1, GROVE_BLOCK_A, 4, 0, new LatLng(51.588549, -0.230636), new String[]{"A", "B", "C", "H", "G"}));
+        list.add(new RoutingObjects("GG13", ROOM, 1, GROVE_BLOCK_A, 4, 0, new LatLng(51.588549, -0.230636), new String[]{"A", "B", "C", "H", "G"}));
+        list.add(new RoutingObjects("GG14", ROOM, 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588471, -0.230401), new String[]{"G"}));
+        list.add(new RoutingObjects("GG15", ROOM, 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588471, -0.230401), new String[]{"G"}));
+        list.add(new RoutingObjects("GG18", ROOM, 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588489, -0.230567), new String[]{"G"}));
+        list.add(new RoutingObjects("GG20", ROOM, 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588489, -0.230567), new String[]{"G"}));
+        list.add(new RoutingObjects("GG21", ROOM, 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588489, -0.230567), new String[]{"G"}));
+        list.add(new RoutingObjects("GG22", ROOM, 10, GROVE_BLOCK_A, 4, 0, new LatLng(51.588487, -0.230657), new String[]{"G"}));
+        list.add(new RoutingObjects("GG23", ROOM, 10, GROVE_BLOCK_A, 4, 0, new LatLng(51.588487, -0.230657), new String[]{"G"}));
+        list.add(new RoutingObjects("GG25", ROOM, 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588536, -0.230798), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("GG28", ROOM, 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588536, -0.230798), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("GG29", ROOM, 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588536, -0.230798), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("GG30", ROOM, 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588536, -0.230798), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("GG31", ROOM, 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588589, -0.231001), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("GG33", ROOM, 6, GROVE_BLOCK_A, 4, 0, new LatLng(51.588610, -0.230999), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("GG34", ROOM, 6, GROVE_BLOCK_A, 4, 0, new LatLng(51.588643, -0.230975), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("GG35", ROOM, 6, GROVE_BLOCK_A, 4, 0, new LatLng(51.588683, -0.230950), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("GG36", ROOM, 6, GROVE_BLOCK_A, 4, 0, new LatLng(51.588735, -0.230904), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("GG37", ROOM, 5, GROVE_BLOCK_A, 4, 0, new LatLng(51.588728, -0.230820), new String[]{"E", "D", "C"}));
+        list.add(new RoutingObjects("GG38", ROOM, 11, GROVE_BLOCK_A, 4, 0, new LatLng(51.588758, -0.230773), new String[]{"D"}));
+        list.add(new RoutingObjects("GG39", ROOM, 11, GROVE_BLOCK_A, 4, 0, new LatLng(51.588758, -0.230773), new String[]{"D"}));
+        list.add(new RoutingObjects("GG41", ROOM, 11, GROVE_BLOCK_A, 4, 0, new LatLng(51.588685, -0.230764), new String[]{"D"}));
+        list.add(new RoutingObjects("GG44", ROOM, 11, GROVE_BLOCK_A, 4, 0, new LatLng(51.588662, -0.230768), new String[]{"D"}));
+        list.add(new RoutingObjects("GG45", ROOM, 11, GROVE_BLOCK_A, 4, 0, new LatLng(51.588685, -0.230764), new String[]{"D"}));
+        list.add(new RoutingObjects("GG46", ROOM, 5, GROVE_BLOCK_A, 4, 0, new LatLng(51.588732, -0.230880), new String[]{"E", "D", "C"}));
+        list.add(new RoutingObjects("GG47", ROOM, 5, GROVE_BLOCK_A, 4, 0, new LatLng(51.588713, -0.230706), new String[]{"E", "D", "C"}));
+        list.add(new RoutingObjects("GG48", ROOM, 5, GROVE_BLOCK_A, 4, 0, new LatLng(51.588707, -0.230670), new String[]{"E", "D", "C"}));
 
 
         //GROVE BLOCK A FIRST FLOOR
-        list.add(new RoutingObjects("Grove Atrium", 11, GROVE_BLOCK_A, 3, 1, new LatLng(51.588581, -0.230482), new String[]{"J", "M", "P"}));
-        list.add(new RoutingObjects("Coffee Pod", 11, GROVE_BLOCK_A, 3, 1, new LatLng(51.588590, -0.230527), new String[]{"J", "M", "P"}));
-        list.add(new RoutingObjects("G101", 13, GROVE_BLOCK_A, 3, 1, new LatLng(51.588690, -0.230571), new String[]{"L", "M", "N"}));
-        list.add(new RoutingObjects("G104A", 13, GROVE_BLOCK_A, 3, 1, new LatLng(51.588669, -0.230459), new String[]{"L", "M", "N"}));
-        list.add(new RoutingObjects("G104B", 13, GROVE_BLOCK_A, 3, 1, new LatLng(51.588669, -0.230459), new String[]{"L", "M", "N"}));
-        list.add(new RoutingObjects("G105", 13, GROVE_BLOCK_A, 3, 1, new LatLng(51.588633, -0.230316), new String[]{"L", "M", "N"}));
-        list.add(new RoutingObjects("G107", 12, GROVE_BLOCK_A, 3, 1, new LatLng(51.588441, -0.230401), new String[]{"L", "K"}));
-        list.add(new RoutingObjects("G110", 12, GROVE_BLOCK_A, 3, 1, new LatLng(51.588418, -0.230410), new String[]{"L", "K"}));
-        list.add(new RoutingObjects("G115", 11, GROVE_BLOCK_A, 3, 1, new LatLng(51.588458, -0.230544), new String[]{"J", "M", "P"}));
-        list.add(new RoutingObjects("G116", 11, GROVE_BLOCK_A, 3, 1, new LatLng(51.588458, -0.230544), new String[]{"J", "M", "P"}));
-        list.add(new RoutingObjects("G117", 9, GROVE_BLOCK_A, 3, 1, new LatLng(51.588490, -0.230643), new String[]{"I", "O", "N"}));
-        list.add(new RoutingObjects("G118", 9, GROVE_BLOCK_A, 3, 1, new LatLng(51.588490, -0.230643), new String[]{"I", "O", "N"}));
-        list.add(new RoutingObjects("G120", 8, GROVE_BLOCK_A, 3, 1, new LatLng(51.588473, -0.230791), new String[]{"G", "H"}));
-        list.add(new RoutingObjects("G121", 8, GROVE_BLOCK_A, 3, 1, new LatLng(51.588457, -0.230804), new String[]{"G", "H"}));
-        list.add(new RoutingObjects("G122", 8, GROVE_BLOCK_A, 3, 1, new LatLng(51.588457, -0.230804), new String[]{"G", "H"}));
-        list.add(new RoutingObjects("G122A", 8, GROVE_BLOCK_A, 3, 1, new LatLng(51.588457, -0.230804), new String[]{"G", "H"}));
-        list.add(new RoutingObjects("G123A", 8, GROVE_BLOCK_A, 3, 1, new LatLng(51.588457, -0.230804), new String[]{"G", "H"}));
-        list.add(new RoutingObjects("G123B", 5, GROVE_BLOCK_A, 3, 1, new LatLng(51.588517, -0.231047), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("G124", 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588493, -0.230826), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("G125", 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588493, -0.230826), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("G126", 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588504, -0.230859), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("G127", 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588504, -0.230859), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("G128", 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588513, -0.230900), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("G129", 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588513, -0.230900), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("G130", 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588523, -0.230941), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("G131", 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588513, -0.230900), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("G132", 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588533, -0.230975), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("G133", 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588523, -0.230941), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("G134", 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588542, -0.231003), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("G135", 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588533, -0.230975), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("G136", 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588542, -0.231003), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("G137", 5, GROVE_BLOCK_A, 3, 1, new LatLng(51.588517, -0.231047), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("G137A", 5, GROVE_BLOCK_A, 3, 1, new LatLng(51.588517, -0.231047), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("G140", 4, GROVE_BLOCK_A, 3, 1, new LatLng(51.588633, -0.230982), new String[]{"E", "D"}));
-        list.add(new RoutingObjects("G141", 4, GROVE_BLOCK_A, 3, 1, new LatLng(51.588651, -0.230971), new String[]{"E", "D"}));
-        list.add(new RoutingObjects("G146", 3, GROVE_BLOCK_A, 3, 1, new LatLng(51.588703, -0.230762), new String[]{"C"}));
-        list.add(new RoutingObjects("G146A", 3, GROVE_BLOCK_A, 3, 1, new LatLng(51.588703, -0.230762), new String[]{"C"}));
-        list.add(new RoutingObjects("G147", 3, GROVE_BLOCK_A, 3, 1, new LatLng(51.588669, -0.230758), new String[]{"C"}));
-        list.add(new RoutingObjects("G148", 3, GROVE_BLOCK_A, 3, 1, new LatLng(51.588669, -0.230758), new String[]{"C"}));
-        list.add(new RoutingObjects("G149", 8, GROVE_BLOCK_A, 3, 1, new LatLng(51.588580, -0.230755), new String[]{"G", "H"}));
+        list.add(new RoutingObjects("Grove Atrium", ROOM, 11, GROVE_BLOCK_A, 3, 1, new LatLng(51.588581, -0.230482), new String[]{"J", "M", "P"}));
+        list.add(new RoutingObjects("Coffee Pod", ROOM, 11, GROVE_BLOCK_A, 3, 1, new LatLng(51.588590, -0.230527), new String[]{"J", "M", "P"}));
+        list.add(new RoutingObjects("G101", ROOM, 13, GROVE_BLOCK_A, 3, 1, new LatLng(51.588690, -0.230571), new String[]{"L", "M", "N"}));
+        list.add(new RoutingObjects("G104A", ROOM, 13, GROVE_BLOCK_A, 3, 1, new LatLng(51.588669, -0.230459), new String[]{"L", "M", "N"}));
+        list.add(new RoutingObjects("G104B", ROOM, 13, GROVE_BLOCK_A, 3, 1, new LatLng(51.588669, -0.230459), new String[]{"L", "M", "N"}));
+        list.add(new RoutingObjects("G105", ROOM, 13, GROVE_BLOCK_A, 3, 1, new LatLng(51.588633, -0.230316), new String[]{"L", "M", "N"}));
+        list.add(new RoutingObjects("G107", ROOM, 12, GROVE_BLOCK_A, 3, 1, new LatLng(51.588441, -0.230401), new String[]{"L", "K"}));
+        list.add(new RoutingObjects("G110", ROOM, 12, GROVE_BLOCK_A, 3, 1, new LatLng(51.588418, -0.230410), new String[]{"L", "K"}));
+        list.add(new RoutingObjects("G115", ROOM, 11, GROVE_BLOCK_A, 3, 1, new LatLng(51.588458, -0.230544), new String[]{"J", "M", "P"}));
+        list.add(new RoutingObjects("G116", ROOM, 11, GROVE_BLOCK_A, 3, 1, new LatLng(51.588458, -0.230544), new String[]{"J", "M", "P"}));
+        list.add(new RoutingObjects("G117", ROOM, 9, GROVE_BLOCK_A, 3, 1, new LatLng(51.588490, -0.230643), new String[]{"I", "O", "N"}));
+        list.add(new RoutingObjects("G118", ROOM, 9, GROVE_BLOCK_A, 3, 1, new LatLng(51.588490, -0.230643), new String[]{"I", "O", "N"}));
+        list.add(new RoutingObjects("G120", ROOM, 8, GROVE_BLOCK_A, 3, 1, new LatLng(51.588473, -0.230791), new String[]{"G", "H"}));
+        list.add(new RoutingObjects("G121", ROOM, 8, GROVE_BLOCK_A, 3, 1, new LatLng(51.588457, -0.230804), new String[]{"G", "H"}));
+        list.add(new RoutingObjects("G122", ROOM, 8, GROVE_BLOCK_A, 3, 1, new LatLng(51.588457, -0.230804), new String[]{"G", "H"}));
+        list.add(new RoutingObjects("G122A", ROOM, 8, GROVE_BLOCK_A, 3, 1, new LatLng(51.588457, -0.230804), new String[]{"G", "H"}));
+        list.add(new RoutingObjects("G123A", ROOM, 8, GROVE_BLOCK_A, 3, 1, new LatLng(51.588457, -0.230804), new String[]{"G", "H"}));
+        list.add(new RoutingObjects("G123B", ROOM, 5, GROVE_BLOCK_A, 3, 1, new LatLng(51.588517, -0.231047), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("G124", ROOM, 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588493, -0.230826), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("G125", ROOM, 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588493, -0.230826), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("G126", ROOM, 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588504, -0.230859), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("G127", ROOM, 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588504, -0.230859), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("G128", ROOM, 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588513, -0.230900), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("G129", ROOM, 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588513, -0.230900), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("G130", ROOM, 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588523, -0.230941), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("G131", ROOM, 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588513, -0.230900), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("G132", ROOM, 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588533, -0.230975), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("G133", ROOM, 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588523, -0.230941), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("G134", ROOM, 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588542, -0.231003), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("G135", ROOM, 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588533, -0.230975), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("G136", ROOM, 7, GROVE_BLOCK_A, 3, 1, new LatLng(51.588542, -0.231003), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("G137", ROOM, 5, GROVE_BLOCK_A, 3, 1, new LatLng(51.588517, -0.231047), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("G137A", ROOM, 5, GROVE_BLOCK_A, 3, 1, new LatLng(51.588517, -0.231047), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("G140", ROOM, 4, GROVE_BLOCK_A, 3, 1, new LatLng(51.588633, -0.230982), new String[]{"E", "D"}));
+        list.add(new RoutingObjects("G141", ROOM, 4, GROVE_BLOCK_A, 3, 1, new LatLng(51.588651, -0.230971), new String[]{"E", "D"}));
+        list.add(new RoutingObjects("G146", ROOM, 3, GROVE_BLOCK_A, 3, 1, new LatLng(51.588703, -0.230762), new String[]{"C"}));
+        list.add(new RoutingObjects("G146A", ROOM, 3, GROVE_BLOCK_A, 3, 1, new LatLng(51.588703, -0.230762), new String[]{"C"}));
+        list.add(new RoutingObjects("G147", ROOM, 3, GROVE_BLOCK_A, 3, 1, new LatLng(51.588669, -0.230758), new String[]{"C"}));
+        list.add(new RoutingObjects("G148", ROOM, 3, GROVE_BLOCK_A, 3, 1, new LatLng(51.588669, -0.230758), new String[]{"C"}));
+        list.add(new RoutingObjects("G149", ROOM, 8, GROVE_BLOCK_A, 3, 1, new LatLng(51.588580, -0.230755), new String[]{"G", "H"}));
 
 
         //GROVE BLOCK A SECOND FLOOR
-        list.add(new RoutingObjects("G201", 11, GROVE_BLOCK_A, 2, 2, new LatLng(51.588666, -0.230452), new String[]{"M", "N", "B"}));
-        list.add(new RoutingObjects("G203", 11, GROVE_BLOCK_A, 2, 2, new LatLng(51.588634, -0.230327), new String[]{"M", "N", "B"}));
-        list.add(new RoutingObjects("G204", 11, GROVE_BLOCK_A, 2, 2, new LatLng(51.588634, -0.230327), new String[]{"M", "N", "B"}));
-        list.add(new RoutingObjects("G205", 11, GROVE_BLOCK_A, 2, 2, new LatLng(51.588634, -0.230327), new String[]{"M", "N", "B"}));
-        list.add(new RoutingObjects("G206", 9, GROVE_BLOCK_A, 2, 2, new LatLng(51.588442, -0.230414), new String[]{"L", "M"}));
-        list.add(new RoutingObjects("G207", 9, GROVE_BLOCK_A, 2, 2, new LatLng(51.588442, -0.230414), new String[]{"L", "M"}));
-        list.add(new RoutingObjects("G209", 8, GROVE_BLOCK_A, 2, 2, new LatLng(51.588460, -0.230557), new String[]{"N", "K"}));
-        list.add(new RoutingObjects("G210", 8, GROVE_BLOCK_A, 2, 2, new LatLng(51.588460, -0.230557), new String[]{"N", "K"}));
-        list.add(new RoutingObjects("G211", 7, GROVE_BLOCK_A, 2, 2, new LatLng(51.588490, -0.230643), new String[]{"J", "P", "C"}));
-        list.add(new RoutingObjects("G212", 7, GROVE_BLOCK_A, 2, 2, new LatLng(51.588490, -0.230643), new String[]{"J", "P", "C"}));
-        list.add(new RoutingObjects("G214A", 6, GROVE_BLOCK_A, 2, 2, new LatLng(51.588530, -0.230766), new String[]{"J", "I", "H", "G"}));
-        list.add(new RoutingObjects("G214B", 6, GROVE_BLOCK_A, 2, 2, new LatLng(51.588566, -0.230908), new String[]{"J", "I", "H", "G"}));
-        list.add(new RoutingObjects("G214C", 6, GROVE_BLOCK_A, 2, 2, new LatLng(51.588593, -0.231005), new String[]{"J", "I", "H", "G"}));
-        list.add(new RoutingObjects("G230", 5, GROVE_BLOCK_A, 2, 2, new LatLng(51.588620, -0.230779), new String[]{"D", "I"}));
-        list.add(new RoutingObjects("G231", 2, GROVE_BLOCK_A, 2, 2, new LatLng(51.588709, -0.230674), new String[]{"C", "D", "E", "F"}));
-        list.add(new RoutingObjects("G234", 1, GROVE_BLOCK_A, 2, 2, new LatLng(51.588705, -0.230544), new String[]{"A", "B", "O"}));
-        list.add(new RoutingObjects("G235", 1, GROVE_BLOCK_A, 2, 2, new LatLng(51.588705, -0.230544), new String[]{"A", "B", "O"}));
+        list.add(new RoutingObjects("G201", ROOM, 11, GROVE_BLOCK_A, 2, 2, new LatLng(51.588666, -0.230452), new String[]{"M", "N", "B"}));
+        list.add(new RoutingObjects("G203", ROOM, 11, GROVE_BLOCK_A, 2, 2, new LatLng(51.588634, -0.230327), new String[]{"M", "N", "B"}));
+        list.add(new RoutingObjects("G204", ROOM, 11, GROVE_BLOCK_A, 2, 2, new LatLng(51.588634, -0.230327), new String[]{"M", "N", "B"}));
+        list.add(new RoutingObjects("G205", ROOM, 11, GROVE_BLOCK_A, 2, 2, new LatLng(51.588634, -0.230327), new String[]{"M", "N", "B"}));
+        list.add(new RoutingObjects("G206", ROOM, 9, GROVE_BLOCK_A, 2, 2, new LatLng(51.588442, -0.230414), new String[]{"L", "M"}));
+        list.add(new RoutingObjects("G207", ROOM, 9, GROVE_BLOCK_A, 2, 2, new LatLng(51.588442, -0.230414), new String[]{"L", "M"}));
+        list.add(new RoutingObjects("G209", ROOM, 8, GROVE_BLOCK_A, 2, 2, new LatLng(51.588460, -0.230557), new String[]{"N", "K"}));
+        list.add(new RoutingObjects("G210", ROOM, 8, GROVE_BLOCK_A, 2, 2, new LatLng(51.588460, -0.230557), new String[]{"N", "K"}));
+        list.add(new RoutingObjects("G211", ROOM, 7, GROVE_BLOCK_A, 2, 2, new LatLng(51.588490, -0.230643), new String[]{"J", "P", "C"}));
+        list.add(new RoutingObjects("G212", ROOM, 7, GROVE_BLOCK_A, 2, 2, new LatLng(51.588490, -0.230643), new String[]{"J", "P", "C"}));
+        list.add(new RoutingObjects("G214A", ROOM, 6, GROVE_BLOCK_A, 2, 2, new LatLng(51.588530, -0.230766), new String[]{"J", "I", "H", "G"}));
+        list.add(new RoutingObjects("G214B", ROOM, 6, GROVE_BLOCK_A, 2, 2, new LatLng(51.588566, -0.230908), new String[]{"J", "I", "H", "G"}));
+        list.add(new RoutingObjects("G214C", ROOM, 6, GROVE_BLOCK_A, 2, 2, new LatLng(51.588593, -0.231005), new String[]{"J", "I", "H", "G"}));
+        list.add(new RoutingObjects("G230", ROOM, 5, GROVE_BLOCK_A, 2, 2, new LatLng(51.588620, -0.230779), new String[]{"D", "I"}));
+        list.add(new RoutingObjects("G231", ROOM, 2, GROVE_BLOCK_A, 2, 2, new LatLng(51.588709, -0.230674), new String[]{"C", "D", "E", "F"}));
+        list.add(new RoutingObjects("G234", ROOM, 1, GROVE_BLOCK_A, 2, 2, new LatLng(51.588705, -0.230544), new String[]{"A", "B", "O"}));
+        list.add(new RoutingObjects("G235", ROOM, 1, GROVE_BLOCK_A, 2, 2, new LatLng(51.588705, -0.230544), new String[]{"A", "B", "O"}));
 
         //GROVE BLOCK A THIRD FLOOR
-        list.add(new RoutingObjects("G301", 2, GROVE_BLOCK_A, 1, 3, new LatLng(51.588666, -0.230452), new String[]{"A"}));
-        list.add(new RoutingObjects("G304", 2, GROVE_BLOCK_A, 1, 3, new LatLng(51.588693, -0.230595), new String[]{"A"}));
-        list.add(new RoutingObjects("G307", 2, GROVE_BLOCK_A, 1, 3, new LatLng(51.588708, -0.230660), new String[]{"A"}));
-        list.add(new RoutingObjects("G308", 2, GROVE_BLOCK_A, 1, 3, new LatLng(51.588714, -0.230711), new String[]{"A"}));
-        list.add(new RoutingObjects("G309", 1, GROVE_BLOCK_A, 1, 3, new LatLng(51.588755, -0.230633), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("G301", ROOM, 2, GROVE_BLOCK_A, 1, 3, new LatLng(51.588666, -0.230452), new String[]{"A"}));
+        list.add(new RoutingObjects("G304", ROOM, 2, GROVE_BLOCK_A, 1, 3, new LatLng(51.588693, -0.230595), new String[]{"A"}));
+        list.add(new RoutingObjects("G307", ROOM, 2, GROVE_BLOCK_A, 1, 3, new LatLng(51.588708, -0.230660), new String[]{"A"}));
+        list.add(new RoutingObjects("G308", ROOM, 2, GROVE_BLOCK_A, 1, 3, new LatLng(51.588714, -0.230711), new String[]{"A"}));
+        list.add(new RoutingObjects("G309", ROOM, 1, GROVE_BLOCK_A, 1, 3, new LatLng(51.588755, -0.230633), new String[]{"A", "B"}));
 
         //GROVE BLOCK A FOURTH FLOOR
-        list.add(new RoutingObjects("G401", 1, GROVE_BLOCK_A, 0, 4, new LatLng(51.588755, -0.230633), new String[]{"A"}));
-        list.add(new RoutingObjects("G404", 1, GROVE_BLOCK_A, 0, 4, new LatLng(51.588740, -0.230650), new String[]{"A"}));
-        list.add(new RoutingObjects("G405", 1, GROVE_BLOCK_A, 0, 4, new LatLng(51.588717, -0.230658), new String[]{"A"}));
-        list.add(new RoutingObjects("G406A", 1, GROVE_BLOCK_A, 0, 4, new LatLng(51.588716, -0.230648), new String[]{"A"}));
+        list.add(new RoutingObjects("G401", ROOM, 1, GROVE_BLOCK_A, 0, 4, new LatLng(51.588755, -0.230633), new String[]{"A"}));
+        list.add(new RoutingObjects("G404", ROOM, 1, GROVE_BLOCK_A, 0, 4, new LatLng(51.588740, -0.230650), new String[]{"A"}));
+        list.add(new RoutingObjects("G405", ROOM, 1, GROVE_BLOCK_A, 0, 4, new LatLng(51.588717, -0.230658), new String[]{"A"}));
+        list.add(new RoutingObjects("G406A", ROOM, 1, GROVE_BLOCK_A, 0, 4, new LatLng(51.588716, -0.230648), new String[]{"A"}));
 
         //GROVE BLOCK B GROUND FLOOR
-        list.add(new RoutingObjects("GG71", 1, GROVE_BLOCK_B, 2, 0, new LatLng(51.588949, -0.230396), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("GG78", 1, GROVE_BLOCK_B, 2, 0, new LatLng(51.588900, -0.230214), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("GG79", 1, GROVE_BLOCK_B, 2, 0, new LatLng(51.588897, -0.230192), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("GG72", 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588965, -0.230216), new String[]{"B"}));
-        list.add(new RoutingObjects("GG73", 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588965, -0.230216), new String[]{"B"}));
-        list.add(new RoutingObjects("GG74", 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588993, -0.230200), new String[]{"B"}));
-        list.add(new RoutingObjects("GG75", 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588993, -0.230200), new String[]{"B"}));
-        list.add(new RoutingObjects("GG77", 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588993, -0.230200), new String[]{"B"}));
-        list.add(new RoutingObjects("GG77", 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588965, -0.230216), new String[]{"B"}));
+        list.add(new RoutingObjects("GG71", ROOM, 1, GROVE_BLOCK_B, 2, 0, new LatLng(51.588949, -0.230396), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("GG78", ROOM, 1, GROVE_BLOCK_B, 2, 0, new LatLng(51.588900, -0.230214), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("GG79", ROOM, 1, GROVE_BLOCK_B, 2, 0, new LatLng(51.588897, -0.230192), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("GG72", ROOM, 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588965, -0.230216), new String[]{"B"}));
+        list.add(new RoutingObjects("GG73", ROOM, 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588965, -0.230216), new String[]{"B"}));
+        list.add(new RoutingObjects("GG74", ROOM, 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588993, -0.230200), new String[]{"B"}));
+        list.add(new RoutingObjects("GG75", ROOM, 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588993, -0.230200), new String[]{"B"}));
+        list.add(new RoutingObjects("GG77", ROOM, 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588993, -0.230200), new String[]{"B"}));
+        list.add(new RoutingObjects("GG77", ROOM, 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588965, -0.230216), new String[]{"B"}));
 
         //GROVE BLOCK B FIRST FLOOR
-        list.add(new RoutingObjects("G170", 2, GROVE_BLOCK_B, 1, 1, new LatLng(51.588927, -0.230365), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("G171", 2, GROVE_BLOCK_B, 1, 1, new LatLng(51.588925, -0.230347), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("G172", 2, GROVE_BLOCK_B, 1, 1, new LatLng(51.588905, -0.230247), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("G174", 2, GROVE_BLOCK_B, 1, 1, new LatLng(51.588896, -0.230199), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("G175", 2, GROVE_BLOCK_B, 1, 1, new LatLng(51.588890, -0.230162), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("G176", 3, GROVE_BLOCK_B, 1, 1, new LatLng(51.588940, -0.230120), new String[]{"C", "B"}));
-        list.add(new RoutingObjects("G177", 3, GROVE_BLOCK_B, 1, 1, new LatLng(51.588960, -0.230111), new String[]{"C", "B"}));
-        list.add(new RoutingObjects("G178", 3, GROVE_BLOCK_B, 1, 1, new LatLng(51.588960, -0.230111), new String[]{"C", "B"}));
-        list.add(new RoutingObjects("G179", 4, GROVE_BLOCK_B, 1, 1, new LatLng(51.588952, -0.230076), new String[]{"C"}));
-        list.add(new RoutingObjects("G180", 4, GROVE_BLOCK_B, 1, 1, new LatLng(51.588936, -0.230044), new String[]{"C"}));
-        list.add(new RoutingObjects("G181", 3, GROVE_BLOCK_B, 1, 1, new LatLng(51.588923, -0.230113), new String[]{"C", "B"}));
-        list.add(new RoutingObjects("G182", 3, GROVE_BLOCK_B, 1, 1, new LatLng(51.588905, -0.230121), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("G170", ROOM, 2, GROVE_BLOCK_B, 1, 1, new LatLng(51.588927, -0.230365), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("G171", ROOM, 2, GROVE_BLOCK_B, 1, 1, new LatLng(51.588925, -0.230347), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("G172", ROOM, 2, GROVE_BLOCK_B, 1, 1, new LatLng(51.588905, -0.230247), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("G174", ROOM, 2, GROVE_BLOCK_B, 1, 1, new LatLng(51.588896, -0.230199), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("G175", ROOM, 2, GROVE_BLOCK_B, 1, 1, new LatLng(51.588890, -0.230162), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("G176", ROOM, 3, GROVE_BLOCK_B, 1, 1, new LatLng(51.588940, -0.230120), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("G177", ROOM, 3, GROVE_BLOCK_B, 1, 1, new LatLng(51.588960, -0.230111), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("G178", ROOM, 3, GROVE_BLOCK_B, 1, 1, new LatLng(51.588960, -0.230111), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("G179", ROOM, 4, GROVE_BLOCK_B, 1, 1, new LatLng(51.588952, -0.230076), new String[]{"C"}));
+        list.add(new RoutingObjects("G180", ROOM, 4, GROVE_BLOCK_B, 1, 1, new LatLng(51.588936, -0.230044), new String[]{"C"}));
+        list.add(new RoutingObjects("G181", ROOM, 3, GROVE_BLOCK_B, 1, 1, new LatLng(51.588923, -0.230113), new String[]{"C", "B"}));
+        list.add(new RoutingObjects("G182", ROOM, 3, GROVE_BLOCK_B, 1, 1, new LatLng(51.588905, -0.230121), new String[]{"C", "B"}));
 
         //GROVE BLOCK B SECOND FLOOR
-        list.add(new RoutingObjects("G270", 2, GROVE_BLOCK_B, 0, 2, new LatLng(51.588932, -0.230382), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("G271", 2, GROVE_BLOCK_B, 0, 2, new LatLng(51.588925, -0.230348), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("G272", 2, GROVE_BLOCK_B, 0, 2, new LatLng(51.588906, -0.230249), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("G274", 3, GROVE_BLOCK_B, 0, 2, new LatLng(51.588917, -0.230128), new String[]{"B"}));
+        list.add(new RoutingObjects("G270", ROOM, 2, GROVE_BLOCK_B, 0, 2, new LatLng(51.588932, -0.230382), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("G271", ROOM, 2, GROVE_BLOCK_B, 0, 2, new LatLng(51.588925, -0.230348), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("G272", ROOM, 2, GROVE_BLOCK_B, 0, 2, new LatLng(51.588906, -0.230249), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("G274", ROOM, 3, GROVE_BLOCK_B, 0, 2, new LatLng(51.588917, -0.230128), new String[]{"B"}));
 
         //GROVE BLOCK C GROUND FLOOR
-        list.add(new RoutingObjects("GG90", 3, GROVE_BLOCK_C, 2, 0, new LatLng(51.589272, -0.230063), new String[]{"C", "B", "D"}));
-        list.add(new RoutingObjects("GG92", 3, GROVE_BLOCK_C, 2, 0, new LatLng(51.589265, -0.229971), new String[]{"C", "B", "D"}));
-        list.add(new RoutingObjects("GG93", 4, GROVE_BLOCK_C, 2, 0, new LatLng(51.589237, -0.230050), new String[]{"B"}));
-        list.add(new RoutingObjects("GG94", 4, GROVE_BLOCK_C, 2, 0, new LatLng(51.589237, -0.230050), new String[]{"B"}));
-        list.add(new RoutingObjects("GG96", 1, GROVE_BLOCK_C, 2, 0, new LatLng(51.589178, -0.230249), new String[]{"A"}));
-        list.add(new RoutingObjects("GG97", 2, GROVE_BLOCK_C, 2, 0, new LatLng(51.589194, -0.230243), new String[]{"A", "E", "C"}));
-        list.add(new RoutingObjects("GG98", 2, GROVE_BLOCK_C, 2, 0, new LatLng(51.589205, -0.230231), new String[]{"A", "E", "C"}));
+        list.add(new RoutingObjects("GG90", ROOM, 3, GROVE_BLOCK_C, 2, 0, new LatLng(51.589272, -0.230063), new String[]{"C", "B", "D"}));
+        list.add(new RoutingObjects("GG92", ROOM, 3, GROVE_BLOCK_C, 2, 0, new LatLng(51.589265, -0.229971), new String[]{"C", "B", "D"}));
+        list.add(new RoutingObjects("GG93", ROOM, 4, GROVE_BLOCK_C, 2, 0, new LatLng(51.589237, -0.230050), new String[]{"B"}));
+        list.add(new RoutingObjects("GG94", ROOM, 4, GROVE_BLOCK_C, 2, 0, new LatLng(51.589237, -0.230050), new String[]{"B"}));
+        list.add(new RoutingObjects("GG96", ROOM, 1, GROVE_BLOCK_C, 2, 0, new LatLng(51.589178, -0.230249), new String[]{"A"}));
+        list.add(new RoutingObjects("GG97", ROOM, 2, GROVE_BLOCK_C, 2, 0, new LatLng(51.589194, -0.230243), new String[]{"A", "E", "C"}));
+        list.add(new RoutingObjects("GG98", ROOM, 2, GROVE_BLOCK_C, 2, 0, new LatLng(51.589205, -0.230231), new String[]{"A", "E", "C"}));
 
         //GROVE BLOCK C FIRST FLOOR
-        list.add(new RoutingObjects("G190", 3, GROVE_BLOCK_C, 1, 1, new LatLng(51.589256, -0.230171), new String[]{"B"}));
-        list.add(new RoutingObjects("G191", 2, GROVE_BLOCK_C, 1, 1, new LatLng(51.589210, -0.230185), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("G192", 3, GROVE_BLOCK_C, 1, 1, new LatLng(51.589256, -0.230171), new String[]{"B"}));
+        list.add(new RoutingObjects("G190", ROOM, 3, GROVE_BLOCK_C, 1, 1, new LatLng(51.589256, -0.230171), new String[]{"B"}));
+        list.add(new RoutingObjects("G191", ROOM, 2, GROVE_BLOCK_C, 1, 1, new LatLng(51.589210, -0.230185), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("G192", ROOM, 3, GROVE_BLOCK_C, 1, 1, new LatLng(51.589256, -0.230171), new String[]{"B"}));
 
         //PORTACABIN A GROUND FLOOR
-        list.add(new RoutingObjects("Portakabin A", 2, PORTACABIN_A, 1, 0, new LatLng(51.589736, -0.230232), new String[]{"A"}));
-        list.add(new RoutingObjects("PAG03", 2, PORTACABIN_A, 1, 0, new LatLng(51.589736, -0.230232), new String[]{"A"}));
-        list.add(new RoutingObjects("PAG04", 2, PORTACABIN_A, 1, 0, new LatLng(51.589736, -0.230232), new String[]{"A"}));
-        list.add(new RoutingObjects("PAG07", 2, PORTACABIN_A, 1, 0, new LatLng(51.589711, -0.230239), new String[]{"A"}));
-        list.add(new RoutingObjects("PAG08", 2, PORTACABIN_A, 1, 0, new LatLng(51.589711, -0.230239), new String[]{"A"}));
+        list.add(new RoutingObjects("Portakabin A", ROOM, 2, PORTACABIN_A, 1, 0, new LatLng(51.589736, -0.230232), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG03", ROOM, 2, PORTACABIN_A, 1, 0, new LatLng(51.589736, -0.230232), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG04", ROOM, 2, PORTACABIN_A, 1, 0, new LatLng(51.589736, -0.230232), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG07", ROOM, 2, PORTACABIN_A, 1, 0, new LatLng(51.589711, -0.230239), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG08", ROOM, 2, PORTACABIN_A, 1, 0, new LatLng(51.589711, -0.230239), new String[]{"A"}));
 
         //PORTACABIN A FIRST FLOOR
-        list.add(new RoutingObjects("PA101", 2, PORTACABIN_A, 0, 1, new LatLng(51.589736, -0.230232), new String[]{"A"}));
-        list.add(new RoutingObjects("PA102", 2, PORTACABIN_A, 0, 1, new LatLng(51.589736, -0.230232), new String[]{"A"}));
-        list.add(new RoutingObjects("PA103", 2, PORTACABIN_A, 0, 1, new LatLng(51.589711, -0.230239), new String[]{"A"}));
-        list.add(new RoutingObjects("PA104", 2, PORTACABIN_A, 0, 1, new LatLng(51.589711, -0.230239), new String[]{"A"}));
+        list.add(new RoutingObjects("PA101", ROOM, 2, PORTACABIN_A, 0, 1, new LatLng(51.589736, -0.230232), new String[]{"A"}));
+        list.add(new RoutingObjects("PA102", ROOM, 2, PORTACABIN_A, 0, 1, new LatLng(51.589736, -0.230232), new String[]{"A"}));
+        list.add(new RoutingObjects("PA103", ROOM, 2, PORTACABIN_A, 0, 1, new LatLng(51.589711, -0.230239), new String[]{"A"}));
+        list.add(new RoutingObjects("PA104", ROOM, 2, PORTACABIN_A, 0, 1, new LatLng(51.589711, -0.230239), new String[]{"A"}));
 
         //PORTACABIN A EXT GROUND FLOOR
-        list.add(new RoutingObjects("PAG01", 1, PORTACABIN_A_EXT, 1, 0, new LatLng(51.589881, -0.230205), new String[]{"A"}));
-        list.add(new RoutingObjects("PAG02", 1, PORTACABIN_A_EXT, 1, 0, new LatLng(51.589857, -0.230211), new String[]{"A"}));
-        list.add(new RoutingObjects("PAG05", 1, PORTACABIN_A_EXT, 1, 0, new LatLng(51.589866, -0.230170), new String[]{"A"}));
-        list.add(new RoutingObjects("PAG06", 1, PORTACABIN_A_EXT, 1, 0, new LatLng(51.589866, -0.230170), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG01", ROOM, 1, PORTACABIN_A_EXT, 1, 0, new LatLng(51.589881, -0.230205), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG02", ROOM, 1, PORTACABIN_A_EXT, 1, 0, new LatLng(51.589857, -0.230211), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG05", ROOM, 1, PORTACABIN_A_EXT, 1, 0, new LatLng(51.589866, -0.230170), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG06", ROOM, 1, PORTACABIN_A_EXT, 1, 0, new LatLng(51.589866, -0.230170), new String[]{"A"}));
 
         //PORTACABIN 6 & 7
 
-        list.add(new RoutingObjects("Portakabin 6 & 7", 3, PORTACABIN_67, 1, 0, new LatLng(51.589699, -0.229967), new String[]{"B"}));
-        list.add(new RoutingObjects("P6G01", 3, PORTACABIN_67, 1, 0, new LatLng(51.589699, -0.229967), new String[]{"B"}));
-        list.add(new RoutingObjects("P6G02", 2, PORTACABIN_67, 1, 0, new LatLng(51.589686, -0.229844), new String[]{"A"}));
-        list.add(new RoutingObjects("P7101", 2, PORTACABIN_67, 1, 0, new LatLng(51.589686, -0.229844), new String[]{"A"}));
-        list.add(new RoutingObjects("P7102", 3, PORTACABIN_67, 1, 0, new LatLng(51.589699, -0.229967), new String[]{"B"}));
+        list.add(new RoutingObjects("Portakabin 6 & 7", ROOM, 3, PORTACABIN_67, 1, 0, new LatLng(51.589699, -0.229967), new String[]{"B"}));
+        list.add(new RoutingObjects("P6G01", ROOM, 3, PORTACABIN_67, 1, 0, new LatLng(51.589699, -0.229967), new String[]{"B"}));
+        list.add(new RoutingObjects("P6G02", ROOM, 2, PORTACABIN_67, 1, 0, new LatLng(51.589686, -0.229844), new String[]{"A"}));
+        list.add(new RoutingObjects("P7101", ROOM, 2, PORTACABIN_67, 1, 0, new LatLng(51.589686, -0.229844), new String[]{"A"}));
+        list.add(new RoutingObjects("P7102", ROOM, 3, PORTACABIN_67, 1, 0, new LatLng(51.589699, -0.229967), new String[]{"B"}));
 
         //PORTACABIN B
-        list.add(new RoutingObjects("Portakabin B", 1, PORTACABIN_B, 0, 0, new LatLng(51.590717, -0.229092), new String[]{"A"}));
-        list.add(new RoutingObjects("PBG01", 1, PORTACABIN_B, 0, 0, new LatLng(51.590717, -0.229092), new String[]{"A"}));
-        list.add(new RoutingObjects("PBG02", 1, PORTACABIN_B, 0, 0, new LatLng(51.590717, -0.229092), new String[]{"A"}));
+        list.add(new RoutingObjects("Portakabin B", ROOM, 1, PORTACABIN_B, 0, 0, new LatLng(51.590717, -0.229092), new String[]{"A"}));
+        list.add(new RoutingObjects("PBG01", ROOM, 1, PORTACABIN_B, 0, 0, new LatLng(51.590717, -0.229092), new String[]{"A"}));
+        list.add(new RoutingObjects("PBG02", ROOM, 1, PORTACABIN_B, 0, 0, new LatLng(51.590717, -0.229092), new String[]{"A"}));
 
         //BARN
-        list.add(new RoutingObjects("Barn", 1, BARN, 0, 0, new LatLng(51.590952, -0.228580), new String[]{"A"}));
-        list.add(new RoutingObjects("BAG01", 1, BARN, 0, 0, new LatLng(51.590952, -0.228580), new String[]{"A"}));
-        list.add(new RoutingObjects("BAG02", 3, BARN, 0, 0, new LatLng(51.591056, -0.228586), new String[]{"B"}));
+        list.add(new RoutingObjects("Barn", ROOM, 1, BARN, 0, 0, new LatLng(51.590952, -0.228580), new String[]{"A"}));
+        list.add(new RoutingObjects("BAG01", ROOM, 1, BARN, 0, 0, new LatLng(51.590952, -0.228580), new String[]{"A"}));
+        list.add(new RoutingObjects("BAG02", ROOM, 3, BARN, 0, 0, new LatLng(51.591056, -0.228586), new String[]{"B"}));
         return list;
     }
 
@@ -1483,4 +1483,27 @@ public class RoutingObjects {
         return Arrays.stream(primeLanes).anyMatch(primeLane -> primeLane == destination);
     }
 
+    @Override
+    public int compareTo(RoutingObjects o) {
+        return name.compareTo(o.name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof RoutingObjects)) return false;
+        if (obj == this) return true;
+
+        RoutingObjects that = (RoutingObjects) obj;
+        return name.equals(that.getName()) && latLng.latitude == that.latLng.latitude && latLng.longitude == that.latLng.longitude;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, latLng.latitude, latLng.longitude);
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

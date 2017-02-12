@@ -13,22 +13,22 @@ import java.util.ArrayList;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class SBDLResponseObject extends MainResponseObject {
     private ArrayList<ArrayList<LatLng>> route;
-    private Double distance;
+    private double distance;
 
-    private SBDLResponseObject(ArrayList<ArrayList<LatLng>> route, Double distance) {
-        this.route = route;
+    private SBDLResponseObject(double distance, ArrayList<ArrayList<LatLng>> route) {
         this.distance = distance;
+        this.route = route;
     }
 
     public ArrayList<ArrayList<LatLng>> getRoute() {
         return route;
     }
 
-    public Double getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public static SBDLResponseObject createRouteObject(ArrayList<ArrayList<LatLng>> route, Double distance) {
-        return new SBDLResponseObject(route, distance);
+    public static SBDLResponseObject createRouteObject(double distance, ArrayList<ArrayList<LatLng>> route) {
+        return new SBDLResponseObject(distance, route);
     }
 }

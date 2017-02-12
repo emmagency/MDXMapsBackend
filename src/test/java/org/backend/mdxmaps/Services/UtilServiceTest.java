@@ -35,7 +35,7 @@ public class UtilServiceTest {
         when(object3.getType()).thenReturn(BASIC_CONNECTOR);
         when(object4.getType()).thenReturn(BASIC_CONNECTOR);
 
-        assertEquals(3, UtilService.filterConnectorObjectsByType(
+        assertEquals(3, RoutingObjectsGetterUtilService.filterConnectorObjectsByType(
                 new ArrayList<>(Arrays.asList(object1, object2, object3, object4)), BASIC_CONNECTOR).size());
     }
 
@@ -50,7 +50,7 @@ public class UtilServiceTest {
         routes.add(new ArrayList<>(Arrays.asList(object1, object2)));
         routes.add(new ArrayList<>(Arrays.asList(object3, object4)));
 
-        assertEquals(1, UtilService.removeNonDisabledRoutes(routes).size());
+        assertEquals(1, RoutingObjectsGetterUtilService.removeNonDisabledRoutes(routes).size());
     }
 
     @Test

@@ -21,7 +21,7 @@ public class IndoorAlgorithm {
     ArrayList<RoutingObjects> allLevelConnectors;
     ArrayList<RoutingObjects> previouslyUsedConnectors;
 
-    //ToDO Switch to static method
+    //ToDO Switch to static method, check for wheelchair users here
     public ArrayList<ArrayList<String>> sameLevelOp(ArrayList<RoutingObjects> primes, int destinationLane, String building, int actualLevel) {
         allLevelConnectors = getConnectors(building, actualLevel);
         previouslyUsedConnectors = new ArrayList<>();
@@ -34,7 +34,7 @@ public class IndoorAlgorithm {
         //Main loop
         for (int i = 0; i < primes.size(); i++) {
             //Set's current alpha as first value
-            if (CAQ.size() == 0) {
+            if (CAQ.isEmpty()) {
                 CAQ.add(0, primes.get(i).getName());
             } else {
                 CAQ.set(0, primes.get(i).getName());

@@ -28,6 +28,7 @@ public class ResolveOperationTypeService {
         this.destinationObject = destinationObject;
     }
 
+    @SuppressWarnings("Duplicates")
     public ResponseService resolveOPType() {
         ResponseService response = new ResponseService();
 
@@ -36,9 +37,9 @@ public class ResolveOperationTypeService {
                 //It's either sbsl or diff buildings ground floors
                 response.setStatus(ResponseService.Status.OK);
                 if (startObject.getBuilding().equals(destinationObject.getBuilding())) {
-                    response.setEntity(SBSLFactoryService.create(startObject, destinationObject, MOT.NULL));
+                    response.setEntity(SBSLFactoryService.create(startObject, destinationObject, NULL));
                 } else {
-                    response.setEntity(new DiffBuildingFactoryService(NULL, NULL, false, false));
+                    response.setEntity(DiffBuildingFactoryService.create(startObject, destinationObject, NULL, NULL, false, false, false));
                 }
                 break;
 
@@ -97,7 +98,7 @@ public class ResolveOperationTypeService {
                                 destEDMethod = ELEVATORS;
                             }
                             response.setStatus(Status.OK);
-                            response.setEntity(new DiffBuildingFactoryService(startEDMethod, destEDMethod, startED, destED));
+                            response.setEntity(DiffBuildingFactoryService.create(startObject, destinationObject, startEDMethod, destEDMethod, true, startED, destED));
                         }
                     } else {
                         if (!destinationObject.getBuildingObject().isBuildingWheelChairAccessible() &&
@@ -186,7 +187,7 @@ public class ResolveOperationTypeService {
                         destEDMethod = NULL;
                     }
 
-                    response.setEntity(new DiffBuildingFactoryService(startEDMethod, destEDMethod, startED, destED));
+                    response.setEntity(DiffBuildingFactoryService.create(startObject, destinationObject, startEDMethod, destEDMethod, false, startED, destED));
                 }
                 break;
 
@@ -240,7 +241,7 @@ public class ResolveOperationTypeService {
                         destED = false;
                         destEDMethod = NULL;
                     }
-                    response.setEntity(new DiffBuildingFactoryService(startEDMethod, destEDMethod, startED, destED));
+                    response.setEntity(DiffBuildingFactoryService.create(startObject, destinationObject, startEDMethod, destEDMethod, false, startED, destED));
                 }
                 break;
         }

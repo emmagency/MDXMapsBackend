@@ -4,14 +4,12 @@ package org.backend.mdxmaps.Services;
  * Created by Emmanuel Keboh on 22/12/2016.
  */
 
-import com.google.common.collect.Multimap;
-import org.backend.mdxmaps.Model.LatLng;
+import org.backend.mdxmaps.Model.Enums.ObjectType;
 import org.backend.mdxmaps.Model.RoutingObjects;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 import static org.backend.mdxmaps.Model.RoutingObjects.connectorMapInit;
@@ -37,7 +35,8 @@ public final class RoutingObjectsGetterUtilService {
         return (ArrayList<RoutingObjects>) Arrays.stream(laneConnectors)
                 .map(laneConnector -> connectorObjects.parallelStream()
                         .filter(connectorObject -> connectorObject.getName().equals(laneConnector))
-                        .findFirst().get())
+                        .findFirst().orElse(null))
+                .filter(Objects::nonNull)
                 .collect(toList());
     }
 
@@ -45,6 +44,24 @@ public final class RoutingObjectsGetterUtilService {
         return connectors.parallelStream()
                 .filter(connector -> connector.getName().equals(name))
                 .findFirst().orElse(null);
+    }
+
+    public static ArrayList<RoutingObjects> getRequiredConnectorObjectsForRoutes(ArrayList<ArrayList<String>> validRoutes,
+                                                                                 ArrayList<RoutingObjects> connectorObjects) {
+        ArrayList<String> requiredConnectorsString = new ArrayList<>();
+
+        validRoutes.forEach(stringsArrayList -> stringsArrayList.forEach(string -> {
+            if (!requiredConnectorsString.contains(string)) {
+                requiredConnectorsString.add(string);
+            }
+        }));
+
+        return (ArrayList<RoutingObjects>) requiredConnectorsString.parallelStream()
+                .map(string -> connectorObjects.parallelStream()
+                        .filter(connectorObject -> connectorObject.getName().equals(string))
+                        .findFirst().orElse(null))
+                .filter(Objects::nonNull)
+                .collect(toList());
     }
 
     public static RoutingObjects getRoomObjectFromName(String name) {
@@ -62,12 +79,26 @@ public final class RoutingObjectsGetterUtilService {
                 .collect(toList());
     }
 
-    public static ArrayList<LatLng> getBestRouteFromSortedMultiMap(Multimap<Double, ArrayList<LatLng>> sortedValidRoutesLatLng) {
-        double shortestDistance = Collections.min(sortedValidRoutesLatLng.keySet());
-        return ((List<ArrayList<LatLng>>) sortedValidRoutesLatLng.get(shortestDistance)).get(0);
-    }
-
     public static ArrayList<RoutingObjects> getConnectors(String building, int actualLevel) {
         return connectorMapInit(building, actualLevel).get(building);
+    }
+
+    public static ArrayList<ArrayList<RoutingObjects>> removeNonDisabledRoutes(ArrayList<ArrayList<RoutingObjects>> validRoutes) {
+        return (ArrayList<ArrayList<RoutingObjects>>) validRoutes.parallelStream()
+                .filter(route -> route.parallelStream()
+                        .noneMatch(connectorObject -> connectorObject.getIsWheelChairAccessible().equals("N")))
+                .collect(toList());
+    }
+
+    public static ArrayList<RoutingObjects> removeNonDisabledObjects(ArrayList<RoutingObjects> objects) {
+        return (ArrayList<RoutingObjects>) objects.parallelStream()
+                .filter(object -> !object.getIsWheelChairAccessible().equals("N"))
+                .collect(toList());
+    }
+
+    public static ArrayList<RoutingObjects> filterConnectorObjectsByType(ArrayList<RoutingObjects> connectors, ObjectType type) {
+        return (ArrayList<RoutingObjects>) connectors.parallelStream()
+                .filter(connector -> connector.getType() == type)
+                .collect(toList());
     }
 }

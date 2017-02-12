@@ -53,7 +53,6 @@ public class OutdoorAlgorithm {
             switch (result) {
                 case "restart":
                     i -= 1;
-//                    Log.d("Gency", "Restart: "+String.valueOf(restart++));
                     break;
                 case "drop":
                     //Current alpha object has a 'visited' arrayList, remove it
@@ -63,7 +62,6 @@ public class OutdoorAlgorithm {
                     //Remove current alpha
                     CAQ.remove(CAQ.size() - 1);
                     i -= 1;
-//                    Log.d("Gency", "Drop: "+String.valueOf(drop++));
                     break;
                 default:
                     //Done with iteration
@@ -72,18 +70,13 @@ public class OutdoorAlgorithm {
                         if (acceptedDistanceFromLine <= 150) {
                             acceptedDistanceFromLine += 10;
                             i -= 1;
-//                            Log.d("Gency", "Restarting: "+String.valueOf(acceptedDistanceFromLine));
                         }
                     }
-                    //                   Log.d("Gency", "Done: "+String.valueOf(done++));
                     break;
             }
 
         }
-
-        //Return all valid routes
         CAQ.clear();
-//        Log.d("Gency", "Returning now");
         return validRoutes;
     }
 

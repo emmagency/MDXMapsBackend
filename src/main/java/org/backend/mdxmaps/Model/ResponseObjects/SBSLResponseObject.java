@@ -14,23 +14,23 @@ import java.util.ArrayList;
 public class SBSLResponseObject extends MainResponseObject {
 
     private ArrayList<LatLng> route;
-    private Double distance;
+    private double distance;
 
-    private SBSLResponseObject(ArrayList<LatLng> route, Double distance) {
-        this.route = route;
+    private SBSLResponseObject(double distance, ArrayList<LatLng> route) {
         this.distance = distance;
+        this.route = route;
     }
 
     public ArrayList<LatLng> getRoute() {
         return route;
     }
 
-    public Double getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public static SBSLResponseObject createRouteObject(ArrayList<LatLng> route, Double distance) {
-        return new SBSLResponseObject(route, distance);
+    public static SBSLResponseObject createRouteObject(double distance, ArrayList<LatLng> route) {
+        return new SBSLResponseObject(distance, route);
     }
 
 

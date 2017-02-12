@@ -8,18 +8,20 @@ import org.backend.mdxmaps.Model.RoutingObjects;
 import org.backend.mdxmaps.Services.Algorithms.IndoorAlgorithm;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.backend.mdxmaps.Model.Enums.MOT.DISABLED;
 import static org.backend.mdxmaps.Model.Enums.ObjectType.BASIC_CONNECTOR;
+import static org.backend.mdxmaps.Model.Enums.ObjectType.ROOM;
+import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.filterConnectorObjectsByType;
 import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getAllPrimes;
 import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getConnectors;
+import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getSameLanesBCForConnetorObject;
+import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.removeNonDisabledRoutes;
 import static org.backend.mdxmaps.Services.UtilService.calculateMultipleRoutesDistanceAndSort;
-import static org.backend.mdxmaps.Services.UtilService.filterConnectorObjectsByType;
 import static org.backend.mdxmaps.Services.UtilService.plugInStartAndEndObjects;
-import static org.backend.mdxmaps.Services.UtilService.removeNonDisabledRoutes;
 import static org.backend.mdxmaps.Services.UtilService.transformValidRoutesStringToObjects;
-import static org.backend.mdxmaps.Services.UtilService.validRouteObjectToLatLngTransformer;
+import static org.backend.mdxmaps.Services.UtilService.validRouteObjectsToLatLngTransformer;
 
 /**
  * Created by Emmanuel Keboh on 21/12/2016.
@@ -30,15 +32,28 @@ public final class SingleLevelSLOCalculator {
     }
 
     public static Multimap<Double, ArrayList<LatLng>> performSingleLevelSLO(RoutingObjects start, RoutingObjects end, MOT mot) {
+        return singleLevelSLO(start, end, mot, null);
+    }
+
+    public static Multimap<Double, ArrayList<LatLng>> performSingleLevelSLO(RoutingObjects start, RoutingObjects end, MOT mot, String building) {
+        return singleLevelSLO(start, end, mot, building);
+    }
+
+    private static Multimap<Double, ArrayList<LatLng>> singleLevelSLO(RoutingObjects start, RoutingObjects end, MOT mot, String location) {
+
+        String building = location != null ? location : start.getBuilding() != null ? start.getBuilding() : end.getBuilding();
 
         //Get the actual connector objects and filter objects by type
         ArrayList<RoutingObjects> connectorObjects =
-                filterConnectorObjectsByType(getConnectors(start.getBuilding(),
+                filterConnectorObjectsByType(getConnectors(building,
                         start.getActualLevel()), BASIC_CONNECTOR);
 
+        ArrayList<RoutingObjects> allPrimes = start.getType() == ROOM ?
+                getAllPrimes(start.getName(), connectorObjects) : getSameLanesBCForConnetorObject(connectorObjects, start);
+        int destLane = end.getType() == ROOM ? end.getLane() : end.getPrimeLanes()[0];
+
         //Run algorithm
-        ArrayList<ArrayList<String>> validRoutes = new IndoorAlgorithm().sameLevelOp(
-                getAllPrimes(start.getName(), connectorObjects), end.getLane(), start.getBuilding(), start.getActualLevel());
+        ArrayList<ArrayList<String>> validRoutes = new IndoorAlgorithm().sameLevelOp(allPrimes, destLane, building, start.getActualLevel());
 
         //Transform algorithm result to objects
         ArrayList<ArrayList<RoutingObjects>> validRoutesObjects = transformValidRoutesStringToObjects(validRoutes, connectorObjects);
@@ -48,12 +63,12 @@ public final class SingleLevelSLOCalculator {
             validRoutesObjects = removeNonDisabledRoutes(validRoutesObjects);
         }
 
-        if (validRoutesObjects.size() != 0) {
+        if (!validRoutesObjects.isEmpty()) {
             validRoutesObjects = plugInStartAndEndObjects(start, end, validRoutesObjects);
 
-            ArrayList<ArrayList<LatLng>> allLatLngs = (ArrayList<ArrayList<LatLng>>) validRoutesObjects.stream()
-                    .map(validRouteObjectToLatLngTransformer())
-                    .collect(Collectors.toList());
+            ArrayList<ArrayList<LatLng>> allLatLngs = (ArrayList<ArrayList<LatLng>>) validRoutesObjects.parallelStream()
+                    .map(validRouteObjectsToLatLngTransformer())
+                    .collect(toList());
 
             return calculateMultipleRoutesDistanceAndSort(allLatLngs);
         }

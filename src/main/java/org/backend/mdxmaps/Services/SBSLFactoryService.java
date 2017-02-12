@@ -3,16 +3,18 @@ package org.backend.mdxmaps.Services;
 import com.google.common.collect.Multimap;
 import org.backend.mdxmaps.Model.Enums.MOT;
 import org.backend.mdxmaps.Model.LatLng;
+import org.backend.mdxmaps.Model.OperationFactory;
 import org.backend.mdxmaps.Model.ResponseObjects.SBSLResponseObject;
-import org.backend.mdxmaps.Model.RouteCalculation;
 import org.backend.mdxmaps.Model.RoutingObjects;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.backend.mdxmaps.Model.Enums.MOT.DISABLED;
 import static org.backend.mdxmaps.Model.Enums.OperationType.SBSL;
+import static org.backend.mdxmaps.Model.ResponseObjects.MainResponseObject.createMainResponseObject;
 import static org.backend.mdxmaps.Services.ResponseService.Status.OK;
 import static org.backend.mdxmaps.Services.RouteCalculators.SingleLevelSLOCalculator.performSingleLevelSLO;
 
@@ -21,7 +23,7 @@ import static org.backend.mdxmaps.Services.RouteCalculators.SingleLevelSLOCalcul
  */
 
 /*SBSL: Same building, same level*/
-public class SBSLFactoryService implements RouteCalculation {
+public class SBSLFactoryService implements OperationFactory {
 
     private MOT mot;
     private RoutingObjects start, destination;
@@ -59,12 +61,11 @@ public class SBSLFactoryService implements RouteCalculation {
                 .forEach(distance -> {
                     List<ArrayList<LatLng>> keyValues = (List<ArrayList<LatLng>>) SLOroutes.get(distance);
                     routes.addAll(keyValues.parallelStream()
-                            .map(route -> SBSLResponseObject.createRouteObject(route, distance))
+                            .map(route -> SBSLResponseObject.createRouteObject(distance, route))
                             .collect(Collectors.toList()));
                 });
 
-        return ResponseService.create(OK,
-                SBSLResponseObject.createMainResponseObject(OK, SBSL, null, routes));
+        ArrayList<String> icon = new ArrayList<>(Arrays.asList(mot == DISABLED ? "wheelchair" : "walk"));
+        return ResponseService.create(OK, createMainResponseObject(OK, SBSL, icon, routes));
     }
-
 }

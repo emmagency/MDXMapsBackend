@@ -3,8 +3,8 @@ package org.backend.mdxmaps.Services;
 import com.google.common.collect.Multimap;
 import org.backend.mdxmaps.Model.Enums.MOT;
 import org.backend.mdxmaps.Model.LatLng;
+import org.backend.mdxmaps.Model.OperationFactory;
 import org.backend.mdxmaps.Model.ResponseObjects.SBDLResponseObject;
-import org.backend.mdxmaps.Model.RouteCalculation;
 import org.backend.mdxmaps.Model.RoutingObjects;
 
 import java.util.ArrayList;
@@ -12,8 +12,9 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.backend.mdxmaps.Model.Enums.MOT.DISABLED;
-import static org.backend.mdxmaps.Model.Enums.ObjectType.ROOM;
 import static org.backend.mdxmaps.Model.Enums.OperationType.SBDL;
+import static org.backend.mdxmaps.Model.ResponseObjects.MainResponseObject.createMainResponseObject;
+import static org.backend.mdxmaps.Services.IconResolverService.resolveSBDLIcons;
 import static org.backend.mdxmaps.Services.ResponseService.Status.OK;
 import static org.backend.mdxmaps.Services.RouteCalculators.MultiLevelSLOCalculator.performMultiLevelSLO;
 
@@ -22,7 +23,7 @@ import static org.backend.mdxmaps.Services.RouteCalculators.MultiLevelSLOCalcula
  */
 
 /*SBDL: Same building, different levels*/
-public class SBDLFactoryService implements RouteCalculation {
+public class SBDLFactoryService implements OperationFactory {
 
     private RoutingObjects startObject, destinationObject;
     private MOT mot;
@@ -52,7 +53,7 @@ public class SBDLFactoryService implements RouteCalculation {
     @Override
     public ResponseService getRoute() {
 
-        Multimap<Double, ArrayList<ArrayList<LatLng>>> SBDLRoutes = performMultiLevelSLO(startObject, destinationObject, mot, ROOM, ROOM);
+        Multimap<Double, ArrayList<ArrayList<LatLng>>> SBDLRoutes = performMultiLevelSLO(startObject, destinationObject, mot);
 
         if (SBDLRoutes == null) {
             return ResponseService.create(ResponseService.Status.ERROR, mot == DISABLED ?
@@ -65,7 +66,7 @@ public class SBDLFactoryService implements RouteCalculation {
                 .forEach(distance -> {
                     List<ArrayList<ArrayList<LatLng>>> keyValues = (List<ArrayList<ArrayList<LatLng>>>) SBDLRoutes.get(distance);
                     routes.addAll(keyValues.parallelStream()
-                            .map(route -> SBDLResponseObject.createRouteObject(route, distance))
+                            .map(route -> SBDLResponseObject.createRouteObject(distance, route))
                             .collect(toList()));
 
                 });
@@ -79,7 +80,6 @@ public class SBDLFactoryService implements RouteCalculation {
         routeDescription.add(firstStep);
         routeDescription.add(mot == DISABLED ? "Get to " + destinationObject.getName() : "Walk to " + destinationObject.getName());
 
-        return ResponseService.create(OK, SBDLResponseObject.createMainResponseObject(OK, SBDL, routeDescription, null,
-                routes));
+        return ResponseService.create(OK, createMainResponseObject(OK, SBDL, routeDescription, resolveSBDLIcons(mot, direction), routes));
     }
 }
