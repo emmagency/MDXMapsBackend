@@ -77,12 +77,15 @@ public class ResolveOperationTypeService {
                         if (!startCheck && !destCheck) {
                             response.setStatus(Status.ERROR);
                             response.setMessage("There are no elevators in " + startObject.getBuilding() + " and " + destinationObject.getBuilding());
+//                            throw new ResolveOperationTypeException(String.format("There are no elevators in %s and %s", startObject.getBuilding(), destinationObject.getBuilding()));
                         } else if (startCheck && !destCheck) {
                             response.setStatus(Status.ERROR);
                             response.setMessage("There are no elevators in " + destinationObject.getBuilding() + " to get to " + destRoom);
+//                            throw new ResolveOperationTypeException(String.format("There are no elevators in %s to get to %s", destinationObject.getBuilding(), destRoom));
                         } else if (!startCheck) {
                             response.setStatus(Status.ERROR);
                             response.setMessage("There are no elevators in " + startObject.getBuilding());
+//                            throw new ResolveOperationTypeException(String.format("There are no elevators in %s", startObject.getBuilding()));
                         } else {
                             if (!startED && !destED) {
                                 startEDMethod = NULL;
@@ -105,12 +108,15 @@ public class ResolveOperationTypeService {
                                 !startObject.getBuildingObject().isBuildingWheelChairAccessible()) {
                             response.setStatus(Status.ERROR);
                             response.setMessage("Both " + startObject.getBuilding() + " & " + destinationObject.getBuilding() + " are not wheelchair accessible");
+//                            throw new ResolveOperationTypeException(String.format("Both %s & %s are not wheelchair accessible", startObject.getBuilding(), destinationObject.getBuilding()));
                         } else if (!startObject.getBuildingObject().isBuildingWheelChairAccessible()) {
                             response.setStatus(Status.ERROR);
                             response.setMessage(startObject.getBuilding() + " is not wheelchair accessible");
+//                            throw new ResolveOperationTypeException(String.format("%s is not wheelchair accessible", startObject.getBuilding()));
                         } else {
                             response.setStatus(Status.ERROR);
                             response.setMessage(destinationObject.getBuilding() + " is not wheelchair accessible");
+//                            throw new ResolveOperationTypeException(String.format("%s is not wheelchair accessible", destinationObject.getBuilding()));
                         }
                     }
                 } else { //Same Building.
@@ -123,6 +129,7 @@ public class ResolveOperationTypeService {
                                 //Building doesn't have elevators
                                 response.setStatus(Status.ERROR);
                                 response.setMessage("There are no elevators in " + startObject.getBuilding());
+//                                throw new ResolveOperationTypeException(String.format("There are no elevators in %s", startObject.getBuilding()));
                             }
                         } else {
                             response.setStatus(Status.OK);
@@ -132,6 +139,7 @@ public class ResolveOperationTypeService {
                         //Building isn't wheelchair accessible
                         response.setStatus(Status.ERROR);
                         response.setMessage(startObject.getBuilding() + " is not wheelchair accessible");
+//                        throw new ResolveOperationTypeException(String.format("%s is not wheelchair accessible", startObject.getBuilding()));
                     }
                 }
                 break;

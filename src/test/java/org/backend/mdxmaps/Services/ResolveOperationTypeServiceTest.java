@@ -32,7 +32,7 @@ public class ResolveOperationTypeServiceTest {
     ResponseService response;
 
     @Before
-    public void reset() {
+    public void setUp() {
         when(start.getBuilding()).thenReturn("CB");
         when(end.getBuilding()).thenReturn("CB");
 

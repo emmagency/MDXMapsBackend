@@ -1,7 +1,7 @@
 package org.backend.mdxmaps.Model;
 
 import org.backend.mdxmaps.Model.Enums.ObjectType;
-import org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService;
+import org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,15 +46,17 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
 
     /*Buildings*/
     public final static String COLLEGE = "College Building";
-    public final static String HATHCROFT = "Hatchcroft Building";
+    public final static String HATCHCROFT = "Hatchcroft Building";
     public final static String WILLIAMS = "Williams Building";
     public final static String SHEPPARDLIBRARY = "Sheppard Library";
     public final static String CIRCLE_CAFE = "Circle Cafe";
     public final static String BARN = "Barn";
-    public final static String PORTACABIN_A = "Portacabin A";
-    public final static String PORTACABIN_B = "Portacabin B";
-    public final static String PORTACABIN_A_EXT = "Portacabin A.";
-    public final static String PORTACABIN_67 = "Portacabin 6 & 7";
+    public final static String PORTAKABIN_A = "Portakabin A";
+    public final static String PORTAKABIN_B = "Portakabin B";
+    public final static String PORTAKABIN_A_EXT = "Portakabin_A_EXT";
+    public final static String PORTAKABIN_2 = "Portakabin 2";
+    public final static String PORTAKABIN_6_7 = "Portakabin 6 & 7";
+    public final static String PORTAKABIN_8 = "Portakabin 8";
     public final static String MDXHOUSE = "MDX House";
     public final static String BUILDING9 = "Building 9";
     public final static String BUILDING10 = "Building 10";
@@ -62,6 +64,8 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
     public final static String GROVE_BLOCK_B = "Grove Block B";
     public final static String GROVE_BLOCK_C = "Grove Block C";
     public final static String VINE = "The Vine";
+    public final static String RAVENSFIELDS = "Ravensfield House";
+    public final static String TOWNHALL = "Town Hall";
 
     //Constructor for connectors, stairs, elevators & doors
     public RoutingObjects(String name, ObjectType type, int[] primeLanes, int gMapLevel,
@@ -85,7 +89,7 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
         this.isWheelChairAccessible = isWheelChairAccessible;
     }
 
-    //Constructor for Rooms
+    //Constructor for SolrRooms
     public RoutingObjects(String name, ObjectType type, int lane, String building, int gMapLevel, int actualLevel, LatLng latLng, String[] laneConnectors) {
         this.name = name;
         this.type = type;
@@ -109,7 +113,7 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
     }
 
 
-    //Connectors and Rooms
+    //Connectors and SolrRooms
     public String getName() {
         return name;
     }
@@ -143,7 +147,7 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
         return isWheelChairAccessible;
     }
 
-    //Just Rooms
+    //Just SolrRooms
     public String[] getLaneConnectors() {
         return laneConnectors;
     }
@@ -156,6 +160,7 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
         return building;
     }
 
+    // @JsonIgnore
     public RoutingObjects getBuildingObject() {
         return getBuilding(building);
     }
@@ -179,8 +184,8 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
             case COLLEGE:
                 connectorMap.put(COLLEGE, getCollegeConnectors(actualLevel));
                 break;
-            case HATHCROFT:
-                connectorMap.put(HATHCROFT, getHatchcroftConnectors(actualLevel));
+            case HATCHCROFT:
+                connectorMap.put(HATCHCROFT, getHatchcroftConnectors(actualLevel));
                 break;
             case WILLIAMS:
                 connectorMap.put(WILLIAMS, getWilliamsConnectors(actualLevel));
@@ -208,16 +213,16 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
             case VINE:
                 connectorMap.put(VINE, getVineConnectors(actualLevel));
                 break;
-            case PORTACABIN_A:
-                connectorMap.put(PORTACABIN_A, getPortacabinAConnectors(actualLevel));
+            case PORTAKABIN_A:
+                connectorMap.put(PORTAKABIN_A, getPortacabinAConnectors(actualLevel));
                 break;
-            case PORTACABIN_A_EXT:
-                connectorMap.put(PORTACABIN_A_EXT, getPortacabinAEXTConnectors());
+            case PORTAKABIN_A_EXT:
+                connectorMap.put(PORTAKABIN_A_EXT, getPortacabinAEXTConnectors());
                 break;
-            case PORTACABIN_B:
-                connectorMap.put(PORTACABIN_B, getPortacabinBConnectors());
-            case PORTACABIN_67:
-                connectorMap.put(PORTACABIN_67, getPortacabin67Connectors());
+            case PORTAKABIN_B:
+                connectorMap.put(PORTAKABIN_B, getPortacabinBConnectors());
+            case PORTAKABIN_6_7:
+                connectorMap.put(PORTAKABIN_6_7, getPortacabin67Connectors());
                 break;
             case BARN:
                 connectorMap.put(BARN, getBarnConnectors());
@@ -968,10 +973,10 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
 
         list.add(new RoutingObjects("CG60", ROOM, 8, COLLEGE, 2, 0, new LatLng(51.589930, -0.229445), new String[]{"J", "G"}));
         list.add(new RoutingObjects("CG62", ROOM, 1, COLLEGE, 2, 0, new LatLng(51.590062, -0.229314), new String[]{"C", "D", "B", "A", "E", "V", "Z"}));
-        list.add(new RoutingObjects("CG62 (Disabled)", ROOM, 8, COLLEGE, 2, 0, new LatLng(51.589925, -0.229401), new String[]{"J", "G"}));
+        list.add(new RoutingObjects("CG62 (Disabled Access)", ROOM, 8, COLLEGE, 2, 0, new LatLng(51.589925, -0.229401), new String[]{"J", "G"}));
         list.add(new RoutingObjects("CG76", ROOM, 6, COLLEGE, 2, 0, new LatLng(51.589921, -0.229081), new String[]{"D", "O", "N"}));
         list.add(new RoutingObjects("CG77", ROOM, 6, COLLEGE, 2, 0, new LatLng(51.589864, -0.229097), new String[]{"O", "N", "D"}));
-        list.add(new RoutingObjects("Costa", ROOM, 5, COLLEGE, 2, 0, new LatLng(51.589755, -0.228960), new String[]{"P", "Q", "C"}));
+        list.add(new RoutingObjects("Costa Quad", ROOM, 5, COLLEGE, 2, 0, new LatLng(51.589755, -0.228960), new String[]{"P", "Q", "C"}));
 
 
         //College First Floor
@@ -1005,7 +1010,7 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
         list.add(new RoutingObjects("C205", ROOM, 2, COLLEGE, 0, 2, new LatLng(51.589614, -0.228658), new String[]{"A", "B", "C", "D", "F"}));
         list.add(new RoutingObjects("C206", ROOM, 2, COLLEGE, 0, 2, new LatLng(51.589618, -0.228699), new String[]{"A", "B", "C", "D", "F"}));
         list.add(new RoutingObjects("C207", ROOM, 2, COLLEGE, 0, 2, new LatLng(51.589641, -0.228921), new String[]{"A", "B", "C", "D", "F"}));
-        list.add(new RoutingObjects("C208", ROOM, 2, COLLEGE, 0, 2, new LatLng(51.589652, -0.229013), new String[]{"A", "B", "C", "D", "F"}));
+        list.add(new RoutingObjects("C209", ROOM, 2, COLLEGE, 0, 2, new LatLng(51.589652, -0.229013), new String[]{"A", "B", "C", "D", "F"}));
         list.add(new RoutingObjects("C210", ROOM, 6, COLLEGE, 0, 2, new LatLng(51.589693, -0.229043), new String[]{"D", "G"}));
         list.add(new RoutingObjects("C211", ROOM, 11, COLLEGE, 0, 2, new LatLng(51.590017, -0.228938), new String[]{"K", "L", "M"}));
         list.add(new RoutingObjects("C212", ROOM, 10, COLLEGE, 0, 2, new LatLng(51.589702, -0.229186), new String[]{"F", "J", "K"}));
@@ -1060,82 +1065,82 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
 
 
         //Hatchcroft Ground Floor
-        list.add(new RoutingObjects("Hatchcroft Building", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589154, -0.229178), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG01", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589138, -0.229016), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG02", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589122, -0.228864), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG03", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589103, -0.228762), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG04", ROOM, 5, HATHCROFT, 2, 0, new LatLng(51.589088, -0.228738), new String[]{"D", "F"}));
-        list.add(new RoutingObjects("HG05", ROOM, 6, HATHCROFT, 2, 0, new LatLng(51.589100, -0.228649), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("HG06", ROOM, 7, HATHCROFT, 2, 0, new LatLng(51.589085, -0.228600), new String[]{"E"}));
-        list.add(new RoutingObjects("HG07", ROOM, 7, HATHCROFT, 2, 0, new LatLng(51.589085, -0.228600), new String[]{"E"}));
+        list.add(new RoutingObjects("Hatchcroft Building", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589154, -0.229178), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG01", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589138, -0.229016), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG02", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589122, -0.228864), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG03", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589103, -0.228762), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG04", ROOM, 5, HATCHCROFT, 2, 0, new LatLng(51.589088, -0.228738), new String[]{"D", "F"}));
+        list.add(new RoutingObjects("HG05", ROOM, 6, HATCHCROFT, 2, 0, new LatLng(51.589100, -0.228649), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("HG06", ROOM, 7, HATCHCROFT, 2, 0, new LatLng(51.589085, -0.228600), new String[]{"E"}));
+        list.add(new RoutingObjects("HG07", ROOM, 7, HATCHCROFT, 2, 0, new LatLng(51.589085, -0.228600), new String[]{"E"}));
         //HG08 Toilet
-        list.add(new RoutingObjects("HG08", ROOM, 5, HATHCROFT, 2, 0, new LatLng(51.589077, -0.228653), new String[]{"D", "F"}));
-        list.add(new RoutingObjects("HG09", ROOM, 5, HATHCROFT, 2, 0, new LatLng(51.589078, -0.228689), new String[]{"D", "F"}));
-        list.add(new RoutingObjects("HG10", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589109, -0.228809), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG11", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589122, -0.228864), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG12", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589122, -0.228864), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG13", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589138, -0.229016), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG14", ROOM, 2, HATHCROFT, 2, 0, new LatLng(51.589105, -0.229233), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("HG19", ROOM, 2, HATHCROFT, 2, 0, new LatLng(51.589054, -0.229264), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("HG08", ROOM, 5, HATCHCROFT, 2, 0, new LatLng(51.589077, -0.228653), new String[]{"D", "F"}));
+        list.add(new RoutingObjects("HG09", ROOM, 5, HATCHCROFT, 2, 0, new LatLng(51.589078, -0.228689), new String[]{"D", "F"}));
+        list.add(new RoutingObjects("HG10", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589109, -0.228809), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG11", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589122, -0.228864), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG12", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589122, -0.228864), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG13", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589138, -0.229016), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG14", ROOM, 2, HATCHCROFT, 2, 0, new LatLng(51.589105, -0.229233), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("HG19", ROOM, 2, HATCHCROFT, 2, 0, new LatLng(51.589054, -0.229264), new String[]{"A", "B"}));
         //HG20 & HG21 Toilet
-        list.add(new RoutingObjects("HG20", ROOM, 2, HATHCROFT, 2, 0, new LatLng(51.589140, -0.229230), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("HG21", ROOM, 2, HATHCROFT, 2, 0, new LatLng(51.589140, -0.229230), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("HG24", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589200, -0.229583), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG27", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589200, -0.229583), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG28", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589200, -0.229583), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG29", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589209, -0.229642), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG30", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589196, -0.229521), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG31", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589182, -0.229423), new String[]{"A", "C", "G", "H"}));
-        list.add(new RoutingObjects("HG33", ROOM, 1, HATHCROFT, 2, 0, new LatLng(51.589175, -0.229333), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG20", ROOM, 2, HATCHCROFT, 2, 0, new LatLng(51.589140, -0.229230), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("HG21", ROOM, 2, HATCHCROFT, 2, 0, new LatLng(51.589140, -0.229230), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("HG24", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589200, -0.229583), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG27", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589200, -0.229583), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG28", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589200, -0.229583), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG29", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589209, -0.229642), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG30", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589196, -0.229521), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG31", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589182, -0.229423), new String[]{"A", "C", "G", "H"}));
+        list.add(new RoutingObjects("HG33", ROOM, 1, HATCHCROFT, 2, 0, new LatLng(51.589175, -0.229333), new String[]{"A", "C", "G", "H"}));
 
         //Hatchcroft First Floor
-        list.add(new RoutingObjects("H101", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589136, -0.229010), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H102", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589122, -0.228895), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H104", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589107, -0.228772), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H105", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589092, -0.228649), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H106", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589095, -0.228680), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H106", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589095, -0.228680), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H109", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589109, -0.228814), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H110", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589109, -0.228814), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H111", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589109, -0.228814), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H113", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589143, -0.229093), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H116", ROOM, 3, HATHCROFT, 1, 1, new LatLng(51.589059, -0.229254), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("H117", ROOM, 4, HATHCROFT, 1, 1, new LatLng(51.588980, -0.229334), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("H118", ROOM, 4, HATHCROFT, 1, 1, new LatLng(51.588985, -0.229385), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("H119", ROOM, 4, HATHCROFT, 1, 1, new LatLng(51.588991, -0.229434), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("H120", ROOM, 4, HATHCROFT, 1, 1, new LatLng(51.588996, -0.229479), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("H121", ROOM, 4, HATHCROFT, 1, 1, new LatLng(51.589003, -0.229523), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("H122", ROOM, 4, HATHCROFT, 1, 1, new LatLng(51.589003, -0.229523), new String[]{"D", "E"}));
-        list.add(new RoutingObjects("H123", ROOM, 5, HATHCROFT, 1, 1, new LatLng(51.589033, -0.229516), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("H124", ROOM, 5, HATHCROFT, 1, 1, new LatLng(51.589063, -0.229507), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("H125", ROOM, 5, HATHCROFT, 1, 1, new LatLng(51.589096, -0.229496), new String[]{"D", "C"}));
-        list.add(new RoutingObjects("H128", ROOM, 3, HATHCROFT, 1, 1, new LatLng(51.589141, -0.229233), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("H129", ROOM, 3, HATHCROFT, 1, 1, new LatLng(51.589141, -0.229233), new String[]{"E", "F"}));
-        list.add(new RoutingObjects("H133", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589195, -0.229554), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H135", ROOM, 6, HATHCROFT, 1, 1, new LatLng(51.589179, -0.229660), new String[]{"A"}));
-        list.add(new RoutingObjects("H136", ROOM, 6, HATHCROFT, 1, 1, new LatLng(51.589179, -0.229660), new String[]{"A"}));
-        list.add(new RoutingObjects("H137", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589179, -0.229660), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H139", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589200, -0.229558), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H141A", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589194, -0.229501), new String[]{"A", "B", "C", "F", "G"}));
-        list.add(new RoutingObjects("H141B", ROOM, 1, HATHCROFT, 1, 1, new LatLng(51.589167, -0.229286), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H101", ROOM, 1, HATCHCROFT, 1, 1, new LatLng(51.589136, -0.229010), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H102", ROOM, 1, HATCHCROFT, 1, 1, new LatLng(51.589122, -0.228895), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H104", ROOM, 1, HATCHCROFT, 1, 1, new LatLng(51.589107, -0.228772), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H105", ROOM, 1, HATCHCROFT, 1, 1, new LatLng(51.589092, -0.228649), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H106", ROOM, 1, HATCHCROFT, 1, 1, new LatLng(51.589095, -0.228680), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H109", ROOM, 1, HATCHCROFT, 1, 1, new LatLng(51.589109, -0.228814), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H110", ROOM, 1, HATCHCROFT, 1, 1, new LatLng(51.589109, -0.228814), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H111", ROOM, 1, HATCHCROFT, 1, 1, new LatLng(51.589109, -0.228814), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H113", ROOM, 1, HATCHCROFT, 1, 1, new LatLng(51.589143, -0.229093), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H116", ROOM, 3, HATCHCROFT, 1, 1, new LatLng(51.589059, -0.229254), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("H117", ROOM, 4, HATCHCROFT, 1, 1, new LatLng(51.588980, -0.229334), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("H118", ROOM, 4, HATCHCROFT, 1, 1, new LatLng(51.588985, -0.229385), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("H119", ROOM, 4, HATCHCROFT, 1, 1, new LatLng(51.588991, -0.229434), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("H120", ROOM, 4, HATCHCROFT, 1, 1, new LatLng(51.588996, -0.229479), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("H121", ROOM, 4, HATCHCROFT, 1, 1, new LatLng(51.589003, -0.229523), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("H122", ROOM, 4, HATCHCROFT, 1, 1, new LatLng(51.589003, -0.229523), new String[]{"D", "E"}));
+        list.add(new RoutingObjects("H123", ROOM, 5, HATCHCROFT, 1, 1, new LatLng(51.589033, -0.229516), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("H124", ROOM, 5, HATCHCROFT, 1, 1, new LatLng(51.589063, -0.229507), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("H125", ROOM, 5, HATCHCROFT, 1, 1, new LatLng(51.589096, -0.229496), new String[]{"D", "C"}));
+        list.add(new RoutingObjects("H128", ROOM, 3, HATCHCROFT, 1, 1, new LatLng(51.589141, -0.229233), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("H129", ROOM, 3, HATCHCROFT, 1, 1, new LatLng(51.589141, -0.229233), new String[]{"E", "F"}));
+        list.add(new RoutingObjects("H133", ROOM, 1, HATCHCROFT, 1, 1, new LatLng(51.589195, -0.229554), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H135", ROOM, 6, HATCHCROFT, 1, 1, new LatLng(51.589179, -0.229660), new String[]{"A"}));
+        list.add(new RoutingObjects("H136", ROOM, 6, HATCHCROFT, 1, 1, new LatLng(51.589179, -0.229660), new String[]{"A"}));
+        list.add(new RoutingObjects("H137", ROOM, 1, HATCHCROFT, 1, 1, new LatLng(51.589179, -0.229660), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H139", ROOM, 1, HATCHCROFT, 1, 1, new LatLng(51.589200, -0.229558), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H141A", ROOM, 1, HATCHCROFT, 1, 1, new LatLng(51.589194, -0.229501), new String[]{"A", "B", "C", "F", "G"}));
+        list.add(new RoutingObjects("H141B", ROOM, 1, HATCHCROFT, 1, 1, new LatLng(51.589167, -0.229286), new String[]{"A", "B", "C", "F", "G"}));
 
         //Hatchcroft Second Floor
-        list.add(new RoutingObjects("H201", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589131, -0.228970), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H202", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589126, -0.228912), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H203", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589110, -0.228769), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H205", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589099, -0.228650), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H206", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589087, -0.228617), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H207", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589096, -0.228693), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H208", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589105, -0.228761), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H211", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589142, -0.229133), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H216", ROOM, 3, HATHCROFT, 0, 2, new LatLng(51.589156, -0.229398), new String[]{"B"}));
-        list.add(new RoutingObjects("H217", ROOM, 3, HATHCROFT, 0, 2, new LatLng(51.589156, -0.229398), new String[]{"B"}));
-        list.add(new RoutingObjects("H219", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589193, -0.229510), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H220", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589200, -0.229580), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H221", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589210, -0.229636), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H222", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589200, -0.229580), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H223", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589187, -0.229450), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("H224", ROOM, 1, HATHCROFT, 0, 2, new LatLng(51.589167, -0.229274), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H201", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589131, -0.228970), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H202", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589126, -0.228912), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H203", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589110, -0.228769), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H205", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589099, -0.228650), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H206", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589087, -0.228617), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H207", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589096, -0.228693), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H208", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589105, -0.228761), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H209", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589131, -0.228970), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H211", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589142, -0.229133), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H216", ROOM, 3, HATCHCROFT, 0, 2, new LatLng(51.589156, -0.229398), new String[]{"B"}));
+        list.add(new RoutingObjects("H217", ROOM, 3, HATCHCROFT, 0, 2, new LatLng(51.589156, -0.229398), new String[]{"B"}));
+        list.add(new RoutingObjects("H219", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589193, -0.229510), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H220", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589200, -0.229580), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H221", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589210, -0.229636), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H222", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589200, -0.229580), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H223", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589187, -0.229450), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("H224", ROOM, 1, HATCHCROFT, 0, 2, new LatLng(51.589167, -0.229274), new String[]{"A", "B"}));
 
         //MDX HOUSE GROUND FLOOR
         list.add(new RoutingObjects("MDX House", ROOM, 3, MDXHOUSE, 0, 0, new LatLng(51.589925, -0.230887), new String[]{"B"}));
@@ -1186,7 +1191,8 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
         list.add(new RoutingObjects("SG13A", ROOM, 5, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590615, -0.229539), new String[]{"E", "F"}));
         list.add(new RoutingObjects("SG13B", ROOM, 5, SHEPPARDLIBRARY, 3, 0, new LatLng(51.590530, -0.229562), new String[]{"E", "F"}));
 
-        list.add(new RoutingObjects("Circle Café", ROOM, 2, CIRCLE_CAFE, 3, 0, new LatLng(51.590508, -0.229859), new String[]{"A"}));
+        //Circle Cafe. Basement on floor plan, but ground floor here (Hence the name SB19)
+        list.add(new RoutingObjects("SB19", ROOM, 2, CIRCLE_CAFE, 3, 0, new LatLng(51.590508, -0.229859), new String[]{"A"}));
 
         //SHEPPARD FIRST FLOOR
         list.add(new RoutingObjects("S101", ROOM, 3, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590571, -0.229627), new String[]{"B", "C"}));
@@ -1195,11 +1201,11 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
         list.add(new RoutingObjects("S105", ROOM, 1, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590773, -0.229463), new String[]{"A"}));
         list.add(new RoutingObjects("S106", ROOM, 2, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590627, -0.229531), new String[]{"B", "A"}));
         list.add(new RoutingObjects("S107", ROOM, 3, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590563, -0.229552), new String[]{"B", "C"}));
-        list.add(new RoutingObjects("S112", ROOM, 5, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590473, -0.229780), new String[]{"D", "E", "F"}));
-        list.add(new RoutingObjects("S119", ROOM, 5, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590412, -0.229637), new String[]{"D", "E", "F"}));
         list.add(new RoutingObjects("S110", ROOM, 6, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590419, -0.229508), new String[]{"E"}));
         list.add(new RoutingObjects("S111", ROOM, 5, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590311, -0.229404), new String[]{"E", "F", "D"}));
         list.add(new RoutingObjects("S112", ROOM, 5, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590311, -0.229404), new String[]{"E", "F", "D"}));
+        list.add(new RoutingObjects("S118", ROOM, 5, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590473, -0.229780), new String[]{"D", "E", "F"}));
+        list.add(new RoutingObjects("S119", ROOM, 5, SHEPPARDLIBRARY, 2, 1, new LatLng(51.590412, -0.229637), new String[]{"D", "E", "F"}));
 
         //SHEPPARD SECOND FLOOR
         list.add(new RoutingObjects("S201", ROOM, 3, SHEPPARDLIBRARY, 1, 2, new LatLng(51.590571, -0.229627), new String[]{"B", "C"}));
@@ -1217,18 +1223,18 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
         list.add(new RoutingObjects("S302", ROOM, 2, SHEPPARDLIBRARY, 0, 3, new LatLng(51.590403, -0.229620), new String[]{"B", "A"}));
         list.add(new RoutingObjects("S303", ROOM, 2, SHEPPARDLIBRARY, 0, 3, new LatLng(51.590307, -0.229403), new String[]{"B", "A"}));
         list.add(new RoutingObjects("S304", ROOM, 2, SHEPPARDLIBRARY, 0, 3, new LatLng(51.590307, -0.229403), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("S306", ROOM, 2, SHEPPARDLIBRARY, 0, 3, new LatLng(51.590473, -0.229781), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("S305", ROOM, 2, SHEPPARDLIBRARY, 0, 3, new LatLng(51.590473, -0.229781), new String[]{"B", "A"}));
 
         //VINE GROUND FLOOR
 
         list.add(new RoutingObjects("Vine building", ROOM, 2, VINE, 1, 0, new LatLng(51.590621, -0.230778), new String[]{"B", "A"}));
         list.add(new RoutingObjects("VG01", ROOM, 2, VINE, 1, 0, new LatLng(51.590621, -0.230778), new String[]{"B", "A"}));
-        list.add(new RoutingObjects("VG04", ROOM, 3, VINE, 1, 0, new LatLng(51.590708, -0.230891), new String[]{"B"}));
-        list.add(new RoutingObjects("VG08", ROOM, 1, VINE, 1, 0, new LatLng(51.590678, -0.230613), new String[]{"A"}));
         list.add(new RoutingObjects("VG02", ROOM, 2, VINE, 1, 0, new LatLng(51.590626, -0.230808), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("VG04", ROOM, 3, VINE, 1, 0, new LatLng(51.590708, -0.230891), new String[]{"B"}));
         list.add(new RoutingObjects("VG05", ROOM, 2, VINE, 1, 0, new LatLng(51.590630, -0.230825), new String[]{"B", "A"}));
         list.add(new RoutingObjects("VG06", ROOM, 2, VINE, 1, 0, new LatLng(51.590621, -0.230736), new String[]{"B", "A"}));
         list.add(new RoutingObjects("VG07", ROOM, 2, VINE, 1, 0, new LatLng(51.590619, -0.230715), new String[]{"B", "A"}));
+        list.add(new RoutingObjects("VG08", ROOM, 1, VINE, 1, 0, new LatLng(51.590678, -0.230613), new String[]{"A"}));
 
         //VINE FIRST FLOOR
         list.add(new RoutingObjects("V101", ROOM, 2, VINE, 0, 1, new LatLng(51.590621, -0.230778), new String[]{"B", "A"}));
@@ -1237,7 +1243,7 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
         list.add(new RoutingObjects("V104", ROOM, 2, VINE, 0, 1, new LatLng(51.590621, -0.230736), new String[]{"B", "A"}));
         list.add(new RoutingObjects("V105", ROOM, 2, VINE, 0, 1, new LatLng(51.590619, -0.230715), new String[]{"B", "A"}));
 
-        list.add(new RoutingObjects("Grove Building", ROOM, 4, GROVE_BLOCK_A, 4, 0, new LatLng(51.588695, -0.230596), new String[]{"C", "D", "E"}));
+        list.add(new RoutingObjects("Grove Block A", ROOM, 4, GROVE_BLOCK_A, 4, 0, new LatLng(51.588695, -0.230596), new String[]{"C", "D", "E"}));
 
         //GROVE BLOCK A BASEMENT
         list.add(new RoutingObjects("GB01", ROOM, 1, GROVE_BLOCK_A, 5, -1, new LatLng(51.588857, -0.230609), new String[]{"A", "B"}));
@@ -1265,13 +1271,14 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
         list.add(new RoutingObjects("GG13", ROOM, 1, GROVE_BLOCK_A, 4, 0, new LatLng(51.588549, -0.230636), new String[]{"A", "B", "C", "H", "G"}));
         list.add(new RoutingObjects("GG14", ROOM, 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588471, -0.230401), new String[]{"G"}));
         list.add(new RoutingObjects("GG15", ROOM, 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588471, -0.230401), new String[]{"G"}));
+        list.add(new RoutingObjects("GG17", ROOM, 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588489, -0.230567), new String[]{"G"}));
         list.add(new RoutingObjects("GG18", ROOM, 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588489, -0.230567), new String[]{"G"}));
         list.add(new RoutingObjects("GG20", ROOM, 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588489, -0.230567), new String[]{"G"}));
         list.add(new RoutingObjects("GG21", ROOM, 9, GROVE_BLOCK_A, 4, 0, new LatLng(51.588489, -0.230567), new String[]{"G"}));
         list.add(new RoutingObjects("GG22", ROOM, 10, GROVE_BLOCK_A, 4, 0, new LatLng(51.588487, -0.230657), new String[]{"G"}));
         list.add(new RoutingObjects("GG23", ROOM, 10, GROVE_BLOCK_A, 4, 0, new LatLng(51.588487, -0.230657), new String[]{"G"}));
         list.add(new RoutingObjects("GG25", ROOM, 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588536, -0.230798), new String[]{"G", "F"}));
-        list.add(new RoutingObjects("GG28", ROOM, 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588536, -0.230798), new String[]{"G", "F"}));
+        list.add(new RoutingObjects("GG26", ROOM, 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588536, -0.230798), new String[]{"G", "F"}));
         list.add(new RoutingObjects("GG29", ROOM, 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588536, -0.230798), new String[]{"G", "F"}));
         list.add(new RoutingObjects("GG30", ROOM, 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588536, -0.230798), new String[]{"G", "F"}));
         list.add(new RoutingObjects("GG31", ROOM, 7, GROVE_BLOCK_A, 4, 0, new LatLng(51.588589, -0.231001), new String[]{"G", "F"}));
@@ -1292,7 +1299,7 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
 
         //GROVE BLOCK A FIRST FLOOR
         list.add(new RoutingObjects("Grove Atrium", ROOM, 11, GROVE_BLOCK_A, 3, 1, new LatLng(51.588581, -0.230482), new String[]{"J", "M", "P"}));
-        list.add(new RoutingObjects("Coffee Pod", ROOM, 11, GROVE_BLOCK_A, 3, 1, new LatLng(51.588590, -0.230527), new String[]{"J", "M", "P"}));
+        list.add(new RoutingObjects("Grove Coffee Pod", ROOM, 11, GROVE_BLOCK_A, 3, 1, new LatLng(51.588590, -0.230527), new String[]{"J", "M", "P"}));
         list.add(new RoutingObjects("G101", ROOM, 13, GROVE_BLOCK_A, 3, 1, new LatLng(51.588690, -0.230571), new String[]{"L", "M", "N"}));
         list.add(new RoutingObjects("G104A", ROOM, 13, GROVE_BLOCK_A, 3, 1, new LatLng(51.588669, -0.230459), new String[]{"L", "M", "N"}));
         list.add(new RoutingObjects("G104B", ROOM, 13, GROVE_BLOCK_A, 3, 1, new LatLng(51.588669, -0.230459), new String[]{"L", "M", "N"}));
@@ -1355,6 +1362,7 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
         //GROVE BLOCK A THIRD FLOOR
         list.add(new RoutingObjects("G301", ROOM, 2, GROVE_BLOCK_A, 1, 3, new LatLng(51.588666, -0.230452), new String[]{"A"}));
         list.add(new RoutingObjects("G304", ROOM, 2, GROVE_BLOCK_A, 1, 3, new LatLng(51.588693, -0.230595), new String[]{"A"}));
+        list.add(new RoutingObjects("G305", ROOM, 2, GROVE_BLOCK_A, 1, 3, new LatLng(51.588693, -0.230595), new String[]{"A"}));
         list.add(new RoutingObjects("G307", ROOM, 2, GROVE_BLOCK_A, 1, 3, new LatLng(51.588708, -0.230660), new String[]{"A"}));
         list.add(new RoutingObjects("G308", ROOM, 2, GROVE_BLOCK_A, 1, 3, new LatLng(51.588714, -0.230711), new String[]{"A"}));
         list.add(new RoutingObjects("G309", ROOM, 1, GROVE_BLOCK_A, 1, 3, new LatLng(51.588755, -0.230633), new String[]{"A", "B"}));
@@ -1367,14 +1375,14 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
 
         //GROVE BLOCK B GROUND FLOOR
         list.add(new RoutingObjects("GG71", ROOM, 1, GROVE_BLOCK_B, 2, 0, new LatLng(51.588949, -0.230396), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("GG78", ROOM, 1, GROVE_BLOCK_B, 2, 0, new LatLng(51.588900, -0.230214), new String[]{"A", "B"}));
-        list.add(new RoutingObjects("GG79", ROOM, 1, GROVE_BLOCK_B, 2, 0, new LatLng(51.588897, -0.230192), new String[]{"A", "B"}));
         list.add(new RoutingObjects("GG72", ROOM, 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588965, -0.230216), new String[]{"B"}));
         list.add(new RoutingObjects("GG73", ROOM, 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588965, -0.230216), new String[]{"B"}));
         list.add(new RoutingObjects("GG74", ROOM, 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588993, -0.230200), new String[]{"B"}));
         list.add(new RoutingObjects("GG75", ROOM, 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588993, -0.230200), new String[]{"B"}));
-        list.add(new RoutingObjects("GG77", ROOM, 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588993, -0.230200), new String[]{"B"}));
+        list.add(new RoutingObjects("GG76", ROOM, 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588993, -0.230200), new String[]{"B"}));
         list.add(new RoutingObjects("GG77", ROOM, 2, GROVE_BLOCK_B, 2, 0, new LatLng(51.588965, -0.230216), new String[]{"B"}));
+        list.add(new RoutingObjects("GG78", ROOM, 1, GROVE_BLOCK_B, 2, 0, new LatLng(51.588900, -0.230214), new String[]{"A", "B"}));
+        list.add(new RoutingObjects("GG79", ROOM, 1, GROVE_BLOCK_B, 2, 0, new LatLng(51.588897, -0.230192), new String[]{"A", "B"}));
 
         //GROVE BLOCK B FIRST FLOOR
         list.add(new RoutingObjects("G170", ROOM, 2, GROVE_BLOCK_B, 1, 1, new LatLng(51.588927, -0.230365), new String[]{"A", "B"}));
@@ -1411,36 +1419,36 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
         list.add(new RoutingObjects("G192", ROOM, 3, GROVE_BLOCK_C, 1, 1, new LatLng(51.589256, -0.230171), new String[]{"B"}));
 
         //PORTACABIN A GROUND FLOOR
-        list.add(new RoutingObjects("Portakabin A", ROOM, 2, PORTACABIN_A, 1, 0, new LatLng(51.589736, -0.230232), new String[]{"A"}));
-        list.add(new RoutingObjects("PAG03", ROOM, 2, PORTACABIN_A, 1, 0, new LatLng(51.589736, -0.230232), new String[]{"A"}));
-        list.add(new RoutingObjects("PAG04", ROOM, 2, PORTACABIN_A, 1, 0, new LatLng(51.589736, -0.230232), new String[]{"A"}));
-        list.add(new RoutingObjects("PAG07", ROOM, 2, PORTACABIN_A, 1, 0, new LatLng(51.589711, -0.230239), new String[]{"A"}));
-        list.add(new RoutingObjects("PAG08", ROOM, 2, PORTACABIN_A, 1, 0, new LatLng(51.589711, -0.230239), new String[]{"A"}));
+        list.add(new RoutingObjects("Portakabin A", ROOM, 2, PORTAKABIN_A, 1, 0, new LatLng(51.589736, -0.230232), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG03", ROOM, 2, PORTAKABIN_A, 1, 0, new LatLng(51.589736, -0.230232), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG04", ROOM, 2, PORTAKABIN_A, 1, 0, new LatLng(51.589736, -0.230232), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG07", ROOM, 2, PORTAKABIN_A, 1, 0, new LatLng(51.589711, -0.230239), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG08", ROOM, 2, PORTAKABIN_A, 1, 0, new LatLng(51.589711, -0.230239), new String[]{"A"}));
 
         //PORTACABIN A FIRST FLOOR
-        list.add(new RoutingObjects("PA101", ROOM, 2, PORTACABIN_A, 0, 1, new LatLng(51.589736, -0.230232), new String[]{"A"}));
-        list.add(new RoutingObjects("PA102", ROOM, 2, PORTACABIN_A, 0, 1, new LatLng(51.589736, -0.230232), new String[]{"A"}));
-        list.add(new RoutingObjects("PA103", ROOM, 2, PORTACABIN_A, 0, 1, new LatLng(51.589711, -0.230239), new String[]{"A"}));
-        list.add(new RoutingObjects("PA104", ROOM, 2, PORTACABIN_A, 0, 1, new LatLng(51.589711, -0.230239), new String[]{"A"}));
+        list.add(new RoutingObjects("PA101", ROOM, 2, PORTAKABIN_A, 0, 1, new LatLng(51.589736, -0.230232), new String[]{"A"}));
+        list.add(new RoutingObjects("PA102", ROOM, 2, PORTAKABIN_A, 0, 1, new LatLng(51.589736, -0.230232), new String[]{"A"}));
+        list.add(new RoutingObjects("PA103", ROOM, 2, PORTAKABIN_A, 0, 1, new LatLng(51.589711, -0.230239), new String[]{"A"}));
+        list.add(new RoutingObjects("PA104", ROOM, 2, PORTAKABIN_A, 0, 1, new LatLng(51.589711, -0.230239), new String[]{"A"}));
 
         //PORTACABIN A EXT GROUND FLOOR
-        list.add(new RoutingObjects("PAG01", ROOM, 1, PORTACABIN_A_EXT, 1, 0, new LatLng(51.589881, -0.230205), new String[]{"A"}));
-        list.add(new RoutingObjects("PAG02", ROOM, 1, PORTACABIN_A_EXT, 1, 0, new LatLng(51.589857, -0.230211), new String[]{"A"}));
-        list.add(new RoutingObjects("PAG05", ROOM, 1, PORTACABIN_A_EXT, 1, 0, new LatLng(51.589866, -0.230170), new String[]{"A"}));
-        list.add(new RoutingObjects("PAG06", ROOM, 1, PORTACABIN_A_EXT, 1, 0, new LatLng(51.589866, -0.230170), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG01", ROOM, 1, PORTAKABIN_A_EXT, 1, 0, new LatLng(51.589881, -0.230205), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG02", ROOM, 1, PORTAKABIN_A_EXT, 1, 0, new LatLng(51.589857, -0.230211), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG05", ROOM, 1, PORTAKABIN_A_EXT, 1, 0, new LatLng(51.589866, -0.230170), new String[]{"A"}));
+        list.add(new RoutingObjects("PAG06", ROOM, 1, PORTAKABIN_A_EXT, 1, 0, new LatLng(51.589866, -0.230170), new String[]{"A"}));
 
         //PORTACABIN 6 & 7
 
-        list.add(new RoutingObjects("Portakabin 6 & 7", ROOM, 3, PORTACABIN_67, 1, 0, new LatLng(51.589699, -0.229967), new String[]{"B"}));
-        list.add(new RoutingObjects("P6G01", ROOM, 3, PORTACABIN_67, 1, 0, new LatLng(51.589699, -0.229967), new String[]{"B"}));
-        list.add(new RoutingObjects("P6G02", ROOM, 2, PORTACABIN_67, 1, 0, new LatLng(51.589686, -0.229844), new String[]{"A"}));
-        list.add(new RoutingObjects("P7101", ROOM, 2, PORTACABIN_67, 1, 0, new LatLng(51.589686, -0.229844), new String[]{"A"}));
-        list.add(new RoutingObjects("P7102", ROOM, 3, PORTACABIN_67, 1, 0, new LatLng(51.589699, -0.229967), new String[]{"B"}));
+        list.add(new RoutingObjects("Portakabin 6 & 7", ROOM, 3, PORTAKABIN_6_7, 1, 0, new LatLng(51.589699, -0.229967), new String[]{"B"}));
+        list.add(new RoutingObjects("P6G01", ROOM, 3, PORTAKABIN_6_7, 1, 0, new LatLng(51.589699, -0.229967), new String[]{"B"}));
+        list.add(new RoutingObjects("P6G02", ROOM, 2, PORTAKABIN_6_7, 1, 0, new LatLng(51.589686, -0.229844), new String[]{"A"}));
+        list.add(new RoutingObjects("P7101", ROOM, 2, PORTAKABIN_6_7, 1, 0, new LatLng(51.589686, -0.229844), new String[]{"A"}));
+        list.add(new RoutingObjects("P7102", ROOM, 3, PORTAKABIN_6_7, 1, 0, new LatLng(51.589699, -0.229967), new String[]{"B"}));
 
         //PORTACABIN B
-        list.add(new RoutingObjects("Portakabin B", ROOM, 1, PORTACABIN_B, 0, 0, new LatLng(51.590717, -0.229092), new String[]{"A"}));
-        list.add(new RoutingObjects("PBG01", ROOM, 1, PORTACABIN_B, 0, 0, new LatLng(51.590717, -0.229092), new String[]{"A"}));
-        list.add(new RoutingObjects("PBG02", ROOM, 1, PORTACABIN_B, 0, 0, new LatLng(51.590717, -0.229092), new String[]{"A"}));
+        list.add(new RoutingObjects("Portakabin B", ROOM, 1, PORTAKABIN_B, 0, 0, new LatLng(51.590717, -0.229092), new String[]{"A"}));
+        list.add(new RoutingObjects("PBG01", ROOM, 1, PORTAKABIN_B, 0, 0, new LatLng(51.590717, -0.229092), new String[]{"A"}));
+        list.add(new RoutingObjects("PBG02", ROOM, 1, PORTAKABIN_B, 0, 0, new LatLng(51.590717, -0.229092), new String[]{"A"}));
 
         //BARN
         list.add(new RoutingObjects("Barn", ROOM, 1, BARN, 0, 0, new LatLng(51.590952, -0.228580), new String[]{"A"}));
@@ -1452,7 +1460,7 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
     private static RoutingObjects getBuilding(String building) {
         ArrayList<RoutingObjects> list = new ArrayList<>();
         list.add(new RoutingObjects(COLLEGE, true, true, true));
-        list.add(new RoutingObjects(HATHCROFT, true, true, true));
+        list.add(new RoutingObjects(HATCHCROFT, true, true, true));
         list.add(new RoutingObjects(WILLIAMS, true, true, true));
         list.add(new RoutingObjects(SHEPPARDLIBRARY, true, true, true));
         list.add(new RoutingObjects(VINE, true, false, true));
@@ -1462,10 +1470,10 @@ public class RoutingObjects implements Comparable<RoutingObjects> {
         list.add(new RoutingObjects(GROVE_BLOCK_C, true, true, true));
         list.add(new RoutingObjects(BUILDING9, false, false, true));
         list.add(new RoutingObjects(MDXHOUSE, true, true, true));
-        list.add(new RoutingObjects(PORTACABIN_A, true, false, true));
-        list.add(new RoutingObjects(PORTACABIN_A_EXT, false, false, true));
-        list.add(new RoutingObjects(PORTACABIN_67, true, false, false));
-        list.add(new RoutingObjects(PORTACABIN_B, false, false, true));
+        list.add(new RoutingObjects(PORTAKABIN_A, true, false, true));
+        list.add(new RoutingObjects(PORTAKABIN_A_EXT, false, false, true));
+        list.add(new RoutingObjects(PORTAKABIN_6_7, true, false, false));
+        list.add(new RoutingObjects(PORTAKABIN_B, false, false, true));
         list.add(new RoutingObjects(BUILDING10, true, false, false));
         list.add(new RoutingObjects(CIRCLE_CAFE, false, false, true));
 

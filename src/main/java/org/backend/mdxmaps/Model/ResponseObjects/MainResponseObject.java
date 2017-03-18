@@ -17,13 +17,13 @@ public class MainResponseObject<E extends List> {
     private OperationType type;
     private String message;
     private ArrayList<String> routeDescription;
-    private ArrayList<String> routeDescriptionIcons;
+    private List<String> routeDescriptionIcons;
     private E routes;
 
     public MainResponseObject() {
     }
 
-    private MainResponseObject(Status status, OperationType type, ArrayList<String> routeDescriptionIcons, E routes) {
+    private MainResponseObject(Status status, OperationType type, List<String> routeDescriptionIcons, E routes) {
         this.status = status;
         this.type = type;
         this.routeDescriptionIcons = routeDescriptionIcons;
@@ -31,7 +31,7 @@ public class MainResponseObject<E extends List> {
     }
 
     public MainResponseObject(Status status, OperationType type, ArrayList<String> routeDescription,
-                              ArrayList<String> routeDescriptionIcons, E routes) {
+                              List<String> routeDescriptionIcons, E routes) {
         this.status = status;
         this.type = type;
         this.routeDescription = routeDescription;
@@ -63,7 +63,7 @@ public class MainResponseObject<E extends List> {
         return routeDescription;
     }
 
-    public ArrayList<String> getRouteDescriptionIcons() {
+    public List<String> getRouteDescriptionIcons() {
         return routeDescriptionIcons;
     }
 
@@ -72,7 +72,7 @@ public class MainResponseObject<E extends List> {
     }
 
     public static <E extends List> MainResponseObject createMainResponseObject(Status status, OperationType type,
-                                                                               ArrayList<String> routeDescriptionIcons, E routes) {
+                                                                               List<String> routeDescriptionIcons, E routes) {
         return new MainResponseObject<>(status, type, routeDescriptionIcons, routes);
     }
 

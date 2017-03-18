@@ -3,6 +3,8 @@ package org.backend.mdxmaps.Services;
 import com.google.common.collect.Multimap;
 import org.backend.mdxmaps.Model.LatLng;
 import org.backend.mdxmaps.Model.RoutingObjects;
+import org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService;
+import org.backend.mdxmaps.Services.Util.UtilService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

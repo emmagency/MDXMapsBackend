@@ -1,4 +1,4 @@
-package org.backend.mdxmaps.Services;
+package org.backend.mdxmaps.Services.Util;
 
 /**
  * Created by Emmanuel Keboh on 21/12/2016.
@@ -15,7 +15,7 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
-import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getRequiredConnectorObjectsForRoutes;
+import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.getRequiredConnectorObjectsForRoutes;
 
 /**
  * Provides helper methods to carry out trivial operations such as calculations, object transformation, etc.

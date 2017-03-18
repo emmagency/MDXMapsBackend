@@ -4,7 +4,7 @@ import org.backend.mdxmaps.Model.RoutingObjects;
 
 import java.util.ArrayList;
 
-import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getConnectors;
+import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.getConnectors;
 
 /**
  * Created by Emmanuel Keboh on 27/11/2016.

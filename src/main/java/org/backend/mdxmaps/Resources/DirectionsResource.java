@@ -62,7 +62,7 @@ public class DirectionsResource implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        System.out.println("ServletContextListener started");
+        System.out.println("Directions ServletContextListener started");
     }
 
     @Override
@@ -73,6 +73,6 @@ public class DirectionsResource implements ServletContextListener {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("ServletContextListener destroyed");
+        System.out.println("Directions ServletContextListener destroyed");
     }
 }

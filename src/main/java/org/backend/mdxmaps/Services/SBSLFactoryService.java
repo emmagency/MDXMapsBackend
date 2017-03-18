@@ -8,7 +8,7 @@ import org.backend.mdxmaps.Model.ResponseObjects.SBSLResponseObject;
 import org.backend.mdxmaps.Model.RoutingObjects;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,7 +65,7 @@ public class SBSLFactoryService implements OperationFactory {
                             .collect(Collectors.toList()));
                 });
 
-        ArrayList<String> icon = new ArrayList<>(Arrays.asList(mot == DISABLED ? "wheelchair" : "walk"));
+        List<String> icon = Collections.singletonList(mot == DISABLED ? "wheelchair" : "walk");
         return ResponseService.create(OK, createMainResponseObject(OK, SBSL, icon, routes));
     }
 }

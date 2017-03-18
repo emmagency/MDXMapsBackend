@@ -6,7 +6,7 @@ import org.backend.mdxmaps.Model.Enums.MOT;
 import org.backend.mdxmaps.Model.LatLng;
 import org.backend.mdxmaps.Model.RoutingObjects;
 import org.backend.mdxmaps.Services.Algorithms.OutdoorAlgorithm;
-import org.backend.mdxmaps.Services.UtilService;
+import org.backend.mdxmaps.Services.Util.UtilService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +19,13 @@ import static org.backend.mdxmaps.Model.Enums.ObjectType.DOOR;
 import static org.backend.mdxmaps.Model.RoutingObjects.getOutsideConnectors;
 import static org.backend.mdxmaps.Services.RouteCalculators.MultiLevelSLOCalculator.performMultiLevelSLO;
 import static org.backend.mdxmaps.Services.RouteCalculators.SingleLevelSLOCalculator.performSingleLevelSLO;
-import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.filterConnectorObjectsByType;
-import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getConnectors;
-import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.removeNonDisabledObjects;
-import static org.backend.mdxmaps.Services.UtilService.calculateMultipleRoutesDistanceAndSort;
-import static org.backend.mdxmaps.Services.UtilService.calculateOutsideRouteDistance;
-import static org.backend.mdxmaps.Services.UtilService.transformValidRoutesStringToObjects;
-import static org.backend.mdxmaps.Services.UtilService.validRouteObjectsToLatLngTransformer;
+import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.filterConnectorObjectsByType;
+import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.getConnectors;
+import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.removeNonDisabledObjects;
+import static org.backend.mdxmaps.Services.Util.UtilService.calculateMultipleRoutesDistanceAndSort;
+import static org.backend.mdxmaps.Services.Util.UtilService.calculateOutsideRouteDistance;
+import static org.backend.mdxmaps.Services.Util.UtilService.transformValidRoutesStringToObjects;
+import static org.backend.mdxmaps.Services.Util.UtilService.validRouteObjectsToLatLngTransformer;
 
 /**
  * Created by Emmanuel Keboh on 22/01/2017.

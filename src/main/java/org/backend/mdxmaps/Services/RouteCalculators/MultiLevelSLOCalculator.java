@@ -18,10 +18,10 @@ import static org.backend.mdxmaps.Model.Enums.ObjectType.ELEVATOR;
 import static org.backend.mdxmaps.Model.Enums.ObjectType.ROOM;
 import static org.backend.mdxmaps.Model.Enums.ObjectType.STAIR;
 import static org.backend.mdxmaps.Services.RouteCalculators.SingleLevelSLOCalculator.performSingleLevelSLO;
-import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.filterConnectorObjectsByType;
-import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getConnectorObjectFromName;
-import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getConnectors;
-import static org.backend.mdxmaps.Services.UtilService.calculateSingleRouteDistance;
+import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.filterConnectorObjectsByType;
+import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.getConnectorObjectFromName;
+import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.getConnectors;
+import static org.backend.mdxmaps.Services.Util.UtilService.calculateSingleRouteDistance;
 
 /**
  * Created by Emmanuel Keboh on 10/01/2017.
@@ -98,7 +98,6 @@ public final class MultiLevelSLOCalculator {
                     currentEDConnector = getConnectorObjectFromName(destinationEDConnectors,
                             startEDConnectors.get(i).getName()); //<<-- Previous Current ED's destn level equivalent
 
-                    //indicates that endObject is a room and not a connector
                     int destObjectLane = destObject.getType() == ROOM ? destObject.getLane() : destObject.getPrimeLanes()[0];
 
                     boolean sameLanesForDestination = Arrays.stream(currentEDConnector.getPrimeLanes())

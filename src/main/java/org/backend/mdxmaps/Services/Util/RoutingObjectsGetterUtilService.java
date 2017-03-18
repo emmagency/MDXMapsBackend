@@ -1,4 +1,4 @@
-package org.backend.mdxmaps.Services;
+package org.backend.mdxmaps.Services.Util;
 
 /**
  * Created by Emmanuel Keboh on 22/12/2016.
@@ -71,7 +71,7 @@ public final class RoutingObjectsGetterUtilService {
     }
 
     //Get same lane basic connectors from connector object
-    public static ArrayList<RoutingObjects> getSameLanesBCForConnetorObject(ArrayList<RoutingObjects> basicConnectors, RoutingObjects connectorObject) {
+    public static ArrayList<RoutingObjects> getSameLanesBCForConnectorObject(ArrayList<RoutingObjects> basicConnectors, RoutingObjects connectorObject) {
         return (ArrayList<RoutingObjects>) basicConnectors.stream()
                 .filter(basicConnector -> Arrays.stream(basicConnector.getPrimeLanes())
                         .anyMatch(connectorPrime -> Arrays.stream(connectorObject.getPrimeLanes())

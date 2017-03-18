@@ -13,15 +13,15 @@ import static java.util.stream.Collectors.toList;
 import static org.backend.mdxmaps.Model.Enums.MOT.DISABLED;
 import static org.backend.mdxmaps.Model.Enums.ObjectType.BASIC_CONNECTOR;
 import static org.backend.mdxmaps.Model.Enums.ObjectType.ROOM;
-import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.filterConnectorObjectsByType;
-import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getAllPrimes;
-import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getConnectors;
-import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getSameLanesBCForConnetorObject;
-import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.removeNonDisabledRoutes;
-import static org.backend.mdxmaps.Services.UtilService.calculateMultipleRoutesDistanceAndSort;
-import static org.backend.mdxmaps.Services.UtilService.plugInStartAndEndObjects;
-import static org.backend.mdxmaps.Services.UtilService.transformValidRoutesStringToObjects;
-import static org.backend.mdxmaps.Services.UtilService.validRouteObjectsToLatLngTransformer;
+import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.filterConnectorObjectsByType;
+import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.getAllPrimes;
+import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.getConnectors;
+import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.getSameLanesBCForConnectorObject;
+import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.removeNonDisabledRoutes;
+import static org.backend.mdxmaps.Services.Util.UtilService.calculateMultipleRoutesDistanceAndSort;
+import static org.backend.mdxmaps.Services.Util.UtilService.plugInStartAndEndObjects;
+import static org.backend.mdxmaps.Services.Util.UtilService.transformValidRoutesStringToObjects;
+import static org.backend.mdxmaps.Services.Util.UtilService.validRouteObjectsToLatLngTransformer;
 
 /**
  * Created by Emmanuel Keboh on 21/12/2016.
@@ -49,7 +49,7 @@ public final class SingleLevelSLOCalculator {
                         start.getActualLevel()), BASIC_CONNECTOR);
 
         ArrayList<RoutingObjects> allPrimes = start.getType() == ROOM ?
-                getAllPrimes(start.getName(), connectorObjects) : getSameLanesBCForConnetorObject(connectorObjects, start);
+                getAllPrimes(start.getName(), connectorObjects) : getSameLanesBCForConnectorObject(connectorObjects, start);
         int destLane = end.getType() == ROOM ? end.getLane() : end.getPrimeLanes()[0];
 
         //Run algorithm

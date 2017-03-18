@@ -12,7 +12,7 @@ import static org.backend.mdxmaps.Services.MOTValidator.validate;
 import static org.backend.mdxmaps.Services.MOTValidator.validateReceivedMOTTypeExists;
 import static org.backend.mdxmaps.Services.ResponseService.Status.ERROR;
 import static org.backend.mdxmaps.Services.ResponseService.Status.INFO;
-import static org.backend.mdxmaps.Services.RoutingObjectsGetterUtilService.getRoomObjectFromName;
+import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.getRoomObjectFromName;
 
 /**
  * Created by Emmanuel Keboh on 27/11/2016.
@@ -47,7 +47,6 @@ public class DirectionsService implements Callable {
 
         RoutingObjects startRoom = getRoomObjectFromName(start.toUpperCase());
         RoutingObjects destinationRoom = getRoomObjectFromName(end.toUpperCase());
-        MOT motEnum;
 
         if (startRoom == null || destinationRoom == null) {
             return ResponseService.create(ERROR, startRoom == null && destinationRoom == null ?
@@ -56,6 +55,7 @@ public class DirectionsService implements Callable {
                             : "Couldn't find room '" + end + "'. Please check your input and try again.");
         }
 
+        MOT motEnum;
         if (receivedMot == null || !validateReceivedMOTTypeExists(receivedMot)) {
             //User didn't provide preferred mot or passed mot is incorrect
             motEnum = autoResolve(startRoom, destinationRoom);
@@ -70,19 +70,19 @@ public class DirectionsService implements Callable {
         }
 
         //Logic to determine type of operation
-        ResponseService resolveOPType =
+        ResponseService oPType =
                 new ResolveOperationTypeService(startRoom, destinationRoom, motEnum).resolveOPType();
 
-        if (resolveOPType.getStatus() == ERROR) {
-            return resolveOPType;
+        if (oPType.getStatus() == ERROR) {
+            return oPType;
         }
 
         //Everything checked out, let's do some calculations!
-        ResponseService result = ((OperationFactory) resolveOPType.getEntity()).getRoute();
+        ResponseService result = ((OperationFactory) oPType.getEntity()).getRoute();
 
-        if (resolveOPType.getStatus() == INFO && result.getEntity() != null) {
+        if (oPType.getStatus() == INFO && result.getEntity() != null) {
             ((MainResponseObject) result.getEntity()).setStatus(INFO);
-            ((MainResponseObject) result.getEntity()).setMessage(resolveOPType.getMessage());
+            ((MainResponseObject) result.getEntity()).setMessage(oPType.getMessage());
         }
 
         return result.getEntity() != null ? result.getEntity() : result;

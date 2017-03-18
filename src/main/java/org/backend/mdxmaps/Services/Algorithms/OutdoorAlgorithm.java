@@ -6,7 +6,7 @@ import org.backend.mdxmaps.Model.RoutingObjects;
 import java.util.ArrayList;
 
 import static org.backend.mdxmaps.Model.RoutingObjects.getOutsideConnectors;
-import static org.backend.mdxmaps.Services.UtilService.calculateDistance;
+import static org.backend.mdxmaps.Services.Util.UtilService.calculateDistance;
 
 /**
  * Created by Emmanuel Keboh on 27/11/2016.
