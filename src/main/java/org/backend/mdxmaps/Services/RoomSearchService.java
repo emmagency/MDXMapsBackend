@@ -52,9 +52,7 @@ public class RoomSearchService implements Callable {
             e.printStackTrace();
         }
 
-        ArrayList<RoomSearchResponseObject> response = getRoomResponseList(list);
-
-        return response;
+        return getRoomResponseList(list);
     }
 
     private ArrayList<RoomSearchResponseObject> getRoomResponseList(SolrDocumentList list) {

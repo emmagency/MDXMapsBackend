@@ -2,6 +2,7 @@ package org.backend.mdxmaps.Resources;
 
 import org.backend.mdxmaps.Model.ServerStatusObject;
 import org.backend.mdxmaps.Services.DirectionsService;
+import org.backend.mdxmaps.Services.Filters.Binders;
 import org.backend.mdxmaps.Services.ResponseService;
 
 import javax.inject.Singleton;
@@ -34,6 +35,7 @@ public class DirectionsResource implements ServletContextListener {
     private ExecutorService service = Executors.newCachedThreadPool();
 
     @GET
+    @Binders.CampusDirection
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDirections(@QueryParam("start") String start, @QueryParam("end") String end,
                                   @QueryParam("mot") String mot) {
