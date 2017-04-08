@@ -10,7 +10,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import static org.backend.mdxmaps.Model.Enums.OperationType.SBDL;
 import static org.backend.mdxmaps.Model.Enums.OperationType.SBSL;
@@ -25,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class DirectionsServiceIntTest {
 
-    private MainResponseObject<? extends List> response = null;
+    private MainResponseObject<?> response = null;
 
     private ArrayList<Double> distances = new ArrayList<>();
 
@@ -33,7 +32,7 @@ public class DirectionsServiceIntTest {
     public void CG03ToCG60() {
 
         try {
-            response = (MainResponseObject<? extends List>) new DirectionsService("CG03", "CG60", null).call();
+            response = (MainResponseObject<?>) new DirectionsService("CG03", "CG60", null).call();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,7 +72,7 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToCG60Disabled() {
         try {
-            response = (MainResponseObject<? extends List>) new DirectionsService("CG03", "CG60", "disabled").call();
+            response = (MainResponseObject<?>) new DirectionsService("CG03", "CG60", "disabled").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,7 +97,7 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToC110() {
         try {
-            response = (MainResponseObject<? extends List>) new DirectionsService("CG03", "C110", null).call();
+            response = (MainResponseObject<?>) new DirectionsService("CG03", "C110", null).call();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -126,7 +125,7 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToC110Elevators() {
         try {
-            response = (MainResponseObject<? extends List>) new DirectionsService("CG03", "C110", "elevators").call();
+            response = (MainResponseObject<?>) new DirectionsService("CG03", "C110", "elevators").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -149,7 +148,7 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToC115Disabled() {
         try {
-            response = (MainResponseObject<? extends List>) new DirectionsService("CG03", "C115", "disabled").call();
+            response = (MainResponseObject<?>) new DirectionsService("CG03", "C115", "disabled").call();
         } catch (Exception e) {
             e.printStackTrace();
         }

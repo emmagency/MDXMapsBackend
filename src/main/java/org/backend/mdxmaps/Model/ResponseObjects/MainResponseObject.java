@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Emmanuel Keboh on 09/01/2017.
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class MainResponseObject<E extends List> {
+public class MainResponseObject<E> {
 
     private Status status;
     private OperationType type;
@@ -71,13 +71,13 @@ public class MainResponseObject<E extends List> {
         return routes;
     }
 
-    public static <E extends List> MainResponseObject createMainResponseObject(Status status, OperationType type,
-                                                                               List<String> routeDescriptionIcons, E routes) {
+    public static <E> MainResponseObject createMainResponseObject(Status status, OperationType type,
+                                                                  List<String> routeDescriptionIcons, E routes) {
         return new MainResponseObject<>(status, type, routeDescriptionIcons, routes);
     }
 
-    public static <E extends List> MainResponseObject createMainResponseObject(Status status, OperationType type, ArrayList<String> routeDescription,
-                                                                               ArrayList<String> routeDescriptionIcons, E routes) {
+    public static <E> MainResponseObject createMainResponseObject(Status status, OperationType type, ArrayList<String> routeDescription,
+                                                                  ArrayList<String> routeDescriptionIcons, E routes) {
         return new MainResponseObject<>(status, type, routeDescription, routeDescriptionIcons, routes);
     }
 }

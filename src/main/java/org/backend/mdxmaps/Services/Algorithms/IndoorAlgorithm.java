@@ -11,33 +11,32 @@ import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.
  */
 public class IndoorAlgorithm {
 
-    ArrayList<ArrayList<String>> validRoutes = new ArrayList<>();
+    private ArrayList<ArrayList<String>> validRoutes = new ArrayList<>();
 
     //CAQ: Current Alpha Queue
-    ArrayList<String> CAQ = new ArrayList<>();
-    ArrayList<ArrayList<String>> visited = new ArrayList<>();
-    ArrayList<String> allPrimeNames = new ArrayList<>();
-    int destinationLane;
-    ArrayList<RoutingObjects> allLevelConnectors;
-    ArrayList<RoutingObjects> previouslyUsedConnectors;
+    private ArrayList<String> CAQ = new ArrayList<>();
+    private ArrayList<ArrayList<String>> visited = new ArrayList<>();
+    private ArrayList<String> allPrimeNames = new ArrayList<>();
+    private int destinationLane;
+    private ArrayList<RoutingObjects> allLevelConnectors;
+    private ArrayList<RoutingObjects> previouslyUsedConnectors;
 
-    //ToDO Switch to static method, check for wheelchair users here
     public ArrayList<ArrayList<String>> sameLevelOp(ArrayList<RoutingObjects> primes, int destinationLane, String building, int actualLevel) {
         allLevelConnectors = getConnectors(building, actualLevel);
         previouslyUsedConnectors = new ArrayList<>();
+
         //Add all primes object names(String) to allPrimeNames array
-        for (int i = 0; i < primes.size(); i++) {
-            allPrimeNames.add(primes.get(i).getName());
+        for (RoutingObjects prime : primes) {
+            allPrimeNames.add(prime.getName());
         }
 
         this.destinationLane = destinationLane;
         //Main loop
         for (int i = 0; i < primes.size(); i++) {
+
             //Set's current alpha as first value
             if (CAQ.isEmpty()) {
                 CAQ.add(0, primes.get(i).getName());
-            } else {
-                CAQ.set(0, primes.get(i).getName());
             }
 
             //Pass last item in queue
@@ -78,13 +77,13 @@ public class IndoorAlgorithm {
             //There are indeed valid adjacents we can visit
             if (allAdjacents.size() != 0) {
 
-                //If true, then add the picked adjacent to the outmost arraylist in 'visited' arraylist
-                //This outmost arraylist is the 'visited' for current alpha
+                //If true, then add the picked adjacent to the out most arraylist in 'visited' arraylist
+                //This out most arraylist is the 'visited' for current alpha
                 if (CAQ.size() == visited.size()) {
                     visited.get(CAQ.size() - 1).add(allAdjacents.get(0).getName());
                 } else {
                     //Create a new 'visited' Arraylist for current alpha and add the picked adjacent to it
-                    visited.add(new ArrayList<String>());
+                    visited.add(new ArrayList<>());
                     visited.get(CAQ.size() - 1).add(allAdjacents.get(0).getName());
                 }
                 //Add picked adjacent to queue then return restart
@@ -105,7 +104,7 @@ public class IndoorAlgorithm {
             validRoutes.add(new ArrayList<>(CAQ));
             //validRoutes.get(validRoutes.size()-1).addAll(CAQ);
             //If queue size is 1, then we are dealing with a prime so we are done, else we need to move one step backward
-            return (CAQ.size() != 1 ? "drop" : "done");
+            return (CAQ.size() > 1 ? "drop" : "done");
         }
 
     }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 /*SBSL: Same building, same level*/
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class SBSLResponseObject extends MainResponseObject {
+public class SBSLResponseObject {
 
     private ArrayList<LatLng> route;
     private double distance;

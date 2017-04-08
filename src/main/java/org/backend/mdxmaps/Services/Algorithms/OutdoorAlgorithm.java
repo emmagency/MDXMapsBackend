@@ -13,19 +13,19 @@ import static org.backend.mdxmaps.Services.Util.UtilService.calculateDistance;
  */
 public class OutdoorAlgorithm {
 
-    ArrayList<ArrayList<String>> validRoutes = new ArrayList<>();
+    private ArrayList<ArrayList<String>> validRoutes = new ArrayList<>();
 
     //CAQ: Current Alpha Queue
-    ArrayList<String> CAQ = new ArrayList<>();
-    ArrayList<ArrayList<String>> visited = new ArrayList<>();
-    String startConnector;
-    String destinationConnector;
-    LatLng startPoint;
-    LatLng destinationPoint;
-    boolean wheelchair;
-    ArrayList<RoutingObjects> allOutdoorConnectors;
-    ArrayList<RoutingObjects> previouslyUsedConnectors;
-    int acceptedDistanceFromLine; //in meters
+    private ArrayList<String> CAQ = new ArrayList<>();
+    private ArrayList<ArrayList<String>> visited = new ArrayList<>();
+    private String startConnector;
+    private String destinationConnector;
+    private LatLng startPoint;
+    private LatLng destinationPoint;
+    private boolean wheelchair;
+    private ArrayList<RoutingObjects> allOutdoorConnectors;
+    private ArrayList<RoutingObjects> previouslyUsedConnectors;
+    private int acceptedDistanceFromLine; //in meters
 
     //ToDO Switch to static method and rename
     public ArrayList<ArrayList<String>> sameLevelOp(String startConnector, String destinationConnector, boolean wheelchair) {
@@ -103,14 +103,14 @@ public class OutdoorAlgorithm {
                         if (CAQ.size() == visited.size()) {
                             visited.get(CAQ.size() - 1).add(allAdjacents.get(k).getName());
                         } else {
-                            visited.add(new ArrayList<String>());
+                            visited.add(new ArrayList<>());
                             visited.get(CAQ.size() - 1).add(allAdjacents.get(k).getName());
                         }
                     } else {
                         if (CAQ.size() == visited.size()) {
                             visited.get(CAQ.size() - 1).add(allAdjacents.get(k).getName());
                         } else {
-                            visited.add(new ArrayList<String>());
+                            visited.add(new ArrayList<>());
                             visited.get(CAQ.size() - 1).add(allAdjacents.get(k).getName());
                         }
                         CAQ.add(allAdjacents.get(k).getName());
@@ -150,9 +150,9 @@ public class OutdoorAlgorithm {
 
         //sort through all connectors and extract all adjacent connectors objects
         for (String adjacentName : adjacentNames) {
-            for (int i = 0; i < allOutdoorConnectors.size(); i++) {
-                if (adjacentName.equals(allOutdoorConnectors.get(i).getName())) {
-                    allAdjacentConnectors.add(allOutdoorConnectors.get(i));
+            for (RoutingObjects allOutdoorConnector : allOutdoorConnectors) {
+                if (adjacentName.equals(allOutdoorConnector.getName())) {
+                    allAdjacentConnectors.add(allOutdoorConnector);
                     break; //Found, exit immediately
                 }
             }
