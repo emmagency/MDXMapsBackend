@@ -72,6 +72,13 @@
             <version>6.4.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${log4j12.binding.version}</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-core -->
         <!--<dependency>-->
         <!--<groupId>org.hamcrest</groupId>-->
@@ -118,6 +125,7 @@
         <project.build.sourceEndcoding>UTF-8</project.build.sourceEndcoding>
         <powermock.version>1.6.6</powermock.version>
         <solrj.version>6.4.1</solrj.version>
+        <log4j12.binding.version>1.7.7</log4j12.binding.version>
     </properties>
 
 </project>

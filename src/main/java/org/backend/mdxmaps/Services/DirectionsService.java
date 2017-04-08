@@ -17,7 +17,7 @@ import static org.backend.mdxmaps.Services.Util.RoutingObjectsGetterUtilService.
 /**
  * Created by Emmanuel Keboh on 27/11/2016.
  */
-public class DirectionsService implements Callable {
+public class DirectionsService implements Callable<Object> {
 
     private String start, end;
     private String receivedMot;

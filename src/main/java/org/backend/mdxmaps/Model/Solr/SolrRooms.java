@@ -179,7 +179,7 @@ public class SolrRooms {
         list.add(new SolrRooms("HG14", true, new LatLng(51.589093, -0.229159), 2, HATCHCROFT, "Spec Lab"));
         list.add(new SolrRooms("HG19", true, new LatLng(51.589023, -0.229431), 2, HATCHCROFT, "Lecture Theatre"));
         list.add(new SolrRooms("HG20", true, new LatLng(51.589106, -0.229287), 2, HATCHCROFT, "Female Toilet (Hatchcroft, Ground Floor)"));
-        list.add(new SolrRooms("HG21)", true, new LatLng(51.589146, -0.229289), 2, HATCHCROFT, "Disabled Toilet 1 (Hatchcroft, Ground Floor"));
+        list.add(new SolrRooms("HG21", true, new LatLng(51.589146, -0.229289), 2, HATCHCROFT, "Disabled Toilet 1 (Hatchcroft, Ground Floor"));
         list.add(new SolrRooms("HG24", true, new LatLng(51.589159, -0.229675), 2, HATCHCROFT, "Spec Lab"));
         list.add(new SolrRooms("HG27", true, new LatLng(51.589129, -0.229532), 2, HATCHCROFT, "Spec Lab"));
         list.add(new SolrRooms("HG28", true, new LatLng(51.589136, -0.229463), 2, HATCHCROFT, "Spec Lab"));

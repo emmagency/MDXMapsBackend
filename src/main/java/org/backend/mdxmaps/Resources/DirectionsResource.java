@@ -50,7 +50,6 @@ public class DirectionsResource implements ServletContextListener {
 
         return Response.ok(ResponseService.create(ERROR,
                 "Something went wrong. FIND IT!!!!!!")).build();
-
     }
 
     @GET

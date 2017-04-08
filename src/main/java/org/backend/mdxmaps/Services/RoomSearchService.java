@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * Created by Emmanuel Keboh on 06/03/2017.
  */
-public class RoomSearchService implements Callable {
+public class RoomSearchService implements Callable<Object> {
 
     public static String NAME = "name";
     public static String BUILDING = "building";
@@ -25,19 +25,19 @@ public class RoomSearchService implements Callable {
     public static String DESCRIPTION = "description";
     public static String LAT_LNG = "latLng";
     public static String DIRECTIONS_AVAILABLE = "directionsAvailable";
+    public final String solrRoomsUrl;
 
     private String query;
 
-    public RoomSearchService(String query) {
+    public RoomSearchService(String query, String solrRoomsUrl) {
         this.query = query;
+        this.solrRoomsUrl = solrRoomsUrl;
     }
 
 
     @Override
     public Object call() throws Exception {
-        String solrURL = "http://localhost:8983/solr/searchRooms";
-
-        SolrClient solrClient = new HttpSolrClient.Builder(solrURL).build();
+        SolrClient solrClient = new HttpSolrClient.Builder(solrRoomsUrl).build();
 
         SolrQuery solrQuery = new SolrQuery();
         solrQuery.setQuery(query);

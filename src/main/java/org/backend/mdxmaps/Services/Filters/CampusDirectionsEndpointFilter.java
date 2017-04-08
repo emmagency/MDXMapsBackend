@@ -1,5 +1,8 @@
 package org.backend.mdxmaps.Services.Filters;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -14,14 +17,15 @@ import java.io.IOException;
 @Binders.CampusDirection
 public class CampusDirectionsEndpointFilter implements ContainerRequestFilter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CampusDirectionsEndpointFilter.class);
+
     @Context
     private HttpServletRequest httpServletRequest;
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext) throws IOException {
-
-        System.out.println("Filter Running!");
-
+        LOGGER.info("{} Request to {}", httpServletRequest.getMethod(),
+                httpServletRequest.getRequestURL().append("/").append(httpServletRequest.getQueryString()));
     }
 
 }
