@@ -5,7 +5,7 @@ import javax.ws.rs.core.Application;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.backend.mdxmaps.Model.Enums.Constants.SOLR_ROOMS_URL;
+import static org.backend.mdxmaps.model.enums.Constants.SOLR_ROOMS_URL;
 
 /**
  * Created by Emmanuel Keboh on 27/11/2016.
@@ -16,7 +16,7 @@ public class App extends Application {
     public Map<String, Object> getProperties() {
         return new HashMap<String, Object>() {
             {
-                put(SOLR_ROOMS_URL.getValue(), "http://localhost:8983/solr/searchRooms");
+                put(SOLR_ROOMS_URL.getValue(), "http://localhost:8983/solr/onCampus");
             }
         };
     }

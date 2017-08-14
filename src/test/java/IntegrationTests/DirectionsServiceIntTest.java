@@ -1,9 +1,8 @@
 package IntegrationTests;
 
-import org.backend.mdxmaps.Model.ResponseObjects.MainResponseObject;
-import org.backend.mdxmaps.Model.ResponseObjects.SBDLResponseObject;
-import org.backend.mdxmaps.Model.ResponseObjects.SBSLResponseObject;
-import org.backend.mdxmaps.Services.DirectionsService;
+import org.backend.mdxmaps.model.responseObjects.directions.MainDirectionsResponse;
+import org.backend.mdxmaps.model.responseObjects.directions.Route;
+import org.backend.mdxmaps.services.DirectionsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -11,9 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static org.backend.mdxmaps.Model.Enums.OperationType.SBDL;
-import static org.backend.mdxmaps.Model.Enums.OperationType.SBSL;
-import static org.backend.mdxmaps.Services.ResponseService.Status.OK;
+import static org.backend.mdxmaps.services.ResponseService.Status.OK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -24,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class DirectionsServiceIntTest {
 
-    private MainResponseObject<?> response = null;
+    private MainDirectionsResponse response = null;
 
     private ArrayList<Double> distances = new ArrayList<>();
 
@@ -32,16 +29,15 @@ public class DirectionsServiceIntTest {
     public void CG03ToCG60() {
 
         try {
-            response = (MainResponseObject<?>) new DirectionsService("CG03", "CG60", null).call();
+            response = (MainDirectionsResponse) new DirectionsService("CG03", "CG60", null).call();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         assertEquals(OK, response.getStatus());
-        assertEquals(SBSL, response.getType());
 
-        ArrayList<SBSLResponseObject> routes = (ArrayList<SBSLResponseObject>) response.getRoutes();
-        routes.forEach(route -> distances.add(route.getDistance()));
+        ArrayList<Route> newRoutes = response.getRoutes();
+        newRoutes.forEach(route -> distances.add(route.getDistance()));
 
         assertTrue(Collections.frequency(distances, 97.0) == 1 && distances.get(0) == 97.0);
         assertTrue(Collections.frequency(distances, 109.0) == 1 && distances.get(1) == 109.0);
@@ -72,16 +68,16 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToCG60Disabled() {
         try {
-            response = (MainResponseObject<?>) new DirectionsService("CG03", "CG60", "disabled").call();
+            response = (MainDirectionsResponse) new DirectionsService("CG03", "CG60", "disabled").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         assertEquals(OK, response.getStatus());
-        assertEquals(SBSL, response.getType());
+        ArrayList<Route> newRoutes = response.getRoutes();
+        newRoutes.forEach(route -> distances.add(route.getDistance()));
 
-        ArrayList<SBSLResponseObject> routes = (ArrayList<SBSLResponseObject>) response.getRoutes();
-        routes.forEach(route -> distances.add(route.getDistance()));
+        assertTrue(distances.size() == 11);
 
         assertTrue(Collections.frequency(distances, 97.0) == 1 && distances.get(0) == 97.0);
         assertTrue(Collections.frequency(distances, 154.0) == 3 && distances.get(1) == 154.0);
@@ -89,27 +85,25 @@ public class DirectionsServiceIntTest {
         assertTrue(Collections.frequency(distances, 186.0) == 1);
         assertTrue(Collections.frequency(distances, 190.0) == 1);
         assertTrue(Collections.frequency(distances, 195.0) == 1);
-        assertTrue(Collections.frequency(distances, 222.0) == 1);
-
-        assertTrue(distances.size() == 11);
+        assertTrue(Collections.frequency(distances, 222.0) == 1 && distances.get(10) == 222.0);
     }
 
     @Test
     public void CG03ToC110() {
         try {
-            response = (MainResponseObject<?>) new DirectionsService("CG03", "C110", null).call();
+            response = (MainDirectionsResponse) new DirectionsService("CG03", "C110", null).call();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         assertEquals(OK, response.getStatus());
-        assertEquals(SBDL, response.getType());
 
-        assertEquals("Walk to the stairs and go up 1 level(s)", response.getRouteDescription().get(0));
-        assertEquals("Walk to C110", response.getRouteDescription().get(1));
+        assertEquals("Walk to the stairs", response.getRoutes().get(0).getSteps().get(0).getDescription());
+        assertEquals("Go up 1 level", response.getRoutes().get(0).getSteps().get(1).getDescription());
+        assertEquals("Walk to C110", response.getRoutes().get(0).getSteps().get(2).getDescription());
 
-        ArrayList<SBDLResponseObject> routes = (ArrayList<SBDLResponseObject>) response.getRoutes();
-        routes.forEach(route -> distances.add(route.getDistance()));
+        ArrayList<Route> newRoutes = response.getRoutes();
+        newRoutes.forEach(route -> distances.add(route.getDistance()));
 
         assertTrue(Collections.frequency(distances, 56.0) == 1 && distances.get(0) == 56.0);
         assertTrue(Collections.frequency(distances, 59.0) == 1 && distances.get(1) == 59.0);
@@ -125,19 +119,19 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToC110Elevators() {
         try {
-            response = (MainResponseObject<?>) new DirectionsService("CG03", "C110", "elevators").call();
+            response = (MainDirectionsResponse) new DirectionsService("CG03", "C110", "elevators").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         assertEquals(OK, response.getStatus());
-        assertEquals(SBDL, response.getType());
 
-        assertEquals("Walk to the elevators and go up 1 level(s)", response.getRouteDescription().get(0));
-        assertEquals("Walk to C110", response.getRouteDescription().get(1));
+        assertEquals("Walk to the elevators", response.getRoutes().get(0).getSteps().get(0).getDescription());
+        assertEquals("Go up 1 level", response.getRoutes().get(0).getSteps().get(1).getDescription());
+        assertEquals("Walk to C110", response.getRoutes().get(0).getSteps().get(2).getDescription());
 
-        ArrayList<SBDLResponseObject> routes = (ArrayList<SBDLResponseObject>) response.getRoutes();
-        routes.forEach(route -> distances.add(route.getDistance()));
+        ArrayList<Route> newRoutes = response.getRoutes();
+        newRoutes.forEach(route -> distances.add(route.getDistance()));
 
         assertTrue(Collections.frequency(distances, 75.0) == 1 && distances.get(0) == 75.0);
         assertTrue(Collections.frequency(distances, 149.0) == 1 && distances.get(1) == 149.0);
@@ -148,22 +142,21 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToC115Disabled() {
         try {
-            response = (MainResponseObject<?>) new DirectionsService("CG03", "C115", "disabled").call();
+            response = (MainDirectionsResponse) new DirectionsService("CG03", "C115", "disabled").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         assertEquals(OK, response.getStatus());
-        assertEquals(SBDL, response.getType());
 
-        assertEquals("Get to the elevators and go up 1 level(s)", response.getRouteDescription().get(0));
-        assertEquals("Get to C115", response.getRouteDescription().get(1));
+        assertEquals("Get to the elevators", response.getRoutes().get(0).getSteps().get(0).getDescription());
+        assertEquals("Go up 1 level", response.getRoutes().get(0).getSteps().get(1).getDescription());
+        assertEquals("Get to C115", response.getRoutes().get(0).getSteps().get(2).getDescription());
 
-        ArrayList<SBDLResponseObject> routes = (ArrayList<SBDLResponseObject>) response.getRoutes();
-        routes.forEach(route -> distances.add(route.getDistance()));
+        ArrayList<Route> newRoutes = response.getRoutes();
+        newRoutes.forEach(route -> distances.add(route.getDistance()));
 
         assertTrue(Collections.frequency(distances, 76.0) == 1 && distances.get(0) == 76.0);
         assertTrue(Collections.frequency(distances, 86.0) == 1 && distances.get(1) == 86.0);
     }
-
 }
