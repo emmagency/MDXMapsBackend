@@ -16,6 +16,8 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.backend.mdxmaps.model.enums.MOT.DISABLED;
+import static org.backend.mdxmaps.services.IconResolverService.WALK;
+import static org.backend.mdxmaps.services.IconResolverService.WHEELCHAIR;
 import static org.backend.mdxmaps.services.ResponseService.Status.OK;
 import static org.backend.mdxmaps.services.TravelTimeCalc.getTravelTime;
 import static org.backend.mdxmaps.services.routeCalculators.SingleLevelSLOCalculator.performSingleLevelSLO;
@@ -74,7 +76,7 @@ public class SBSLFactoryService implements OperationFactory {
 
     private List<Step> getSteps(ArrayList<LatLng> latLngs) {
         String description = String.format("%s to %s", mot == DISABLED ? "Get" : "Walk", destination.getName());
-        String iconHref = mot == DISABLED ? "wheelchair" : "walk";
+        String iconHref = mot == DISABLED ? WHEELCHAIR : WALK;
         return Collections.singletonList(Step.createStep(description, start.getgMapLevel(), iconHref, latLngs));
     }
 }

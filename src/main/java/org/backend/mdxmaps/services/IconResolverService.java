@@ -13,8 +13,8 @@ import static org.backend.mdxmaps.model.enums.MOT.STAIRS;
 
 public final class IconResolverService {
 
-    private static String WALK = "assets/icons/walk.svg";
-    private static String WHEELCHAIR = "assets/icons/disabled.svg";
+    public static String WALK = "assets/icons/walk.svg";
+    public static String WHEELCHAIR = "assets/icons/disabled.svg";
     private static String ELEVATORS = "assets/icons/elevator.svg";
     private static String STAIRS_UP = "assets/icons/stairs-up.svg";
     private static String STAIRS_DOWN = "assets/icons/stairs-down.svg";
