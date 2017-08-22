@@ -11,6 +11,7 @@ import org.backend.mdxmaps.model.responseObjects.directions.Route;
 import org.backend.mdxmaps.model.responseObjects.directions.Step;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.min;
@@ -27,7 +28,7 @@ import static org.backend.mdxmaps.services.routeCalculators.DifferentBuildingCal
  * Created by Emmanuel Keboh on 18/12/2016.
  */
 
-public class DiffBuildingFactoryService implements OperationFactory {
+public class DifferentBuildingFactoryService implements OperationFactory {
 
     private MOT startEDMethod, destEDMethod;
     private boolean isStartED, isDestED, disabled;
@@ -42,8 +43,8 @@ public class DiffBuildingFactoryService implements OperationFactory {
         return destEDMethod;
     }
 
-    private DiffBuildingFactoryService(Routing start, Routing destination, MOT startEDMethod,
-                                       MOT destEDMethod, boolean disabled, boolean isStartED, boolean isDestED) {
+    private DifferentBuildingFactoryService(Routing start, Routing destination, MOT startEDMethod,
+                                            MOT destEDMethod, boolean disabled, boolean isStartED, boolean isDestED) {
         this.start = start;
         this.destination = destination;
         this.startEDMethod = startEDMethod;
@@ -53,9 +54,9 @@ public class DiffBuildingFactoryService implements OperationFactory {
         this.isDestED = isDestED;
     }
 
-    public static DiffBuildingFactoryService create(Routing startObject, Routing destinationObject, MOT startEDMethod,
-                                                    MOT destEDMethod, boolean disabled, boolean isStartED, boolean isDestED) {
-        return new DiffBuildingFactoryService(startObject, destinationObject, startEDMethod, destEDMethod, disabled, isStartED, isDestED);
+    public static DifferentBuildingFactoryService create(Routing startObject, Routing destinationObject, MOT startEDMethod,
+                                                         MOT destEDMethod, boolean disabled, boolean isStartED, boolean isDestED) {
+        return new DifferentBuildingFactoryService(startObject, destinationObject, startEDMethod, destEDMethod, disabled, isStartED, isDestED);
     }
 
     @Override
@@ -99,7 +100,8 @@ public class DiffBuildingFactoryService implements OperationFactory {
             steps.add(createStep(String.format("%s to the %s", movementMethod, startEDMethod.toString().toLowerCase()),
                     start.getgMapLevel(), iconsList.get(0), route.get(0).get(0)));
             steps.add(createStep(String.format("Go %s %d %s", start.getLevel() > 0 ? "down" : "up", Math.abs(start.getLevel()),
-                    Math.abs(start.getLevel()) > 1 ? "levels" : "level"), null, iconsList.get(1), null));
+                    Math.abs(start.getLevel()) > 1 ? "levels" : "level"), null, iconsList.get(1),
+                    Collections.singletonList(route.get(0).get(0).get(route.get(0).get(0).size() - 1))));
             steps.add(createStep(String.format("%s to the door and exit from %s", movementMethod, start.getBuilding()),
                     Routing.getGmapIntForGroundFloor(start.getBuilding()), iconsList.get(2), route.get(0).get(1)));
             for (int i = 0; i < 3; i++) {
@@ -121,7 +123,8 @@ public class DiffBuildingFactoryService implements OperationFactory {
             steps.add(createStep(String.format("Enter %s and %s to the %s", destination.getBuilding(), movementMethod, destEDMethod.toString().toLowerCase()),
                     Routing.getGmapIntForGroundFloor(destination.getBuilding()), iconsList.get(0), route.get(2).get(0)));
             steps.add(createStep(String.format("Go %s %d %s", destination.getLevel() > 0 ? "up" : "down", Math.abs(destination.getLevel()),
-                    Math.abs(destination.getLevel()) > 1 ? "levels" : "level"), null, iconsList.get(1), null));
+                    Math.abs(destination.getLevel()) > 1 ? "levels" : "level"), null, iconsList.get(1),
+                    Collections.singletonList(route.get(2).get(0).get(route.get(2).get(0).size() - 1))));
             steps.add(createStep(String.format("%s to %s", movementMethod, destination.getName()), destination.getgMapLevel(),
                     iconsList.get(2), route.get(2).get(1)));
         } else {

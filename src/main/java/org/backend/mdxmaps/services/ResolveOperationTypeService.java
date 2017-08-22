@@ -39,7 +39,7 @@ public class ResolveOperationTypeService {
                 if (start.getBuilding().equals(destination.getBuilding())) {
                     response.setEntity(SBSLFactoryService.create(start, destination, NULL));
                 } else {
-                    response.setEntity(DiffBuildingFactoryService.create(start, destination, NULL, NULL, false, false, false));
+                    response.setEntity(DifferentBuildingFactoryService.create(start, destination, NULL, NULL, false, false, false));
                 }
                 break;
 
@@ -101,7 +101,7 @@ public class ResolveOperationTypeService {
                                 destEDMethod = ELEVATORS;
                             }
                             response.setStatus(Status.OK);
-                            response.setEntity(DiffBuildingFactoryService.create(start, destination, startEDMethod, destEDMethod, true, startED, destED));
+                            response.setEntity(DifferentBuildingFactoryService.create(start, destination, startEDMethod, destEDMethod, true, startED, destED));
                         }
                     } else {
                         if (!destination.getBuildingObject().isBuildingWheelChairAccessible() &&
@@ -195,7 +195,7 @@ public class ResolveOperationTypeService {
                         destEDMethod = NULL;
                     }
 
-                    response.setEntity(DiffBuildingFactoryService.create(start, destination, startEDMethod, destEDMethod, false, startED, destED));
+                    response.setEntity(DifferentBuildingFactoryService.create(start, destination, startEDMethod, destEDMethod, false, startED, destED));
                 }
                 break;
 
@@ -249,7 +249,7 @@ public class ResolveOperationTypeService {
                         destED = false;
                         destEDMethod = NULL;
                     }
-                    response.setEntity(DiffBuildingFactoryService.create(start, destination, startEDMethod, destEDMethod, false, startED, destED));
+                    response.setEntity(DifferentBuildingFactoryService.create(start, destination, startEDMethod, destEDMethod, false, startED, destED));
                 }
                 break;
         }

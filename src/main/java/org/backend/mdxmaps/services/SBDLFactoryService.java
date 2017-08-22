@@ -11,6 +11,7 @@ import org.backend.mdxmaps.model.responseObjects.directions.Route;
 import org.backend.mdxmaps.model.responseObjects.directions.Step;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -92,7 +93,7 @@ public class SBDLFactoryService implements OperationFactory {
     private List<Step> getSteps(ArrayList<ArrayList<LatLng>> routes) {
         ArrayList<Step> steps = new ArrayList<>();
         steps.add(Step.createStep(firstStep, start.getgMapLevel(), icons.get(0), routes.get(0)));
-        steps.add(Step.createStep(intermediateStep, 0, icons.get(1), null));
+        steps.add(Step.createStep(intermediateStep, 0, icons.get(1), Collections.singletonList(routes.get(0).get(routes.get(0).size() - 1))));
         steps.add(Step.createStep(lastStep, destination.getgMapLevel(), icons.get(2), routes.get(1)));
         return steps;
     }
