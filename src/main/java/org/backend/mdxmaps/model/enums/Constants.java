@@ -5,7 +5,8 @@ package org.backend.mdxmaps.model.enums;
  */
 public enum Constants {
 
-    SOLR_ROOMS_URL("solrRoomsUrl");
+    SOLR_ROOMS_URL("solrRoomsUrl"),
+    SOLR_NEARBY_URL("solrNearyUrl");
 
     private String value;
 

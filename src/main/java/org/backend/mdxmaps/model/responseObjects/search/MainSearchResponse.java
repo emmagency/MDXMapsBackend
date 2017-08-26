@@ -1,9 +1,5 @@
 package org.backend.mdxmaps.model.responseObjects.search;
 
-import org.backend.mdxmaps.model.solr.CampusSearchResponse;
-import org.backend.mdxmaps.model.solr.model.Nearby;
-import org.backend.mdxmaps.model.solr.model.Transport;
-
 import java.util.List;
 
 /**
@@ -12,10 +8,10 @@ import java.util.List;
 public class MainSearchResponse {
 
     private List<CampusSearchResponse> campus;
-    private List<Nearby> nearby;
-    private List<Transport> transport;
+    private List<NearbySearchResponse> nearby;
+    private List<TransportSearchResponse> transport;
 
-    private MainSearchResponse(List<CampusSearchResponse> campus, List<Nearby> nearby, List<Transport> transport) {
+    private MainSearchResponse(List<CampusSearchResponse> campus, List<NearbySearchResponse> nearby, List<TransportSearchResponse> transport) {
         this.campus = campus;
         this.nearby = nearby;
         this.transport = transport;
@@ -25,16 +21,16 @@ public class MainSearchResponse {
         return campus;
     }
 
-    public List<Nearby> getNearby() {
+    public List<NearbySearchResponse> getNearby() {
         return nearby;
     }
 
-    public List<Transport> getTransport() {
+    public List<TransportSearchResponse> getTransport() {
         return transport;
     }
 
-    public static MainSearchResponse create(List<CampusSearchResponse> CampusSearchResponse, List<Nearby> nearby,
-                                            List<Transport> transport) {
+    public static MainSearchResponse create(List<CampusSearchResponse> CampusSearchResponse, List<NearbySearchResponse> nearby,
+                                            List<TransportSearchResponse> transport) {
         return new MainSearchResponse(CampusSearchResponse, nearby, transport);
     }
 }

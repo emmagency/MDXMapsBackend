@@ -5,6 +5,7 @@ import javax.ws.rs.core.Application;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.backend.mdxmaps.model.enums.Constants.SOLR_NEARBY_URL;
 import static org.backend.mdxmaps.model.enums.Constants.SOLR_ROOMS_URL;
 
 /**
@@ -17,6 +18,7 @@ public class App extends Application {
         return new HashMap<String, Object>() {
             {
                 put(SOLR_ROOMS_URL.getValue(), "http://localhost:8983/solr/onCampus");
+                put(SOLR_NEARBY_URL.getValue(), "http://localhost:8983/solr/nearby");
             }
         };
     }

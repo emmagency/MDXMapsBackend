@@ -16,7 +16,5 @@ public class GlobalResponseFilter implements ContainerResponseFilter {
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
             throws IOException {
         responseContext.getHeaders().add("Access-Control-Allow-Origin", "*");
-        responseContext.getHeaders().add("MDX Maps Designed By: ", "Emmanuel Keboh");
-
     }
 }

@@ -1,4 +1,4 @@
-package org.backend.mdxmaps.services;
+package org.backend.mdxmaps.services.factoryServices;
 
 import com.google.common.collect.Multimap;
 import org.backend.mdxmaps.model.DirectionsRequestParams;
@@ -9,6 +9,7 @@ import org.backend.mdxmaps.model.enums.MOT;
 import org.backend.mdxmaps.model.responseObjects.directions.MainDirectionsResponse;
 import org.backend.mdxmaps.model.responseObjects.directions.Route;
 import org.backend.mdxmaps.model.responseObjects.directions.Step;
+import org.backend.mdxmaps.services.ResponseService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,8 +19,8 @@ import static java.util.stream.Collectors.toList;
 import static org.backend.mdxmaps.model.enums.MOT.DISABLED;
 import static org.backend.mdxmaps.services.IconResolverService.resolveSBDLIcons;
 import static org.backend.mdxmaps.services.ResponseService.Status.OK;
-import static org.backend.mdxmaps.services.TravelTimeCalc.getTravelTime;
 import static org.backend.mdxmaps.services.routeCalculators.MultiLevelSLOCalculator.performMultiLevelSLO;
+import static org.backend.mdxmaps.services.util.TravelTimeCalc.getTravelTime;
 
 /**
  * Created by Emmanuel Keboh on 18/12/2016.

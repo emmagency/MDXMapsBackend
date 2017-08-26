@@ -1,6 +1,9 @@
 package org.backend.mdxmaps.services;
 
 import org.backend.mdxmaps.model.Routing;
+import org.backend.mdxmaps.services.factoryServices.DifferentBuildingFactoryService;
+import org.backend.mdxmaps.services.factoryServices.SBDLFactoryService;
+import org.backend.mdxmaps.services.factoryServices.SBSLFactoryService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

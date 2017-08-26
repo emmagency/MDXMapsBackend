@@ -3,6 +3,9 @@ package org.backend.mdxmaps.services;
 import org.backend.mdxmaps.model.Routing;
 import org.backend.mdxmaps.model.enums.MOT;
 import org.backend.mdxmaps.services.ResponseService.Status;
+import org.backend.mdxmaps.services.factoryServices.DifferentBuildingFactoryService;
+import org.backend.mdxmaps.services.factoryServices.SBDLFactoryService;
+import org.backend.mdxmaps.services.factoryServices.SBSLFactoryService;
 
 import static org.backend.mdxmaps.model.enums.MOT.ELEVATORS;
 import static org.backend.mdxmaps.model.enums.MOT.NULL;

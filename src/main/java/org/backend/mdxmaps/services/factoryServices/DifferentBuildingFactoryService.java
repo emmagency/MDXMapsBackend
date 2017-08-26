@@ -1,4 +1,4 @@
-package org.backend.mdxmaps.services;
+package org.backend.mdxmaps.services.factoryServices;
 
 import com.google.common.collect.Multimap;
 import org.backend.mdxmaps.model.DirectionsRequestParams;
@@ -9,6 +9,7 @@ import org.backend.mdxmaps.model.enums.MOT;
 import org.backend.mdxmaps.model.responseObjects.directions.MainDirectionsResponse;
 import org.backend.mdxmaps.model.responseObjects.directions.Route;
 import org.backend.mdxmaps.model.responseObjects.directions.Step;
+import org.backend.mdxmaps.services.ResponseService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,8 +22,8 @@ import static org.backend.mdxmaps.model.responseObjects.directions.Route.createR
 import static org.backend.mdxmaps.model.responseObjects.directions.Step.createStep;
 import static org.backend.mdxmaps.services.IconResolverService.resolveDifferentBuildingIcons;
 import static org.backend.mdxmaps.services.ResponseService.Status.OK;
-import static org.backend.mdxmaps.services.TravelTimeCalc.getTravelTime;
 import static org.backend.mdxmaps.services.routeCalculators.DifferentBuildingCalculator.performDifferentBuildingCalculation;
+import static org.backend.mdxmaps.services.util.TravelTimeCalc.getTravelTime;
 
 /**
  * Created by Emmanuel Keboh on 18/12/2016.
@@ -35,11 +36,11 @@ public class DifferentBuildingFactoryService implements OperationFactory {
     private Routing start, destination;
     private ArrayList<String> iconsList;
 
-    MOT getStartEDMethod() {
+    public MOT getStartEDMethod() {
         return startEDMethod;
     }
 
-    MOT getDestEDMethod() {
+    public MOT getDestEDMethod() {
         return destEDMethod;
     }
 

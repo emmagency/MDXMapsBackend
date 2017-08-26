@@ -1,4 +1,4 @@
-package org.backend.mdxmaps.services;
+package org.backend.mdxmaps.services.util;
 
 import org.backend.mdxmaps.model.enums.MOT;
 

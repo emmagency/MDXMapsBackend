@@ -1,8 +1,10 @@
 package org.backend.mdxmaps.resources;
 
+import org.backend.mdxmaps.model.responseObjects.search.CampusSearchResponse;
 import org.backend.mdxmaps.model.responseObjects.search.MainSearchResponse;
-import org.backend.mdxmaps.model.solr.CampusSearchResponse;
-import org.backend.mdxmaps.services.RoomSearchService;
+import org.backend.mdxmaps.model.responseObjects.search.NearbySearchResponse;
+import org.backend.mdxmaps.services.search.NearbySearchService;
+import org.backend.mdxmaps.services.search.RoomSearchService;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
@@ -24,6 +26,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static org.backend.mdxmaps.model.enums.Constants.SOLR_NEARBY_URL;
 import static org.backend.mdxmaps.model.enums.Constants.SOLR_ROOMS_URL;
 
 /**
@@ -47,7 +50,7 @@ public class SearchResource implements ServletContextListener {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchAll(@QueryParam("q") String query) {
         return Response.ok(MainSearchResponse.create(querySolrForRooms(query),
-                Collections.emptyList(), Collections.emptyList())).build();
+                querySolrForNearbyDocs(query, null), Collections.emptyList())).build();
     }
 
     @GET
@@ -55,6 +58,13 @@ public class SearchResource implements ServletContextListener {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchOnCampusData(@QueryParam("q") String query) {
         return Response.ok(querySolrForRooms(query)).build();
+    }
+
+    @GET
+    @Path("nearbyListing")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchNearby(@QueryParam("q") String query, @QueryParam("c") String type) {
+        return Response.ok(querySolrForNearbyDocs(query, type)).build();
     }
 
     @GET
@@ -71,6 +81,20 @@ public class SearchResource implements ServletContextListener {
                         (String) configuration.getProperty(SOLR_ROOMS_URL.getValue()))).get();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
+                return Collections.emptyList();
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    private List<NearbySearchResponse> querySolrForNearbyDocs(String query, String type) {
+        if (query.length() > 1) {
+            try {
+                return service.submit(new NearbySearchService(query, type,
+                        (String) configuration.getProperty(SOLR_NEARBY_URL.getValue()))).get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+                return Collections.emptyList();
             }
         }
         return Collections.emptyList();
@@ -91,5 +115,4 @@ public class SearchResource implements ServletContextListener {
         }
         System.out.println("Search ServletContextListener destroyed");
     }
-
 }

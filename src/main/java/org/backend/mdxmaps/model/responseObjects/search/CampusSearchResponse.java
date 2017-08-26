@@ -1,4 +1,4 @@
-package org.backend.mdxmaps.model.solr;
+package org.backend.mdxmaps.model.responseObjects.search;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,16 +9,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public final class CampusSearchResponse {
 
-    private String name, building, description;
-    private String latLng;
+    private String name, building, level, description, latLng;
     private int gMapLevel;
     private boolean isDirectionsAvailable;
 
-    private CampusSearchResponse(String name, String building, String description, String latLng, int gMapLevel, boolean isDirectionsAvailable) {
+    private CampusSearchResponse(String name, String building, String description, String latLng, String level,
+                                 int gMapLevel, boolean isDirectionsAvailable) {
         this.name = name;
         this.building = building;
         this.description = description;
         this.latLng = latLng;
+        this.level = level;
         this.gMapLevel = gMapLevel;
         this.isDirectionsAvailable = isDirectionsAvailable;
     }
@@ -39,6 +40,10 @@ public final class CampusSearchResponse {
         return latLng;
     }
 
+    public String getLevel() {
+        return level;
+    }
+
     public int getgMapLevel() {
         return gMapLevel;
     }
@@ -52,8 +57,8 @@ public final class CampusSearchResponse {
     }
 
     public static CampusSearchResponse create(String name, String building, String description, String latLng,
-                                              int gMapLevel, boolean isDirectionsAvailable) {
-        return new CampusSearchResponse(name, building, description, latLng, gMapLevel, isDirectionsAvailable);
+                                              String level, int gMapLevel, boolean isDirectionsAvailable) {
+        return new CampusSearchResponse(name, building, description, latLng, level, gMapLevel, isDirectionsAvailable);
     }
 
 }

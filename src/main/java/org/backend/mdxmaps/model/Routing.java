@@ -976,7 +976,7 @@ public class Routing implements Comparable<Routing> {
         list.add(new Routing("CG62 (Disabled Access)", ROOM, 8, COLLEGE, 2, 0, new LatLng(51.589925, -0.229401), new String[]{"J", "G"}));
         list.add(new Routing("CG76", ROOM, 6, COLLEGE, 2, 0, new LatLng(51.589921, -0.229081), new String[]{"D", "O", "N"}));
         list.add(new Routing("CG77", ROOM, 6, COLLEGE, 2, 0, new LatLng(51.589864, -0.229097), new String[]{"O", "N", "D"}));
-        list.add(new Routing("Costa Quad", ROOM, 5, COLLEGE, 2, 0, new LatLng(51.589755, -0.228960), new String[]{"P", "Q", "C"}));
+        list.add(new Routing("Costa (Quad)", ROOM, 5, COLLEGE, 2, 0, new LatLng(51.589755, -0.228960), new String[]{"P", "Q", "C"}));
 
 
         //College First Floor
@@ -1025,7 +1025,6 @@ public class Routing implements Comparable<Routing> {
 
         //Williams Ground Floor
         list.add(new Routing("Williams Building", ROOM, 4, WILLIAMS, 1, 0, new LatLng(51.590479, -0.228873), new String[]{"E", "H"}));
-        list.add(new Routing("Library @ Williams", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590630, -0.228110), new String[]{"C", "B"}));
         list.add(new Routing("WG07", ROOM, 4, WILLIAMS, 1, 0, new LatLng(51.590479, -0.228873), new String[]{"E", "H"}));
         list.add(new Routing("WG32", ROOM, 8, WILLIAMS, 1, 0, new LatLng(51.590511, -0.228757), new String[]{"G", "I"}));
         list.add(new Routing("WG33", ROOM, 5, WILLIAMS, 1, 0, new LatLng(51.590505, -0.228718), new String[]{"G", "E"}));
@@ -1033,6 +1032,7 @@ public class Routing implements Comparable<Routing> {
         list.add(new Routing("WG37", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590417, -0.228166), new String[]{"C", "B"}));
         list.add(new Routing("WG38", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590437, -0.228161), new String[]{"C", "B"}));
         list.add(new Routing("WG39", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590449, -0.228157), new String[]{"C", "B"}));
+        list.add(new Routing("WG41", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590630, -0.228110), new String[]{"C", "B"}));
         list.add(new Routing("WG42", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590535, -0.228132), new String[]{"C", "B"}));
         list.add(new Routing("WG44", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590562, -0.228125), new String[]{"C", "B"}));
         list.add(new Routing("WG45", ROOM, 3, WILLIAMS, 1, 0, new LatLng(51.590594, -0.228121), new String[]{"C", "B"}));
@@ -1227,7 +1227,7 @@ public class Routing implements Comparable<Routing> {
 
         //VINE GROUND FLOOR
 
-        list.add(new Routing("Vine building", ROOM, 2, VINE, 1, 0, new LatLng(51.590621, -0.230778), new String[]{"B", "A"}));
+        list.add(new Routing("Vine Building", ROOM, 2, VINE, 1, 0, new LatLng(51.590621, -0.230778), new String[]{"B", "A"}));
         list.add(new Routing("VG01", ROOM, 2, VINE, 1, 0, new LatLng(51.590621, -0.230778), new String[]{"B", "A"}));
         list.add(new Routing("VG02", ROOM, 2, VINE, 1, 0, new LatLng(51.590626, -0.230808), new String[]{"B", "A"}));
         list.add(new Routing("VG04", ROOM, 3, VINE, 1, 0, new LatLng(51.590708, -0.230891), new String[]{"B"}));
