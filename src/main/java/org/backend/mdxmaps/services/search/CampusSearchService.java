@@ -30,9 +30,13 @@ public class CampusSearchService implements Callable<List<CampusSearchResponse>>
     private final String solrRoomsUrl;
 
     private String query;
+    private int rows;
+    private boolean isDirectionsAvailable;
 
-    public CampusSearchService(String query, String solrRoomsUrl) {
+    public CampusSearchService(String query, int rows, boolean isDirectionsAvailable, String solrRoomsUrl) {
         this.query = query;
+        this.rows = rows;
+        this.isDirectionsAvailable = isDirectionsAvailable;
         this.solrRoomsUrl = solrRoomsUrl;
     }
 
@@ -41,8 +45,8 @@ public class CampusSearchService implements Callable<List<CampusSearchResponse>>
     public List<CampusSearchResponse> call() throws Exception {
         SolrClient solrClient = new HttpSolrClient.Builder(solrRoomsUrl).build();
 
-        SolrQuery solrQuery = new SolrQuery(query);
-        solrQuery.set("rows", 5);
+        SolrQuery solrQuery = new SolrQuery(isDirectionsAvailable ? constructQuery(query) : query);
+        solrQuery.set("rows", rows > 0 ? rows : 5);
         solrQuery.setRequestHandler("/query");
 
         QueryResponse response;
@@ -54,6 +58,10 @@ public class CampusSearchService implements Callable<List<CampusSearchResponse>>
         }
 
         return getRoomResponseList(response.getResults());
+    }
+
+    private String constructQuery(String query) {
+        return query + " AND isDirectionsAvailable:true";
     }
 
     private ArrayList<CampusSearchResponse> getRoomResponseList(SolrDocumentList list) {

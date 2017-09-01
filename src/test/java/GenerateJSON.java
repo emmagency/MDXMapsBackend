@@ -34,10 +34,47 @@ public class GenerateJSON {
         }
     }
 
+//    @Test
+//    public void generateOutsideJSON() {
+//        List<BlahClass> blah = BlahClass.getAllGroceries();
+//        try {
+//            new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(new File("C:\\Users\\keboh\\Documents\\WorkArea\\blah.json"), blah);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
+
+//    @Test
+//    public void fishingExercise() {
+//        List<Campus> campus = Campus.getRoomsForSolr();
+//
+//        List<Routing> routing = Routing.getRooms();
+//
+//        ArrayList<Campus> list = new ArrayList<>();
+//
+//        for (int i=0; i<campus.size(); i++) {
+//            boolean found = false;
+//            if (campus.get(i).isDirectionsAvailable()) {
+//                for (int j=0; j<routing.size(); j++) {
+//                    if (routing.get(j).getName().equals(campus.get(i).getName())) {
+//                        found = true;
+//                        break;
+//                    }
+//                }
+//            }
+//            if (!found && campus.get(i).isDirectionsAvailable()) {
+//                list.add(campus.get(i));
+//            }
+//        }
+//
+//        list.forEach(item -> System.out.println(item.getName()));
+//    }
+
     //Requires a local running instance of Solr. Replace solrURL appropriately
     @Test
     public void testSolr() {
-        String solrURL = "http://localhost:8983/solr/searchRooms";
+        String solrURL = "http://localhost:8983/solr/onCampus";
 
         SolrClient solrClient = new HttpSolrClient.Builder(solrURL).build();
 

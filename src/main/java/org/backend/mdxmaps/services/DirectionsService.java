@@ -19,12 +19,12 @@ import static org.backend.mdxmaps.services.util.RoutingObjectsGetterUtilService.
  */
 public class DirectionsService implements Callable<Object> {
 
-    private String start, end;
+    private String start, destination;
     private String receivedMot;
 
-    public DirectionsService(String start, String end, String receivedMot) {
+    public DirectionsService(String start, String destination, String receivedMot) {
         this.start = start;
-        this.end = end;
+        this.destination = destination;
         this.receivedMot = receivedMot;
     }
 
@@ -33,8 +33,8 @@ public class DirectionsService implements Callable<Object> {
     }
 
 
-    private String getEnd() {
-        return end;
+    private String getDestination() {
+        return destination;
     }
 
 
@@ -45,14 +45,14 @@ public class DirectionsService implements Callable<Object> {
     @Override
     public Object call() throws Exception {
 
-        Routing start = getRoomObjectFromName(this.start.toUpperCase());
-        Routing destination = getRoomObjectFromName(end.toUpperCase());
+        Routing start = getRoomObjectFromName(this.start);
+        Routing destination = getRoomObjectFromName(this.destination);
 
         if (start == null || destination == null) {
             return ResponseService.create(ERROR, start == null && destination == null ?
-                    "Couldn't find rooms " + this.start + " & " + end + ". Please check your input and try again." :
+                    "Couldn't find rooms '" + this.start + "' & '" + this.destination + ".' Please check your input and try again." :
                     start == null ? "Couldn't find room '" + this.start + "'. Please check your input and try again."
-                            : "Couldn't find room '" + end + "'. Please check your input and try again.");
+                            : "Couldn't find room '" + this.destination + "'. Please check your input and try again.");
         }
 
         if (start.getName().equals(destination.getName())) {

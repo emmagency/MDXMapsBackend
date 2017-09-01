@@ -48,23 +48,24 @@ public class SearchResource implements ServletContextListener {
     //Main Search
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchAll(@QueryParam("q") String query) {
-        return Response.ok(MainSearchResponse.create(querySolrForRooms(query),
-                querySolrForNearbyDocs(query, null), null)).build();
+    public Response searchAll(@QueryParam("q") String query, @QueryParam("rows") int rows) {
+        return Response.ok(MainSearchResponse.create(querySolrForRooms(query, rows, false),
+                querySolrForNearbyDocs(query, null, rows), Collections.emptyList())).build();
     }
 
     @GET
     @Path("campus")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchOnCampusData(@QueryParam("q") String query) {
-        return Response.ok(querySolrForRooms(query)).build();
+    public Response searchOnCampusData(@QueryParam("q") String query, @QueryParam("rows") int rows,
+                                       @QueryParam("isDirectionsAvailable") boolean isDirectionsAvailable) {
+        return Response.ok(querySolrForRooms(query, rows, isDirectionsAvailable)).build();
     }
 
     @GET
     @Path("nearbylisting")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchNearby(@QueryParam("q") String query, @QueryParam("c") String type) {
-        return Response.ok(querySolrForNearbyDocs(query, type)).build();
+    public Response searchNearby(@QueryParam("q") String query, @QueryParam("c") String type, @QueryParam("rows") int rows) {
+        return Response.ok(querySolrForNearbyDocs(query, type, rows)).build();
     }
 
     @GET
@@ -74,10 +75,10 @@ public class SearchResource implements ServletContextListener {
         return null;
     }
 
-    private List<CampusSearchResponse> querySolrForRooms(String query) {
+    private List<CampusSearchResponse> querySolrForRooms(String query, int rows, boolean isDirectionsAvailable) {
         if (query.length() > 1) {
             try {
-                return service.submit(new CampusSearchService(query,
+                return service.submit(new CampusSearchService(query, rows, isDirectionsAvailable,
                         (String) configuration.getProperty(SOLR_ROOMS_URL.getValue()))).get();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
@@ -87,10 +88,10 @@ public class SearchResource implements ServletContextListener {
         return Collections.emptyList();
     }
 
-    private List<NearbySearchResponse> querySolrForNearbyDocs(String query, String type) {
+    private List<NearbySearchResponse> querySolrForNearbyDocs(String query, String type, int rows) {
         if (query.length() > 1) {
             try {
-                return service.submit(new NearbySearchService(query, type,
+                return service.submit(new NearbySearchService(query, type, rows,
                         (String) configuration.getProperty(SOLR_NEARBY_URL.getValue()))).get();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();

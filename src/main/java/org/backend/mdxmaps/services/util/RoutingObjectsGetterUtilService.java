@@ -66,7 +66,7 @@ public final class RoutingObjectsGetterUtilService {
 
     public static Routing getRoomObjectFromName(String name) {
         return getRooms().parallelStream()
-                .filter(room -> room.getName().equals(name))
+                .filter(room -> room.getName().equalsIgnoreCase(name))
                 .findFirst().orElse(null);
     }
 

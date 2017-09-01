@@ -25,10 +25,12 @@ public class NearbySearchService implements Callable<List<NearbySearchResponse>>
     private static String LATLNG = "latLng";
 
     private String query, type, solrNearbyUrl;
+    private int rows;
 
-    public NearbySearchService(String query, String type, String solrNearbyUrl) {
+    public NearbySearchService(String query, String type, int rows, String solrNearbyUrl) {
         this.query = query;
         this.type = type;
+        this.rows = rows;
         this.solrNearbyUrl = solrNearbyUrl;
     }
 
@@ -38,7 +40,7 @@ public class NearbySearchService implements Callable<List<NearbySearchResponse>>
 
         SolrQuery solrQuery = new SolrQuery();
         solrQuery.setQuery(constructQuery(query, type, solrQuery));
-        solrQuery.set("rows", 5);
+        solrQuery.set("rows", rows > 0 ? rows : 5);
         solrQuery.setRequestHandler("/query");
 
         QueryResponse response;
