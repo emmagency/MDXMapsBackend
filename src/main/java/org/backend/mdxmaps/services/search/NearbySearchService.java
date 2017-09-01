@@ -10,7 +10,6 @@ import org.backend.mdxmaps.model.responseObjects.search.NearbySearchResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -37,7 +36,8 @@ public class NearbySearchService implements Callable<List<NearbySearchResponse>>
     public List<NearbySearchResponse> call() throws Exception {
         SolrClient solrClient = new HttpSolrClient.Builder(solrNearbyUrl).build();
 
-        SolrQuery solrQuery = new SolrQuery(constructQuery(query, type));
+        SolrQuery solrQuery = new SolrQuery();
+        solrQuery.setQuery(constructQuery(query, type, solrQuery));
         solrQuery.set("rows", 5);
         solrQuery.setRequestHandler("/query");
 
@@ -46,14 +46,15 @@ public class NearbySearchService implements Callable<List<NearbySearchResponse>>
             response = solrClient.query(solrQuery);
         } catch (IOException | SolrServerException e) {
             e.printStackTrace();
-            return Collections.emptyList();
+            return null;
         }
 
         return getNearbyResponseList(response.getResults());
     }
 
-    private String constructQuery(String query, String type) {
+    private String constructQuery(String query, String type, SolrQuery solrQuery) {
         if (type != null && type.equals("listing")) {
+            solrQuery.set("q.op", "AND");
             return "{!child of=\"isParent:true\"}name:" + query;
         }
         return query;

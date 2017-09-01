@@ -10,7 +10,6 @@ import org.backend.mdxmaps.model.responseObjects.search.CampusSearchResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -19,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * Created by Emmanuel Keboh on 06/03/2017.
  */
-public class RoomSearchService implements Callable<List<CampusSearchResponse>> {
+public class CampusSearchService implements Callable<List<CampusSearchResponse>> {
 
     public static String NAME = "name";
     public static String BUILDING = "building";
@@ -32,7 +31,7 @@ public class RoomSearchService implements Callable<List<CampusSearchResponse>> {
 
     private String query;
 
-    public RoomSearchService(String query, String solrRoomsUrl) {
+    public CampusSearchService(String query, String solrRoomsUrl) {
         this.query = query;
         this.solrRoomsUrl = solrRoomsUrl;
     }
@@ -51,7 +50,7 @@ public class RoomSearchService implements Callable<List<CampusSearchResponse>> {
             response = solrClient.query(solrQuery);
         } catch (IOException | SolrServerException e) {
             e.printStackTrace();
-            return Collections.emptyList();
+            return null;
         }
 
         return getRoomResponseList(response.getResults());

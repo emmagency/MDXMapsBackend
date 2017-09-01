@@ -3,8 +3,8 @@ package org.backend.mdxmaps.resources;
 import org.backend.mdxmaps.model.responseObjects.search.CampusSearchResponse;
 import org.backend.mdxmaps.model.responseObjects.search.MainSearchResponse;
 import org.backend.mdxmaps.model.responseObjects.search.NearbySearchResponse;
+import org.backend.mdxmaps.services.search.CampusSearchService;
 import org.backend.mdxmaps.services.search.NearbySearchService;
-import org.backend.mdxmaps.services.search.RoomSearchService;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
@@ -50,7 +50,7 @@ public class SearchResource implements ServletContextListener {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchAll(@QueryParam("q") String query) {
         return Response.ok(MainSearchResponse.create(querySolrForRooms(query),
-                querySolrForNearbyDocs(query, null), Collections.emptyList())).build();
+                querySolrForNearbyDocs(query, null), null)).build();
     }
 
     @GET
@@ -61,7 +61,7 @@ public class SearchResource implements ServletContextListener {
     }
 
     @GET
-    @Path("nearbyListing")
+    @Path("nearbylisting")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchNearby(@QueryParam("q") String query, @QueryParam("c") String type) {
         return Response.ok(querySolrForNearbyDocs(query, type)).build();
@@ -77,11 +77,11 @@ public class SearchResource implements ServletContextListener {
     private List<CampusSearchResponse> querySolrForRooms(String query) {
         if (query.length() > 1) {
             try {
-                return service.submit(new RoomSearchService(query,
+                return service.submit(new CampusSearchService(query,
                         (String) configuration.getProperty(SOLR_ROOMS_URL.getValue()))).get();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
-                return Collections.emptyList();
+                return null;
             }
         }
         return Collections.emptyList();
@@ -94,7 +94,7 @@ public class SearchResource implements ServletContextListener {
                         (String) configuration.getProperty(SOLR_NEARBY_URL.getValue()))).get();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
-                return Collections.emptyList();
+                return null;
             }
         }
         return Collections.emptyList();

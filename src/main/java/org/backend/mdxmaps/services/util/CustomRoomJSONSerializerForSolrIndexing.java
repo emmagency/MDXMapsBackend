@@ -7,13 +7,13 @@ import org.backend.mdxmaps.model.solr.model.Campus;
 
 import java.io.IOException;
 
-import static org.backend.mdxmaps.services.search.RoomSearchService.BUILDING;
-import static org.backend.mdxmaps.services.search.RoomSearchService.DESCRIPTION;
-import static org.backend.mdxmaps.services.search.RoomSearchService.DIRECTIONS_AVAILABLE;
-import static org.backend.mdxmaps.services.search.RoomSearchService.GOOGLE_MAP_LEVEL;
-import static org.backend.mdxmaps.services.search.RoomSearchService.LAT_LNG;
-import static org.backend.mdxmaps.services.search.RoomSearchService.LEVEL;
-import static org.backend.mdxmaps.services.search.RoomSearchService.NAME;
+import static org.backend.mdxmaps.services.search.CampusSearchService.BUILDING;
+import static org.backend.mdxmaps.services.search.CampusSearchService.DESCRIPTION;
+import static org.backend.mdxmaps.services.search.CampusSearchService.DIRECTIONS_AVAILABLE;
+import static org.backend.mdxmaps.services.search.CampusSearchService.GOOGLE_MAP_LEVEL;
+import static org.backend.mdxmaps.services.search.CampusSearchService.LAT_LNG;
+import static org.backend.mdxmaps.services.search.CampusSearchService.LEVEL;
+import static org.backend.mdxmaps.services.search.CampusSearchService.NAME;
 
 /**
  * Created by Emmanuel Keboh on 05/03/2017.
