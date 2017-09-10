@@ -29,7 +29,7 @@ public class DirectionsServiceIntTest {
     public void CG03ToCG60() {
 
         try {
-            response = (MainDirectionsResponse) new DirectionsService("CG03", "CG60", null).call();
+            response = (MainDirectionsResponse) new DirectionsService("CG03", "CG60", null, false, "").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,7 +68,7 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToCG60Disabled() {
         try {
-            response = (MainDirectionsResponse) new DirectionsService("CG03", "CG60", "disabled").call();
+            response = (MainDirectionsResponse) new DirectionsService("CG03", "CG60", "disabled", false, "").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -91,7 +91,7 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToC110() {
         try {
-            response = (MainDirectionsResponse) new DirectionsService("CG03", "C110", null).call();
+            response = (MainDirectionsResponse) new DirectionsService("CG03", "C110", null, false, "").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,7 +119,7 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToC110Elevators() {
         try {
-            response = (MainDirectionsResponse) new DirectionsService("CG03", "C110", "elevators").call();
+            response = (MainDirectionsResponse) new DirectionsService("CG03", "C110", "elevators", false, "").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -142,7 +142,7 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToC115Disabled() {
         try {
-            response = (MainDirectionsResponse) new DirectionsService("CG03", "C115", "disabled").call();
+            response = (MainDirectionsResponse) new DirectionsService("CG03", "C115", "disabled", false, "").call();
         } catch (Exception e) {
             e.printStackTrace();
         }

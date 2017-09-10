@@ -6,7 +6,8 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
-import org.backend.mdxmaps.model.responseObjects.search.CampusSearchResponse;
+import org.backend.mdxmaps.model.LatLng;
+import org.backend.mdxmaps.model.solr.model.Campus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * Created by Emmanuel Keboh on 06/03/2017.
  */
-public class CampusSearchService implements Callable<List<CampusSearchResponse>> {
+public class CampusSearchService implements Callable<List<Campus>> {
 
     public static String NAME = "name";
     public static String BUILDING = "building";
@@ -40,9 +41,8 @@ public class CampusSearchService implements Callable<List<CampusSearchResponse>>
         this.solrRoomsUrl = solrRoomsUrl;
     }
 
-
     @Override
-    public List<CampusSearchResponse> call() throws Exception {
+    public List<Campus> call() throws Exception {
         SolrClient solrClient = new HttpSolrClient.Builder(solrRoomsUrl).build();
 
         SolrQuery solrQuery = new SolrQuery(isDirectionsAvailable ? constructQuery(query) : query);
@@ -64,12 +64,12 @@ public class CampusSearchService implements Callable<List<CampusSearchResponse>>
         return query + " AND isDirectionsAvailable:true";
     }
 
-    private ArrayList<CampusSearchResponse> getRoomResponseList(SolrDocumentList list) {
+    private ArrayList<Campus> getRoomResponseList(SolrDocumentList list) {
 
-        return (ArrayList<CampusSearchResponse>) list.stream()
-                .map(doc -> CampusSearchResponse.create(
+        return (ArrayList<Campus>) list.stream()
+                .map(doc -> new Campus(
                         (String) doc.getFieldValue(NAME), (String) doc.getFieldValue(BUILDING),
-                        (String) doc.getFieldValue(DESCRIPTION), (String) doc.getFieldValue(LAT_LNG),
+                        (String) doc.getFieldValue(DESCRIPTION), new LatLng((String) doc.getFieldValue(LAT_LNG)),
                         (String) doc.getFieldValue(LEVEL), (Integer) doc.getFieldValue(GOOGLE_MAP_LEVEL),
                         (Boolean) doc.getFieldValue(DIRECTIONS_AVAILABLE)))
                 .collect(toList());

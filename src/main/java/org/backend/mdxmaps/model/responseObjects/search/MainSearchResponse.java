@@ -1,6 +1,8 @@
 package org.backend.mdxmaps.model.responseObjects.search;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.backend.mdxmaps.model.solr.model.Campus;
+import org.backend.mdxmaps.model.solr.model.Nearby;
 
 import java.util.List;
 
@@ -9,28 +11,28 @@ import java.util.List;
  */
 public class MainSearchResponse {
 
-    private List<CampusSearchResponse> campus;
-    private List<NearbySearchResponse> nearby;
+    private List<Campus> campus;
+    private List<Nearby> nearby;
     private List<TransportSearchResponse> transport;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private String errorInfo;
+    private String errorMessage;
 
-    private MainSearchResponse(List<CampusSearchResponse> campus, List<NearbySearchResponse> nearby, List<TransportSearchResponse> transport) {
+    private MainSearchResponse(List<Campus> campus, List<Nearby> nearby, List<TransportSearchResponse> transport) {
         this.campus = campus;
         this.nearby = nearby;
         this.transport = transport;
     }
 
-    private MainSearchResponse(String errorInfo) {
-        this.errorInfo = errorInfo;
+    private MainSearchResponse(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
-    public List<CampusSearchResponse> getCampus() {
+    public List<Campus> getCampus() {
         return campus;
     }
 
-    public List<NearbySearchResponse> getNearby() {
+    public List<Nearby> getNearby() {
         return nearby;
     }
 
@@ -38,15 +40,15 @@ public class MainSearchResponse {
         return transport;
     }
 
-    public String getErrorInfo() {
-        return errorInfo;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public static MainSearchResponse create(List<CampusSearchResponse> campusSearchResponses, List<NearbySearchResponse> nearby,
+    public static MainSearchResponse create(List<Campus> campus, List<Nearby> nearby,
                                             List<TransportSearchResponse> transport) {
-        if (campusSearchResponses == null && nearby == null && transport == null) {
-            return new MainSearchResponse("Apologies! We\'ve run into some problems.Please try again at a later time");
+        if (campus == null && nearby == null && transport == null) {
+            return new MainSearchResponse("Apologies! We've run into some problems. Please try again at a later time");
         }
-        return new MainSearchResponse(campusSearchResponses, nearby, transport);
+        return new MainSearchResponse(campus, nearby, transport);
     }
 }

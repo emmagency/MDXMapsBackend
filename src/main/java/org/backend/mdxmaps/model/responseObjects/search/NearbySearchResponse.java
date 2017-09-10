@@ -1,43 +1,40 @@
 package org.backend.mdxmaps.model.responseObjects.search;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.backend.mdxmaps.model.solr.model.Nearby;
+
+import java.util.List;
 
 /**
  * Created by Emmanuel Keboh on 13/07/2017.
  */
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class NearbySearchResponse {
-    private String name, category, subName, address, latLng;
 
-    private NearbySearchResponse(String name, String category, String subName, String address, String latLng) {
-        this.name = name;
-        this.category = category;
-        this.subName = subName;
-        this.address = address;
-        this.latLng = latLng;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private String errorMessage;
+
+    private List<Nearby> nearby;
+
+    private NearbySearchResponse(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
-    public String getName() {
-        return name;
+    private NearbySearchResponse(List<Nearby> nearby) {
+        this.nearby = nearby;
     }
 
-    public String getCategory() {
-        return category;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public String getSubName() {
-        return subName;
+    public List<Nearby> getNearby() {
+        return nearby;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public String getLatLng() {
-        return latLng;
-    }
-
-    public static NearbySearchResponse create(String name, String category, String subName, String address, String latLng) {
-        return new NearbySearchResponse(name, category, subName, address, latLng);
+    public static NearbySearchResponse create(List<Nearby> nearby) {
+        if (nearby == null) {
+            return new NearbySearchResponse("Apologies! We've run into some problems. Please try again at a later time");
+        }
+        return new NearbySearchResponse(nearby);
     }
 }

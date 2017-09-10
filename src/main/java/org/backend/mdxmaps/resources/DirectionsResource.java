@@ -12,6 +12,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.concurrent.ExecutionException;
@@ -19,6 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static org.backend.mdxmaps.model.enums.Constants.SOLR_ROOMS_URL;
 import static org.backend.mdxmaps.services.ResponseService.Status.ERROR;
 
 /**
@@ -32,6 +35,9 @@ public class DirectionsResource implements ServletContextListener {
 
     private ExecutorService service = Executors.newCachedThreadPool();
 
+    @Context
+    private Configuration configuration;
+
     @GET
     @Binders.CampusDirection
     @Produces(MediaType.APPLICATION_JSON)
@@ -39,7 +45,8 @@ public class DirectionsResource implements ServletContextListener {
                                   @QueryParam("m") String mot) {
         if (start != null && !start.equals("") && end != null && !end.equals("")) {
             try {
-                return Response.ok(service.submit(new DirectionsService(start, end, mot)).get()).build();
+                String solrRoomsUrl = (String) configuration.getProperty(SOLR_ROOMS_URL.getValue());
+                return Response.ok(service.submit(new DirectionsService(start, end, mot, true, solrRoomsUrl)).get()).build();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }

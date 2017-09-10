@@ -15,6 +15,13 @@ public class LatLng {
         this.longitude = longitude;
     }
 
+    public LatLng(String latLng) {
+        // ToDo Add error handling
+        String[] result = latLng.split(",");
+        latitude = Double.valueOf(result[0]);
+        longitude = Double.valueOf(result[1]);
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(latitude, longitude);
@@ -35,4 +42,5 @@ public class LatLng {
     public String toString() {
         return Objects.toString(latitude + ", " + longitude);
     }
+
 }
