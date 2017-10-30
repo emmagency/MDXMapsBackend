@@ -3,6 +3,7 @@ package org.backend.mdxmaps.model.responseObjects.search;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.backend.mdxmaps.model.solr.model.Campus;
 import org.backend.mdxmaps.model.solr.model.Nearby;
+import org.backend.mdxmaps.model.solr.model.Transport;
 
 import java.util.List;
 
@@ -13,12 +14,12 @@ public class MainSearchResponse {
 
     private List<Campus> campus;
     private List<Nearby> nearby;
-    private List<TransportSearchResponse> transport;
+    private List<Transport> transport;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String errorMessage;
 
-    private MainSearchResponse(List<Campus> campus, List<Nearby> nearby, List<TransportSearchResponse> transport) {
+    private MainSearchResponse(List<Campus> campus, List<Nearby> nearby, List<Transport> transport) {
         this.campus = campus;
         this.nearby = nearby;
         this.transport = transport;
@@ -36,7 +37,7 @@ public class MainSearchResponse {
         return nearby;
     }
 
-    public List<TransportSearchResponse> getTransport() {
+    public List<Transport> getTransport() {
         return transport;
     }
 
@@ -45,7 +46,7 @@ public class MainSearchResponse {
     }
 
     public static MainSearchResponse create(List<Campus> campus, List<Nearby> nearby,
-                                            List<TransportSearchResponse> transport) {
+                                            List<Transport> transport) {
         if (campus == null && nearby == null && transport == null) {
             return new MainSearchResponse("Apologies! We've run into some problems. Please try again at a later time");
         }

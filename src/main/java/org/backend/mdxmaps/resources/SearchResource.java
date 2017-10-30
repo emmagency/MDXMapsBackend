@@ -3,10 +3,13 @@ package org.backend.mdxmaps.resources;
 import org.backend.mdxmaps.model.responseObjects.search.CampusSearchResponse;
 import org.backend.mdxmaps.model.responseObjects.search.MainSearchResponse;
 import org.backend.mdxmaps.model.responseObjects.search.NearbySearchResponse;
+import org.backend.mdxmaps.model.responseObjects.search.TransportSearchResponse;
 import org.backend.mdxmaps.model.solr.model.Campus;
 import org.backend.mdxmaps.model.solr.model.Nearby;
+import org.backend.mdxmaps.model.solr.model.Transport;
 import org.backend.mdxmaps.services.search.CampusSearchService;
 import org.backend.mdxmaps.services.search.NearbySearchService;
+import org.backend.mdxmaps.services.search.TransportSearchService;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
@@ -30,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.backend.mdxmaps.model.enums.Constants.SOLR_NEARBY_URL;
 import static org.backend.mdxmaps.model.enums.Constants.SOLR_ROOMS_URL;
+import static org.backend.mdxmaps.model.enums.Constants.SOLR_TRANSPORT_URL;
 
 /**
  * Created by Emmanuel Keboh on 06/03/2017.
@@ -52,7 +56,7 @@ public class SearchResource implements ServletContextListener {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchAll(@QueryParam("q") String query, @QueryParam("rows") int rows) {
         return Response.ok(MainSearchResponse.create(querySolrForRooms(query, rows, false),
-                querySolrForNearbyDocs(query, false, rows), Collections.emptyList())).build();
+                querySolrForNearbyDocs(query, false, rows), querySolrForTransport(query, rows))).build();
     }
 
     @GET
@@ -73,8 +77,8 @@ public class SearchResource implements ServletContextListener {
     @GET
     @Path("transport")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response tflQuery() {
-        return null;
+    public Response tflQuery(@QueryParam("q") String query, @QueryParam("rows") int rows) {
+        return Response.ok(TransportSearchResponse.create(querySolrForTransport(query, rows))).build();
     }
 
     private List<Campus> querySolrForRooms(String query, int rows, boolean isDirectionsAvailable) {
@@ -95,6 +99,19 @@ public class SearchResource implements ServletContextListener {
             try {
                 return service.submit(new NearbySearchService(query, type, rows,
                         (String) configuration.getProperty(SOLR_NEARBY_URL.getValue()))).get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    private List<Transport> querySolrForTransport(String query, int rows) {
+        if (query.length() > 1) {
+            try {
+                return service.submit(new TransportSearchService(query, false, rows,
+                        (String) configuration.getProperty(SOLR_TRANSPORT_URL.getValue()))).get();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
                 return null;

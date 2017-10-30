@@ -7,6 +7,7 @@ import java.util.Map;
 
 import static org.backend.mdxmaps.model.enums.Constants.SOLR_NEARBY_URL;
 import static org.backend.mdxmaps.model.enums.Constants.SOLR_ROOMS_URL;
+import static org.backend.mdxmaps.model.enums.Constants.SOLR_TRANSPORT_URL;
 
 /**
  * Created by Emmanuel Keboh on 27/11/2016.
@@ -19,6 +20,7 @@ public class App extends Application {
             {
                 put(SOLR_ROOMS_URL.getValue(), "http://localhost:8983/solr/onCampus");
                 put(SOLR_NEARBY_URL.getValue(), "http://localhost:8983/solr/nearby");
+                put(SOLR_TRANSPORT_URL.getValue(), "http://localhost:8983/solr/transport");
             }
         };
     }
