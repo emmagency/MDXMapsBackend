@@ -1,7 +1,7 @@
 package org.backend.mdxmaps.model;
 
 import org.backend.mdxmaps.model.enums.ObjectType;
-import org.backend.mdxmaps.services.util.RoutingObjectsGetterUtilService;
+import org.backend.mdxmaps.service.util.RoutingObjectsGetterUtilService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1487,7 +1487,7 @@ public class Routing implements Comparable<Routing> {
     }
 
 
-    public boolean checkIfCurrentAlphaContainsDestination(int destination) {
+    public boolean checkIfCurrentAlphaIsInSameLaneAsDestination(int destination) {
         return Arrays.stream(primeLanes).anyMatch(primeLane -> primeLane == destination);
     }
 

@@ -2,7 +2,7 @@ package IntegrationTests;
 
 import org.backend.mdxmaps.model.responseObjects.directions.MainDirectionsResponse;
 import org.backend.mdxmaps.model.responseObjects.directions.Route;
-import org.backend.mdxmaps.services.DirectionsService;
+import org.backend.mdxmaps.service.DirectionsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -10,7 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static org.backend.mdxmaps.services.ResponseService.Status.OK;
+import static org.backend.mdxmaps.service.ResponseService.Status.OK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

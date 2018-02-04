@@ -2,7 +2,7 @@ package org.backend.mdxmaps.model.responseObjects.directions;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.backend.mdxmaps.model.DirectionsRequestParams;
-import org.backend.mdxmaps.services.ResponseService.Status;
+import org.backend.mdxmaps.service.ResponseService.Status;
 
 import java.util.ArrayList;
 

@@ -3,7 +3,7 @@ package org.backend.mdxmaps.model.solr.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.backend.mdxmaps.model.LatLng;
-import org.backend.mdxmaps.services.util.CustomRoomJSONSerializerForSolrIndexing;
+import org.backend.mdxmaps.service.util.CustomRoomJSONSerializerForSolrIndexing;
 
 import java.util.ArrayList;
 

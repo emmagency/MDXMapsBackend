@@ -1,6 +1,6 @@
 package org.backend.mdxmaps.model;
 
-import org.backend.mdxmaps.services.ResponseService;
+import org.backend.mdxmaps.service.ResponseService;
 
 /**
  * Created by Emmanuel Keboh on 18/12/2016.

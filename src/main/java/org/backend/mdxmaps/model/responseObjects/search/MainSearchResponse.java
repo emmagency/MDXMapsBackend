@@ -23,6 +23,7 @@ public class MainSearchResponse {
         this.campus = campus;
         this.nearby = nearby;
         this.transport = transport;
+
     }
 
     private MainSearchResponse(String errorMessage) {
