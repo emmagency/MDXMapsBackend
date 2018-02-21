@@ -1,32 +1,33 @@
-package org.backend.mdxmaps.model.solr.model;
+package org.backend.mdxmaps.model.solr;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.backend.mdxmaps.model.LatLng;
+import org.backend.mdxmaps.model.enums.Building;
 import org.backend.mdxmaps.service.util.CustomRoomJSONSerializerForSolrIndexing;
 
 import java.util.ArrayList;
 
-import static org.backend.mdxmaps.model.Routing.BARN;
-import static org.backend.mdxmaps.model.Routing.BUILDING10;
-import static org.backend.mdxmaps.model.Routing.BUILDING9;
-import static org.backend.mdxmaps.model.Routing.CIRCLE_CAFE;
-import static org.backend.mdxmaps.model.Routing.COLLEGE;
-import static org.backend.mdxmaps.model.Routing.GROVE_BLOCK_A;
-import static org.backend.mdxmaps.model.Routing.GROVE_BLOCK_B;
-import static org.backend.mdxmaps.model.Routing.GROVE_BLOCK_C;
-import static org.backend.mdxmaps.model.Routing.HATCHCROFT;
-import static org.backend.mdxmaps.model.Routing.MDXHOUSE;
-import static org.backend.mdxmaps.model.Routing.PORTAKABIN_2;
-import static org.backend.mdxmaps.model.Routing.PORTAKABIN_6_7;
-import static org.backend.mdxmaps.model.Routing.PORTAKABIN_8;
-import static org.backend.mdxmaps.model.Routing.PORTAKABIN_A;
-import static org.backend.mdxmaps.model.Routing.PORTAKABIN_B;
-import static org.backend.mdxmaps.model.Routing.RAVENSFIELDS;
-import static org.backend.mdxmaps.model.Routing.SHEPPARDLIBRARY;
-import static org.backend.mdxmaps.model.Routing.TOWNHALL;
-import static org.backend.mdxmaps.model.Routing.VINE;
-import static org.backend.mdxmaps.model.Routing.WILLIAMS;
+import static org.backend.mdxmaps.model.enums.Building.BARN;
+import static org.backend.mdxmaps.model.enums.Building.BUILDING10;
+import static org.backend.mdxmaps.model.enums.Building.BUILDING9;
+import static org.backend.mdxmaps.model.enums.Building.CIRCLE_CAFE;
+import static org.backend.mdxmaps.model.enums.Building.COLLEGE;
+import static org.backend.mdxmaps.model.enums.Building.GROVE_BLOCK_A;
+import static org.backend.mdxmaps.model.enums.Building.GROVE_BLOCK_B;
+import static org.backend.mdxmaps.model.enums.Building.GROVE_BLOCK_C;
+import static org.backend.mdxmaps.model.enums.Building.HATCHCROFT;
+import static org.backend.mdxmaps.model.enums.Building.MDXHOUSE;
+import static org.backend.mdxmaps.model.enums.Building.PORTAKABIN_2;
+import static org.backend.mdxmaps.model.enums.Building.PORTAKABIN_6_7;
+import static org.backend.mdxmaps.model.enums.Building.PORTAKABIN_8;
+import static org.backend.mdxmaps.model.enums.Building.PORTAKABIN_A;
+import static org.backend.mdxmaps.model.enums.Building.PORTAKABIN_B;
+import static org.backend.mdxmaps.model.enums.Building.RAVENSFIELDS;
+import static org.backend.mdxmaps.model.enums.Building.SHEPPARDLIBRARY;
+import static org.backend.mdxmaps.model.enums.Building.TOWNHALL;
+import static org.backend.mdxmaps.model.enums.Building.VINE;
+import static org.backend.mdxmaps.model.enums.Building.WILLIAMS;
 
 /**
  * Created by Emmanuel Keboh on 11/03/2017.
@@ -38,10 +39,21 @@ public class Campus {
     private LatLng latLng;
     private String level;
     private int gMapLevel;
-    private String building;
+    private Building building;
+    private String buildingStringValue;
     private String description;
     private boolean isDirectionsAvailable;
 
+
+    public Campus(String name, Building building, String description, LatLng latLng, String level, int gMapLevel, boolean isDirectionsAvailable) {
+        this.name = name;
+        this.isDirectionsAvailable = isDirectionsAvailable;
+        this.latLng = latLng;
+        this.level = level;
+        this.gMapLevel = gMapLevel;
+        this.building = building;
+        this.description = description;
+    }
 
     public Campus(String name, String building, String description, LatLng latLng, String level, int gMapLevel, boolean isDirectionsAvailable) {
         this.name = name;
@@ -49,7 +61,7 @@ public class Campus {
         this.latLng = latLng;
         this.level = level;
         this.gMapLevel = gMapLevel;
-        this.building = building;
+        this.buildingStringValue = building;
         this.description = description;
     }
 
@@ -69,7 +81,7 @@ public class Campus {
         return gMapLevel;
     }
 
-    public String getBuilding() {
+    public Building getBuilding() {
         return building;
     }
 
@@ -87,7 +99,7 @@ public class Campus {
 
         /*College Building ground floor*/
 
-        list.add(new Campus("College Building", null, "Main Building", new LatLng(51.589825, -0.2288390), "Ground Floor", 2, true));
+        list.add(new Campus("College Building", "College Building", "Main Building", new LatLng(51.589825, -0.2288390), "Ground Floor", 2, true));
         list.add(new Campus("Quad", COLLEGE, "Rickett Quadrangle", new LatLng(51.589825, -0.228839), "Ground Floor", 2, true));
         list.add(new Campus("CG03", COLLEGE, "Seminar Room", new LatLng(51.589537, -0.228467), "Ground Floor", 2, true));
         list.add(new Campus("CG04", COLLEGE, "Seminar Room", new LatLng(51.589553, -0.228542), "Ground Floor", 2, true));
@@ -173,7 +185,7 @@ public class Campus {
 
         /*HatchCroft Building Ground Floor*/
 
-        list.add(new Campus("Hatchcroft Building", null, "Science & Technology", new LatLng(51.589154, -0.229178), "Ground Floor", 2, true));
+        list.add(new Campus("Hatchcroft Building", "Hatchcroft Building", "Science & Technology", new LatLng(51.589154, -0.229178), "Ground Floor", 2, true));
         list.add(new Campus("HG01", HATCHCROFT, "Spec Lab", new LatLng(51.589178, -0.229000), "Ground Floor", 2, true));
         list.add(new Campus("HG02", HATCHCROFT, "Spec Lab", new LatLng(51.589164, -0.228829), "Ground Floor", 2, true));
         list.add(new Campus("HG03", HATCHCROFT, "Spec Lab", new LatLng(51.589162, -0.228700), "Ground Floor", 2, true));
@@ -252,7 +264,7 @@ public class Campus {
 
         /*Building 9*/
 
-        list.add(new Campus("Building 9", null, "Building 9 Description", new LatLng(51.588709, -0.229398), "Ground Floor", 0, true));
+        list.add(new Campus("Building 9", "Building 9", "Building 9 Description", new LatLng(51.588709, -0.229398), "Ground Floor", 0, true));
         list.add(new Campus("BG01", BUILDING9, "Classroom", new LatLng(51.588697, -0.229558), "Ground Floor", 0, true));
         list.add(new Campus("BG02", BUILDING9, "Classroom", new LatLng(51.588771, -0.229495), "Ground Floor", 0, true));
         list.add(new Campus("BG03", BUILDING9, "Toilet", new LatLng(51.588709, -0.229460), "Ground Floor", 0, true));
@@ -264,7 +276,7 @@ public class Campus {
 
         /*Building 10 ground floor*/
 
-        list.add(new Campus("Building 10", null, "Building 10 Description", new LatLng(51.589837, -0.229845), "Ground Floor", 1, true));
+        list.add(new Campus("Building 10", "Building 10", "Building 10 Description", new LatLng(51.589837, -0.229845), "Ground Floor", 1, true));
 
         list.add(new Campus("BTG01", BUILDING10, "Simulation Room A", new LatLng(51.589815, -0.229934), "Ground Floor", 1, true));
         list.add(new Campus("BTG02", BUILDING10, "Store Room", new LatLng(51.589858, -0.229918), "Ground Floor", 1, true));
@@ -277,7 +289,7 @@ public class Campus {
 
         /*Portakabin 2 ground floor*/
 
-        list.add(new Campus("Portakabin 2", null, "Portakabin 2 Description", new LatLng(51.589994, -0.229832), "Ground Level", 1, false));
+        list.add(new Campus("Portakabin 2", "Portakabin 2", "Portakabin 2 Description", new LatLng(51.589994, -0.229832), "Ground Level", 1, false));
         list.add(new Campus("P2G01", PORTAKABIN_2, "Recital Room", new LatLng(51.589963, -0.229843), "Ground Level", 0, false));
         list.add(new Campus("P2G02", PORTAKABIN_2, "Recital Room", new LatLng(51.590010, -0.229825), "Ground Level", 0, false));
         list.add(new Campus("P2G03", PORTAKABIN_2, "Recital Room", new LatLng(51.589982, -0.229734), "Ground Level", 0, false));
@@ -287,7 +299,7 @@ public class Campus {
 
         /*Portakabin 6 & 7 ground floor*/
 
-        list.add(new Campus("Portakabin 6 & 7", null, "Portakabin 6 & 7", new LatLng(51.589662, -0.229930), "Ground Level", 1, true));
+        list.add(new Campus("Portakabin 6 & 7", "Portakabin 6 & 7", "Portakabin 6 & 7", new LatLng(51.589662, -0.229930), "Ground Level", 1, true));
         list.add(new Campus("P6G01", PORTAKABIN_6_7, "Classroom", new LatLng(51.589661, -0.229960), "Ground Level", 1, true));
         list.add(new Campus("P6G02", PORTAKABIN_6_7, "Classroom", new LatLng(51.589654, -0.229853), "Ground Level", 1, true));
 
@@ -303,7 +315,7 @@ public class Campus {
 
         /*Portakabin A ground floor*/
 
-        list.add(new Campus("Portakabin A", null, "Portakabin A Description", new LatLng(51.589795, -0.230213), "Ground Level", 1, true));
+        list.add(new Campus("Portakabin A", "Portakabin A", "Portakabin A Description", new LatLng(51.589795, -0.230213), "Ground Level", 1, true));
         list.add(new Campus("PAG01", PORTAKABIN_A, "Classroom", new LatLng(51.589905, -0.230136), "Ground Level", 1, true));
         list.add(new Campus("PAG02", PORTAKABIN_A, "Classroom", new LatLng(51.589819, -0.230155), "Ground Level", 1, true));
         list.add(new Campus("PAG03", PORTAKABIN_A, "Classroom", new LatLng(51.589691, -0.230168), "Ground Level", 1, true));
@@ -321,13 +333,13 @@ public class Campus {
         list.add(new Campus("PA104", PORTAKABIN_A, "Toilet 2", new LatLng(51.589691, -0.230167), "First Level", 0, true));
 
         /*Portakabin B ground floor*/
-        list.add(new Campus("Portakabin B", null, "Portakabin B Description", new LatLng(51.590750, -0.229020), "Ground Level", 0, true));
+        list.add(new Campus("Portakabin B", "Portakabin B", "Portakabin B Description", new LatLng(51.590750, -0.229020), "Ground Level", 0, true));
         list.add(new Campus("PBG01", PORTAKABIN_B, "Classroom", new LatLng(51.590750, -0.229020), "Ground Level", 0, true));
         list.add(new Campus("PBG02", PORTAKABIN_B, "Classroom", new LatLng(51.590655, -0.229057), "Ground Level", 0, true));
 
         /*Vine ground floor*/
 
-        list.add(new Campus("Vine Building", null, "Vine Building Description", new LatLng(51.590637, -0.230763), "Ground Floor", 1, true));
+        list.add(new Campus("Vine Building", "Vine Building", "Vine Building Description", new LatLng(51.590637, -0.230763), "Ground Floor", 1, true));
         list.add(new Campus("VG01", VINE, "Meeting Room", new LatLng(51.590575, -0.230748), "Ground Floor", 1, true));
         list.add(new Campus("VG02", VINE, "Meeting Room", new LatLng(51.590586, -0.230860), "Ground Floor", 1, true));
         list.add(new Campus("VG04", VINE, "Male Toilet", new LatLng(51.590717, -0.230900), "Ground Floor", 1, true));
@@ -345,7 +357,7 @@ public class Campus {
         list.add(new Campus("V105", VINE, "Classroom", new LatLng(51.590663, -0.230672), "First Floor", 0, true));
 
         /*MDX House ground floor*/
-        list.add(new Campus("MDX House", null, "MDX House", new LatLng(51.589976, -0.230764), "Ground Floor", 0, true));
+        list.add(new Campus("MDX House", "MDX House", "MDX House", new LatLng(51.589976, -0.230764), "Ground Floor", 0, true));
 
         /*MDX House basement */
         list.add(new Campus("Student Union", MDXHOUSE, "MDXSU", new LatLng(51.590136, -0.230874), "Basement", 1, true));
@@ -355,7 +367,7 @@ public class Campus {
 
         /*Sheppard Library*/
 
-        list.add(new Campus("Sheppard Library", null, "Main University Library", new LatLng(51.590456, -0.229614), "Ground Floor", 3, true));//SET
+        list.add(new Campus("Sheppard Library", "Sheppard Library", "Main University Library", new LatLng(51.590456, -0.229614), "Ground Floor", 3, true));//SET
 
         /*Sheppard Library basement*/
 
@@ -431,7 +443,7 @@ public class Campus {
 
         /*Williams Building ground floor*/
 
-        list.add(new Campus("Williams Building", null, "Williams Building Description", new LatLng(51.590478, -0.228681), "Ground Floor", 1, true));
+        list.add(new Campus("Williams Building", "Williams Building", "Williams Building Description", new LatLng(51.590478, -0.228681), "Ground Floor", 1, true));
         list.add(new Campus("WG07", WILLIAMS, "Female Toilet 1", new LatLng(51.590502, -0.228898), "Ground Floor", 1, true));
         list.add(new Campus("WG32", WILLIAMS, "Meeting Room", new LatLng(51.590523, -0.228726), "Ground Floor", 1, true));
         list.add(new Campus("WG33", WILLIAMS, "Translation Room", new LatLng(51.590528, -0.228629), "Ground Floor", 1, true));
@@ -472,7 +484,7 @@ public class Campus {
 
         /*Barn ground floor*/
 
-        list.add(new Campus("Barn", null, "Barn Description", new LatLng(51.590982, -0.228562), "Ground Floor", 0, true));
+        list.add(new Campus("Barn", "Barn", "Barn Description", new LatLng(51.590982, -0.228562), "Ground Floor", 0, true));
         list.add(new Campus("BAG01", BARN, "Meeting Room", new LatLng(51.590944, -0.228581), "Ground Floor", 0, true));
         list.add(new Campus("BAG02", BARN, "Classroom", new LatLng(51.591041, -0.228582), "Ground Floor", 0, true));
 
@@ -494,7 +506,7 @@ public class Campus {
         list.add(new Campus("GB23", GROVE_BLOCK_A, "Male Toilet", new LatLng(51.588753, -0.230682), "Basement", 5, true));
 
         /*Grove Block A Ground Floor*/
-        list.add(new Campus("Grove Block A", null, "Grove Block A Description", new LatLng(51.588695, -0.230596), "Ground Floor", 4, true));
+        list.add(new Campus("Grove Block A", "Grove Block A", "Grove Block A Description", new LatLng(51.588695, -0.230596), "Ground Floor", 4, true));
         list.add(new Campus("GG01", GROVE_BLOCK_A, "Plastic/Wood/Metal Workshop", new LatLng(51.588774, -0.230414), "Ground Floor", 4, true));
         list.add(new Campus("GG04", GROVE_BLOCK_A, "Plastic/Wood/Metal Workshop", new LatLng(51.588697, -0.230232), "Ground Floor", 4, true));
         list.add(new Campus("GG07", GROVE_BLOCK_A, "Storage & Dispensing Storage", new LatLng(51.588618, -0.230458), "Ground Floor", 4, true));
@@ -663,7 +675,7 @@ public class Campus {
 
          /*Ravensfield Bulding*/
 
-        list.add(new Campus("Ravensfield House", null, "Ravensfield House Description", new LatLng(51.588633, -0.227835), "Ground Floor", 0, false));
+        list.add(new Campus("Ravensfield House", "Ravensfield House", "Ravensfield House Description", new LatLng(51.588633, -0.227835), "Ground Floor", 0, false));
 
         /*Ravensfield Ground floor*/
 
@@ -704,7 +716,7 @@ public class Campus {
 
         /*Town Hall*/
 
-        list.add(new Campus("Town Hall", null, "Town Hall Description", new LatLng(51.588161, -0.229226), "Ground Floor", 0, false));
+        list.add(new Campus("Town Hall", "Town Hall", "Town Hall Description", new LatLng(51.588161, -0.229226), "Ground Floor", 0, false));
 
         /*Town Hall ground floor*/
 

@@ -3,7 +3,7 @@ package org.backend.mdxmaps.service.util;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import org.backend.mdxmaps.model.solr.model.Campus;
+import org.backend.mdxmaps.model.solr.Campus;
 
 import java.io.IOException;
 
@@ -33,7 +33,7 @@ public class CustomRoomJSONSerializerForSolrIndexing extends StdSerializer<Campu
         jsonGenerator.writeStartObject();
         jsonGenerator.writeStringField(NAME, campus.getName());
         if (campus.getBuilding() != null) {
-            jsonGenerator.writeStringField(BUILDING, campus.getBuilding());
+            jsonGenerator.writeStringField(BUILDING, campus.getBuilding().getValue());
         }
         jsonGenerator.writeStringField(LEVEL, campus.getLevel());
         jsonGenerator.writeNumberField(GOOGLE_MAP_LEVEL, campus.getgMapLevel());

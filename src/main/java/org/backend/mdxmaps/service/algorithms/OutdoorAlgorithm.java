@@ -3,17 +3,18 @@ package org.backend.mdxmaps.service.algorithms;
 import org.backend.mdxmaps.model.LatLng;
 import org.backend.mdxmaps.model.Routing;
 
+import java.time.Instant;
 import java.util.ArrayList;
 
-import static org.backend.mdxmaps.model.Routing.getOutsideConnectors;
 import static org.backend.mdxmaps.service.util.UtilService.calculateDistance;
 
 /**
  * Created by Emmanuel Keboh on 27/11/2016.
  */
+@SuppressWarnings("Duplicates")
 public class OutdoorAlgorithm {
 
-    private ArrayList<ArrayList<String>> validRoutes = new ArrayList<>();
+    private ArrayList<ArrayList<String>> validRoutes;
 
     //CAQ: Current Alpha Queue
     private ArrayList<String> CAQ = new ArrayList<>();
@@ -28,8 +29,14 @@ public class OutdoorAlgorithm {
     private int acceptedDistanceFromLine; //in meters
 
     //ToDO Switch to static method and rename
-    public ArrayList<ArrayList<String>> sameLevelOp(String startConnector, String destinationConnector, boolean wheelchair) {
-        allOutdoorConnectors = getOutsideConnectors();
+    public ArrayList<ArrayList<String>> sameLevelOp(String startConnector, String destinationConnector, ArrayList<Routing> outsideConnectors,
+                                                    boolean wheelchair) {
+        validRoutes = new ArrayList<>();
+        if (startConnector.equals(destinationConnector)) return validRoutes;
+
+        long startTime = Instant.now().toEpochMilli();
+
+        allOutdoorConnectors = outsideConnectors;
         previouslyUsedConnectors = new ArrayList<>();
         this.wheelchair = wheelchair;
         this.startConnector = startConnector;
@@ -77,6 +84,12 @@ public class OutdoorAlgorithm {
 
         }
         CAQ.clear();
+        if (!validRoutes.isEmpty()) {
+            System.out.println("Start: " + startConnector + " Dest: " + destinationConnector);
+            System.out.println("Number of routes: " + validRoutes.size());
+            System.out.println("Time in ms: " + (Instant.now().toEpochMilli() - startTime));
+            System.out.println();
+        }
         return validRoutes;
     }
 
@@ -130,7 +143,7 @@ public class OutdoorAlgorithm {
                 if (startConnector.equals(currentAlpha)) {
                     return "done";
                 } else {
-                    //It isn't a prime hence we can drop it and move one step backward
+                    //Move one step backward
                     return "drop";
                 }
             }
@@ -158,7 +171,7 @@ public class OutdoorAlgorithm {
 
         if (wheelchair) {
             for (int i = 0; i < allAdjacentConnectors.size(); i++) {
-                if (allAdjacentConnectors.get(i).getIsWheelChairAccessible().equals("N")) {
+                if (!allAdjacentConnectors.get(i).isWheelChairAccessible()) {
                     allAdjacentConnectors.remove(i);
                     i--;
                 }

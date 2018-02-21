@@ -1,7 +1,7 @@
 package org.backend.mdxmaps.model.responseObjects.search;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.backend.mdxmaps.model.solr.model.Nearby;
+import org.backend.mdxmaps.model.solr.Nearby;
 
 import java.util.List;
 

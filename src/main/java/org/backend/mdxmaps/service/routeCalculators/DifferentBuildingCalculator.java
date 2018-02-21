@@ -82,10 +82,12 @@ public class DifferentBuildingCalculator {
 
         Multimap<Double, ArrayList<ArrayList<ArrayList<LatLng>>>> finalRoutes = MultimapBuilder.treeKeys().linkedListValues().build();
 
+        ArrayList<Routing> outsideConnectors = getOutsideConnectors();
+
         //Calculate outside route from each door at start building to each door at destination building
         startIndoorRoutesPerDoor.keySet().forEach(startDoor ->
                 destinationIndoorRoutesPerDoor.keySet().forEach(destinationDoor -> {
-                    ArrayList<LatLng> outsideRoute = calculateOutsideRoute(startDoor, destinationDoor, disabled);
+                    ArrayList<LatLng> outsideRoute = calculateOutsideRoute(startDoor, destinationDoor, outsideConnectors, disabled);
                     if (outsideRoute != null) {
                         ArrayList<ArrayList<ArrayList<LatLng>>> currentRoute = new ArrayList<>();
                         currentRoute.add(((List<ArrayList<ArrayList<LatLng>>>) startIndoorRoutesPerDoor.get(startDoor)).get(0));//StartBuilding Route
@@ -93,7 +95,6 @@ public class DifferentBuildingCalculator {
                         currentRoute.get(1).add(outsideRoute); //Outside route
                         currentRoute.add(((List<ArrayList<ArrayList<LatLng>>>) destinationIndoorRoutesPerDoor.get(destinationDoor)).get(0)); //DestinationBuilding Route
                         currentRoute.trimToSize();
-
                         finalRoutes.put(calculateOutsideRouteDistance(currentRoute), currentRoute);
                     }
 
@@ -118,12 +119,15 @@ public class DifferentBuildingCalculator {
     }
 
     //Filters for the best outside route
-    private static ArrayList<LatLng> calculateOutsideRoute(Routing startDoor, Routing destinationDoor, boolean disabled) {
-        ArrayList<ArrayList<String>> outsideRoutesString = new OutdoorAlgorithm().sameLevelOp(startDoor.getAdjacentConnectors()[1], destinationDoor.getAdjacentConnectors()[1], disabled);
+    private static ArrayList<LatLng> calculateOutsideRoute(Routing startDoor, Routing destinationDoor, ArrayList<Routing> outsideConnectors,
+                                                           boolean disabled) {
+        ArrayList<ArrayList<String>> outsideRoutesString =
+                new OutdoorAlgorithm().sameLevelOp(startDoor.getAdjacentConnectors()[1], destinationDoor.getAdjacentConnectors()[1], outsideConnectors,
+                        disabled);
 
         if (outsideRoutesString.isEmpty()) return null;
 
-        ArrayList<ArrayList<Routing>> outsideRoutesObjects = transformValidRoutesStringToObjects(outsideRoutesString, getOutsideConnectors());
+        ArrayList<ArrayList<Routing>> outsideRoutesObjects = transformValidRoutesStringToObjects(outsideRoutesString, outsideConnectors);
 
         outsideRoutesObjects = UtilService.plugInStartAndEndObjects(startDoor, destinationDoor, outsideRoutesObjects);
 

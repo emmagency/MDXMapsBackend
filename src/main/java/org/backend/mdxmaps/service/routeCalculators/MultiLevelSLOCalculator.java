@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import org.backend.mdxmaps.model.LatLng;
 import org.backend.mdxmaps.model.Routing;
+import org.backend.mdxmaps.model.enums.Building;
 import org.backend.mdxmaps.model.enums.MOT;
 import org.backend.mdxmaps.model.enums.ObjectType;
 
@@ -36,16 +37,16 @@ public final class MultiLevelSLOCalculator {
         return multiLevelSLO(startObject, destObject, modeOfTravel, null);
     }
 
-    public static Multimap<Double, ArrayList<ArrayList<LatLng>>> performMultiLevelSLO(Routing startObject, Routing destObject, MOT modeOfTravel, String building) {
+    public static Multimap<Double, ArrayList<ArrayList<LatLng>>> performMultiLevelSLO(Routing startObject, Routing destObject, MOT modeOfTravel, Building building) {
         return multiLevelSLO(startObject, destObject, modeOfTravel, building);
     }
 
-    private static Multimap<Double, ArrayList<ArrayList<LatLng>>> multiLevelSLO(Routing startObject, Routing destObject, MOT modeOfTravel, String location) {
+    private static Multimap<Double, ArrayList<ArrayList<LatLng>>> multiLevelSLO(Routing startObject, Routing destObject, MOT modeOfTravel, Building location) {
 
         ArrayList<ArrayList<ArrayList<LatLng>>> allRoutes = new ArrayList<>();
         Routing currentEDConnector;
 
-        String building = location != null ? location : startObject.getBuilding() != null ? startObject.getBuilding() : destObject.getBuilding();
+        Building building = location != null ? location : startObject.getBuilding() != null ? startObject.getBuilding() : destObject.getBuilding();
 
         ObjectType type = modeOfTravel != STAIRS ? ELEVATOR : STAIR;
 

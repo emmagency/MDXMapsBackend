@@ -1,4 +1,4 @@
-package org.backend.mdxmaps.model.solr.model;
+package org.backend.mdxmaps.model.solr;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

@@ -43,10 +43,10 @@ public class UtilServiceTest {
 
     @Test
     public void shouldRemoveNonDisabledRoutes() {
-        when(object1.getIsWheelChairAccessible()).thenReturn("N");
-        when(object2.getIsWheelChairAccessible()).thenReturn("Y");
-        when(object3.getIsWheelChairAccessible()).thenReturn("Y");
-        when(object4.getIsWheelChairAccessible()).thenReturn("Y");
+        when(object1.isWheelChairAccessible()).thenReturn(false);
+        when(object2.isWheelChairAccessible()).thenReturn(true);
+        when(object3.isWheelChairAccessible()).thenReturn(true);
+        when(object4.isWheelChairAccessible()).thenReturn(true);
 
         ArrayList<ArrayList<Routing>> routes = new ArrayList<>();
         routes.add(new ArrayList<>(Arrays.asList(object1, object2)));

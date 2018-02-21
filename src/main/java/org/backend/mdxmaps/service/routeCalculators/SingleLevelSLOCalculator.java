@@ -4,6 +4,7 @@ package org.backend.mdxmaps.service.routeCalculators;
 import com.google.common.collect.Multimap;
 import org.backend.mdxmaps.model.LatLng;
 import org.backend.mdxmaps.model.Routing;
+import org.backend.mdxmaps.model.enums.Building;
 import org.backend.mdxmaps.model.enums.MOT;
 import org.backend.mdxmaps.service.algorithms.IndoorAlgorithm;
 
@@ -35,13 +36,13 @@ public final class SingleLevelSLOCalculator {
         return singleLevelSLO(start, end, mot, null);
     }
 
-    public static Multimap<Double, ArrayList<LatLng>> performSingleLevelSLO(Routing start, Routing end, MOT mot, String building) {
+    public static Multimap<Double, ArrayList<LatLng>> performSingleLevelSLO(Routing start, Routing end, MOT mot, Building building) {
         return singleLevelSLO(start, end, mot, building);
     }
 
-    private static Multimap<Double, ArrayList<LatLng>> singleLevelSLO(Routing start, Routing end, MOT mot, String location) {
+    private static Multimap<Double, ArrayList<LatLng>> singleLevelSLO(Routing start, Routing end, MOT mot, Building location) {
 
-        String building = location != null ? location : start.getBuilding() != null ? start.getBuilding() : end.getBuilding();
+        Building building = location != null ? location : start.getBuilding() != null ? start.getBuilding() : end.getBuilding();
 
         //Get the actual connector objects and filter objects by type
         ArrayList<Routing> connectorObjects =

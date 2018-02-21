@@ -1,6 +1,7 @@
 package org.backend.mdxmaps.service;
 
 import org.backend.mdxmaps.model.Routing;
+import org.backend.mdxmaps.model.enums.Building;
 import org.backend.mdxmaps.model.enums.MOT;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,8 +28,8 @@ public class MOTValidatorTest {
 
     @Before
     public void reset() {
-        when(start.getBuilding()).thenReturn("CB");
-        when(end.getBuilding()).thenReturn("CB");
+        when(start.getBuilding()).thenReturn(Building.COLLEGE);
+        when(end.getBuilding()).thenReturn(Building.COLLEGE);
         when(start.getLevel()).thenReturn(0);
         when(end.getLevel()).thenReturn(0);
     }
@@ -46,7 +47,7 @@ public class MOTValidatorTest {
 
     @Test
     public void shouldValidateIfAnMOTIsRequiredForDIFFB() {
-        when(end.getBuilding()).thenReturn("HC");
+        when(end.getBuilding()).thenReturn(Building.HATCHCROFT);
 
         //Ground floors in both buildings. Should return false
         assertFalse(MOTValidator.validate(start, end));

@@ -6,7 +6,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
-import org.backend.mdxmaps.model.solr.model.Transport;
+import org.backend.mdxmaps.model.solr.Transport;
 
 import java.io.IOException;
 import java.util.ArrayList;

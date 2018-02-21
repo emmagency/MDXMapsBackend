@@ -159,4 +159,15 @@ public class DirectionsServiceIntTest {
         assertTrue(Collections.frequency(distances, 76.0) == 1 && distances.get(0) == 76.0);
         assertTrue(Collections.frequency(distances, 86.0) == 1 && distances.get(1) == 86.0);
     }
+
+    @Test
+    public void C115ToG210Stairs() {
+        try {
+            response = (MainDirectionsResponse) new DirectionsService("C115", "G210", "stairs", false, "").call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(OK, response.getStatus());
+    }
 }

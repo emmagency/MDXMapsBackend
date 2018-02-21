@@ -47,7 +47,7 @@ public final class UtilService {
         return multimap;
     }
 
-    public static Double calculateOutsideRouteDistance(ArrayList<ArrayList<ArrayList<LatLng>>> route) {
+    public static double calculateOutsideRouteDistance(ArrayList<ArrayList<ArrayList<LatLng>>> route) {
         return route.stream().mapToDouble(UtilService::calculateSingleRouteDistance).sum();
     }
 

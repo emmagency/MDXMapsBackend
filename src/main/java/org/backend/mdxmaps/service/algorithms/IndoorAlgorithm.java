@@ -1,6 +1,7 @@
 package org.backend.mdxmaps.service.algorithms;
 
 import org.backend.mdxmaps.model.Routing;
+import org.backend.mdxmaps.model.enums.Building;
 
 import java.util.ArrayList;
 
@@ -21,7 +22,7 @@ public class IndoorAlgorithm {
     private ArrayList<Routing> allLevelConnectors;
     private ArrayList<Routing> previouslyUsedConnectors;
 
-    public ArrayList<ArrayList<String>> sameLevelOp(ArrayList<Routing> primes, int destinationLane, String building, int actualLevel) {
+    public ArrayList<ArrayList<String>> sameLevelOp(ArrayList<Routing> primes, int destinationLane, Building building, int actualLevel) {
         allLevelConnectors = getConnectors(building, actualLevel);
         previouslyUsedConnectors = new ArrayList<>();
 

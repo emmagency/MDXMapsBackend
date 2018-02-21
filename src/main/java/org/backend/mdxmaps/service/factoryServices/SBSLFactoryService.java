@@ -78,6 +78,6 @@ public class SBSLFactoryService implements OperationFactory {
     private List<Step> getSteps(ArrayList<LatLng> latLngs) {
         String description = String.format("%s to %s", mot == DISABLED ? "Get" : "Walk", destination.getName());
         String iconHref = mot == DISABLED ? WHEELCHAIR : WALK;
-        return Collections.singletonList(Step.createStep(description, start.getgMapLevel(), iconHref, latLngs));
+        return Collections.singletonList(Step.createStep(description, start.getGMapLevel(), iconHref, latLngs));
     }
 }

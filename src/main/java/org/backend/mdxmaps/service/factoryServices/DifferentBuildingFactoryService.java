@@ -99,7 +99,7 @@ public class DifferentBuildingFactoryService implements OperationFactory {
         //Inside steps
         if (isStartED) {
             steps.add(createStep(String.format("%s to the %s", movementMethod, startEDMethod.toString().toLowerCase()),
-                    start.getgMapLevel(), iconsList.get(0), route.get(0).get(0)));
+                    start.getGMapLevel(), iconsList.get(0), route.get(0).get(0)));
             steps.add(createStep(String.format("Go %s %d %s", start.getLevel() > 0 ? "down" : "up", Math.abs(start.getLevel()),
                     Math.abs(start.getLevel()) > 1 ? "levels" : "level"), null, iconsList.get(1),
                     Collections.singletonList(route.get(0).get(0).get(route.get(0).get(0).size() - 1))));
@@ -110,7 +110,7 @@ public class DifferentBuildingFactoryService implements OperationFactory {
             }
         } else {
             steps.add(createStep(String.format("%s to the door and exit from %s", movementMethod, start.getBuilding()),
-                    start.getgMapLevel(), iconsList.get(0), route.get(0).get(0)));
+                    start.getGMapLevel(), iconsList.get(0), route.get(0).get(0)));
             iconsList.remove(0);
         }
 
@@ -126,11 +126,11 @@ public class DifferentBuildingFactoryService implements OperationFactory {
             steps.add(createStep(String.format("Go %s %d %s", destination.getLevel() > 0 ? "up" : "down", Math.abs(destination.getLevel()),
                     Math.abs(destination.getLevel()) > 1 ? "levels" : "level"), null, iconsList.get(1),
                     Collections.singletonList(route.get(2).get(0).get(route.get(2).get(0).size() - 1))));
-            steps.add(createStep(String.format("%s to %s", movementMethod, destination.getName()), destination.getgMapLevel(),
+            steps.add(createStep(String.format("%s to %s", movementMethod, destination.getName()), destination.getGMapLevel(),
                     iconsList.get(2), route.get(2).get(1)));
         } else {
             steps.add(createStep(String.format("Enter %s and %s to %s", destination.getBuilding(), movementMethod, destination.getName()),
-                    destination.getgMapLevel(), iconsList.get(0), route.get(2).get(0)));
+                    destination.getGMapLevel(), iconsList.get(0), route.get(2).get(0)));
         }
 
         return steps;

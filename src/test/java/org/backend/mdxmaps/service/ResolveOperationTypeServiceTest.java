@@ -1,6 +1,7 @@
 package org.backend.mdxmaps.service;
 
 import org.backend.mdxmaps.model.Routing;
+import org.backend.mdxmaps.model.enums.Building;
 import org.backend.mdxmaps.service.factoryServices.DifferentBuildingFactoryService;
 import org.backend.mdxmaps.service.factoryServices.SBDLFactoryService;
 import org.backend.mdxmaps.service.factoryServices.SBSLFactoryService;
@@ -36,8 +37,8 @@ public class ResolveOperationTypeServiceTest {
 
     @Before
     public void setUp() {
-        when(start.getBuilding()).thenReturn("CB");
-        when(end.getBuilding()).thenReturn("CB");
+        when(start.getBuilding()).thenReturn(Building.COLLEGE);
+        when(end.getBuilding()).thenReturn(Building.COLLEGE);
 
         when(start.getLevel()).thenReturn(0);
         when(end.getLevel()).thenReturn(0);
@@ -45,8 +46,8 @@ public class ResolveOperationTypeServiceTest {
         when(start.getBuildingObject()).thenReturn(startBuilding);
         when(end.getBuildingObject()).thenReturn(destBuilding);
 
-        when(startBuilding.isBuildingWheelChairAccessible()).thenReturn(true);
-        when(destBuilding.isBuildingWheelChairAccessible()).thenReturn(true);
+        when(startBuilding.isWheelChairAccessible()).thenReturn(true);
+        when(destBuilding.isWheelChairAccessible()).thenReturn(true);
 
         when(startBuilding.hasStairs()).thenReturn(true);
         when(destBuilding.hasStairs()).thenReturn(true);
@@ -61,7 +62,7 @@ public class ResolveOperationTypeServiceTest {
         assertEquals(OK, response.getStatus());
         assertTrue(response.getEntity() instanceof SBSLFactoryService);
 
-        when(end.getBuilding()).thenReturn("Meh!");
+        when(end.getBuilding()).thenReturn(Building.HATCHCROFT);
         response = new ResolveOperationTypeService(start, end, NULL).resolveOPType();
         assertTrue(response.getEntity() instanceof DifferentBuildingFactoryService);
     }
@@ -83,20 +84,20 @@ public class ResolveOperationTypeServiceTest {
         when(startBuilding.hasElevators()).thenReturn(false);
         response = new ResolveOperationTypeService(start, end, DISABLED).resolveOPType();
         assertEquals(ERROR, response.getStatus());
-        assertEquals("There are no elevators in CB", response.getMessage());
+        assertEquals("There are no elevators in COLLEGE", response.getMessage());
 
         //None-wheelchair accessible building
-        when(startBuilding.isBuildingWheelChairAccessible()).thenReturn(false);
+        when(startBuilding.isWheelChairAccessible()).thenReturn(false);
         response = new ResolveOperationTypeService(start, end, DISABLED).resolveOPType();
         assertEquals(ERROR, response.getStatus());
         assertNull(response.getEntity());
-        assertEquals("CB is not wheelchair accessible", response.getMessage());
+        assertEquals("COLLEGE is not wheelchair accessible", response.getMessage());
     }
 
     @Test
     public void shouldTestDISABLEDCasesForDifferentBuildings() {
 
-        when(end.getBuilding()).thenReturn("HC");
+        when(end.getBuilding()).thenReturn(Building.HATCHCROFT);
 
         //Wheelchair-accessible buildings with elevators, ground floors
         response = new ResolveOperationTypeService(start, end, DISABLED).resolveOPType();
@@ -130,36 +131,36 @@ public class ResolveOperationTypeServiceTest {
 
 
         //Start building non wheelchair-accessible
-        when(startBuilding.isBuildingWheelChairAccessible()).thenReturn(false);
+        when(startBuilding.isWheelChairAccessible()).thenReturn(false);
         response = new ResolveOperationTypeService(start, end, DISABLED).resolveOPType();
         assertEquals(ERROR, response.getStatus());
-        assertEquals("CB is not wheelchair accessible", response.getMessage());
+        assertEquals("COLLEGE is not wheelchair accessible", response.getMessage());
         assertNull(response.getEntity());
-        when(startBuilding.isBuildingWheelChairAccessible()).thenReturn(true);
+        when(startBuilding.isWheelChairAccessible()).thenReturn(true);
 
         //Destination building non wheelchair-accessible
-        when(destBuilding.isBuildingWheelChairAccessible()).thenReturn(false);
+        when(destBuilding.isWheelChairAccessible()).thenReturn(false);
         response = new ResolveOperationTypeService(start, end, DISABLED).resolveOPType();
         assertEquals(ERROR, response.getStatus());
-        assertEquals("HC is not wheelchair accessible", response.getMessage());
+        assertEquals("HATCHCROFT is not wheelchair accessible", response.getMessage());
         assertNull(response.getEntity());
 
         //Both buildings not wheelchair-accessible
-        when(startBuilding.isBuildingWheelChairAccessible()).thenReturn(false);
+        when(startBuilding.isWheelChairAccessible()).thenReturn(false);
         response = new ResolveOperationTypeService(start, end, DISABLED).resolveOPType();
         assertEquals(ERROR, response.getStatus());
-        assertEquals("Both CB & HC are not wheelchair accessible",
+        assertEquals("Both COLLEGE & HATCHCROFT are not wheelchair accessible",
                 response.getMessage());
         assertNull(response.getEntity());
 
         //Both wheelchair-accessible buildings, trying to get to 1st floor of destination building without elevators
-        when(startBuilding.isBuildingWheelChairAccessible()).thenReturn(true);
-        when(destBuilding.isBuildingWheelChairAccessible()).thenReturn(true);
+        when(startBuilding.isWheelChairAccessible()).thenReturn(true);
+        when(destBuilding.isWheelChairAccessible()).thenReturn(true);
         when(destBuilding.hasElevators()).thenReturn(false);
-        when(end.getName()).thenReturn("HC101");
+        when(end.getName()).thenReturn("HATCHCROFT101");
         response = new ResolveOperationTypeService(start, end, DISABLED).resolveOPType();
         assertEquals(ERROR, response.getStatus());
-        assertEquals("There are no elevators in HC to get to HC101", response.getMessage());
+        assertEquals("There are no elevators in HATCHCROFT to get to HATCHCROFT101", response.getMessage());
         assertNull(response.getEntity());
 
         //Both wheelchair-accessible buildings, coming from 1st floor of start building without elevators
@@ -167,14 +168,14 @@ public class ResolveOperationTypeServiceTest {
         when(startBuilding.hasElevators()).thenReturn(false);
         response = new ResolveOperationTypeService(start, end, DISABLED).resolveOPType();
         assertEquals(ERROR, response.getStatus());
-        assertEquals("There are no elevators in CB", response.getMessage());
+        assertEquals("There are no elevators in COLLEGE", response.getMessage());
         assertNull(response.getEntity());
 
         //Both wheelchair-accessible buildings, but no elevators in both
         when(destBuilding.hasElevators()).thenReturn(false);
         response = new ResolveOperationTypeService(start, end, DISABLED).resolveOPType();
         assertEquals(ERROR, response.getStatus());
-        assertEquals("There are no elevators in CB and HC", response.getMessage());
+        assertEquals("There are no elevators in COLLEGE and HATCHCROFT", response.getMessage());
         assertNull(response.getEntity());
     }
 
@@ -190,7 +191,7 @@ public class ResolveOperationTypeServiceTest {
         when(startBuilding.hasStairs()).thenReturn(false);
         response = new ResolveOperationTypeService(start, end, STAIRS).resolveOPType();
         assertEquals(INFO, response.getStatus());
-        assertEquals("No stairs in CB. App switched to elevators for this building", response.getMessage());
+        assertEquals("No stairs in COLLEGE. App switched to elevators for this building", response.getMessage());
         assertTrue(response.getEntity() instanceof SBDLFactoryService);
         assertEquals(ELEVATORS, ((SBDLFactoryService) response.getEntity()).getMot());
 
@@ -198,7 +199,7 @@ public class ResolveOperationTypeServiceTest {
 
     @Test
     public void shouldTestSTAIRSForDifferentBuildings() {
-        when(end.getBuilding()).thenReturn("HC");
+        when(end.getBuilding()).thenReturn(Building.HATCHCROFT);
 
         //Ground floor in start building, basement in destination building
         when(end.getLevel()).thenReturn(-1);
@@ -227,21 +228,21 @@ public class ResolveOperationTypeServiceTest {
         when(startBuilding.hasStairs()).thenReturn(false);
         response = new ResolveOperationTypeService(start, end, STAIRS).resolveOPType();
         assertEquals(INFO, response.getStatus());
-        assertEquals("No stairs in CB. App switched to elevators for this building", response.getMessage());
+        assertEquals("No stairs in COLLEGE. App switched to elevators for this building", response.getMessage());
         assertTrue(response.getEntity() instanceof DifferentBuildingFactoryService);
 
         //No stairs in both buildings (Not applicable to any of the buildings but completes the logic)
         when(destBuilding.hasStairs()).thenReturn(false);
         response = new ResolveOperationTypeService(start, end, STAIRS).resolveOPType();
         assertEquals(INFO, response.getStatus());
-        assertEquals("No stairs in both buildings, app switched to elevators in CB & HC", response.getMessage());
+        assertEquals("No stairs in both buildings, app switched to elevators in COLLEGE & HATCHCROFT", response.getMessage());
         assertTrue(response.getEntity() instanceof DifferentBuildingFactoryService);
 
         //No stairs in destination building. (Not applicable to any of the buildings but completes the logic)
         when(startBuilding.hasStairs()).thenReturn(true);
         response = new ResolveOperationTypeService(start, end, STAIRS).resolveOPType();
         assertEquals(INFO, response.getStatus());
-        assertEquals("No stairs in HC. App switched to elevators for this building", response.getMessage());
+        assertEquals("No stairs in HATCHCROFT. App switched to elevators for this building", response.getMessage());
         assertTrue(response.getEntity() instanceof DifferentBuildingFactoryService);
 
     }
@@ -258,7 +259,7 @@ public class ResolveOperationTypeServiceTest {
         when(startBuilding.hasElevators()).thenReturn(false);
         response = new ResolveOperationTypeService(start, end, ELEVATORS).resolveOPType();
         assertEquals(INFO, response.getStatus());
-        assertEquals("No elevators in CB. App switched to stairs for this building", response.getMessage());
+        assertEquals("No elevators in COLLEGE. App switched to stairs for this building", response.getMessage());
         assertTrue(response.getEntity() instanceof SBDLFactoryService);
         assertTrue(response.getEntity() instanceof SBDLFactoryService);
         assertEquals(STAIRS, ((SBDLFactoryService) response.getEntity()).getMot());
@@ -266,7 +267,7 @@ public class ResolveOperationTypeServiceTest {
 
     @Test
     public void shouldTestELEVATORSForDifferentBuildings() {
-        when(end.getBuilding()).thenReturn("HC");
+        when(end.getBuilding()).thenReturn(Building.HATCHCROFT);
 
         //Ground floor in start building, basement in destination building
         when(end.getLevel()).thenReturn(-1);
@@ -297,7 +298,7 @@ public class ResolveOperationTypeServiceTest {
         when(startBuilding.hasElevators()).thenReturn(false);
         response = new ResolveOperationTypeService(start, end, ELEVATORS).resolveOPType();
         assertEquals(INFO, response.getStatus());
-        assertEquals("No elevators in CB. App switched to stairs for this building", response.getMessage());
+        assertEquals("No elevators in COLLEGE. App switched to stairs for this building", response.getMessage());
         assertTrue(response.getEntity() instanceof DifferentBuildingFactoryService);
         assertEquals(STAIRS, ((DifferentBuildingFactoryService) response.getEntity()).getStartEDMethod());
         assertEquals(ELEVATORS, ((DifferentBuildingFactoryService) response.getEntity()).getDestEDMethod());
@@ -306,7 +307,7 @@ public class ResolveOperationTypeServiceTest {
         when(destBuilding.hasElevators()).thenReturn(false);
         response = new ResolveOperationTypeService(start, end, ELEVATORS).resolveOPType();
         assertEquals(INFO, response.getStatus());
-        assertEquals("No elevators in both buildings, app switched to stairs for CB & HC", response.getMessage());
+        assertEquals("No elevators in both buildings, app switched to stairs for COLLEGE & HATCHCROFT", response.getMessage());
         assertTrue(response.getEntity() instanceof DifferentBuildingFactoryService);
         assertEquals(STAIRS, ((DifferentBuildingFactoryService) response.getEntity()).getStartEDMethod());
         assertEquals(STAIRS, ((DifferentBuildingFactoryService) response.getEntity()).getDestEDMethod());
@@ -315,7 +316,7 @@ public class ResolveOperationTypeServiceTest {
         when(startBuilding.hasElevators()).thenReturn(true);
         response = new ResolveOperationTypeService(start, end, ELEVATORS).resolveOPType();
         assertEquals(INFO, response.getStatus());
-        assertEquals("No elevators in HC. App switched to stairs for this building", response.getMessage());
+        assertEquals("No elevators in HATCHCROFT. App switched to stairs for this building", response.getMessage());
         assertTrue(response.getEntity() instanceof DifferentBuildingFactoryService);
         assertEquals(ELEVATORS, ((DifferentBuildingFactoryService) response.getEntity()).getStartEDMethod());
         assertEquals(STAIRS, ((DifferentBuildingFactoryService) response.getEntity()).getDestEDMethod());

@@ -5,6 +5,7 @@ package org.backend.mdxmaps.service.util;
  */
 
 import org.backend.mdxmaps.model.Routing;
+import org.backend.mdxmaps.model.enums.Building;
 import org.backend.mdxmaps.model.enums.ObjectType;
 
 import java.util.ArrayList;
@@ -79,20 +80,20 @@ public final class RoutingObjectsGetterUtilService {
                 .collect(toList());
     }
 
-    public static ArrayList<Routing> getConnectors(String building, int actualLevel) {
+    public static ArrayList<Routing> getConnectors(Building building, int actualLevel) {
         return connectorMapInit(building, actualLevel).get(building);
     }
 
     public static ArrayList<ArrayList<Routing>> removeNonDisabledRoutes(ArrayList<ArrayList<Routing>> validRoutes) {
         return (ArrayList<ArrayList<Routing>>) validRoutes.parallelStream()
                 .filter(route -> route.parallelStream()
-                        .noneMatch(connectorObject -> connectorObject.getIsWheelChairAccessible().equals("N")))
+                        .allMatch(Routing::isWheelChairAccessible))
                 .collect(toList());
     }
 
     public static ArrayList<Routing> removeNonDisabledObjects(ArrayList<Routing> objects) {
         return (ArrayList<Routing>) objects.parallelStream()
-                .filter(object -> !object.getIsWheelChairAccessible().equals("N"))
+                .filter(Routing::isWheelChairAccessible)
                 .collect(toList());
     }
 

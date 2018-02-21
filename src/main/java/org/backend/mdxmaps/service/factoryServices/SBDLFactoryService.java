@@ -93,9 +93,9 @@ public class SBDLFactoryService implements OperationFactory {
 
     private List<Step> getSteps(ArrayList<ArrayList<LatLng>> routes) {
         ArrayList<Step> steps = new ArrayList<>();
-        steps.add(Step.createStep(firstStep, start.getgMapLevel(), icons.get(0), routes.get(0)));
+        steps.add(Step.createStep(firstStep, start.getGMapLevel(), icons.get(0), routes.get(0)));
         steps.add(Step.createStep(intermediateStep, 0, icons.get(1), Collections.singletonList(routes.get(0).get(routes.get(0).size() - 1))));
-        steps.add(Step.createStep(lastStep, destination.getgMapLevel(), icons.get(2), routes.get(1)));
+        steps.add(Step.createStep(lastStep, destination.getGMapLevel(), icons.get(2), routes.get(1)));
         return steps;
     }
 }

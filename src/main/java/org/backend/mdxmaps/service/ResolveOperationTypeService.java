@@ -51,8 +51,8 @@ public class ResolveOperationTypeService {
                 boolean destCheck;
 
                 if (!start.getBuilding().equals(destination.getBuilding())) { //Different Buildings
-                    if (destination.getBuildingObject().isBuildingWheelChairAccessible() &&
-                            start.getBuildingObject().isBuildingWheelChairAccessible()) {
+                    if (destination.getBuildingObject().isWheelChairAccessible() &&
+                            start.getBuildingObject().isWheelChairAccessible()) {
                         if (startLevel != 0) {
                             if (start.getBuildingObject().hasElevators()) {
                                 startCheck = true;
@@ -107,12 +107,12 @@ public class ResolveOperationTypeService {
                             response.setEntity(DifferentBuildingFactoryService.create(start, destination, startEDMethod, destEDMethod, true, startED, destED));
                         }
                     } else {
-                        if (!destination.getBuildingObject().isBuildingWheelChairAccessible() &&
-                                !start.getBuildingObject().isBuildingWheelChairAccessible()) {
+                        if (!destination.getBuildingObject().isWheelChairAccessible() &&
+                                !start.getBuildingObject().isWheelChairAccessible()) {
                             response.setStatus(Status.ERROR);
                             response.setMessage("Both " + start.getBuilding() + " & " + destination.getBuilding() + " are not wheelchair accessible");
 //                            throw new ResolveOperationTypeException(String.format("Both %s & %s are not wheelchair accessible", start.getBuilding(), destination.getBuilding()));
-                        } else if (!start.getBuildingObject().isBuildingWheelChairAccessible()) {
+                        } else if (!start.getBuildingObject().isWheelChairAccessible()) {
                             response.setStatus(Status.ERROR);
                             response.setMessage(start.getBuilding() + " is not wheelchair accessible");
 //                            throw new ResolveOperationTypeException(String.format("%s is not wheelchair accessible", start.getBuilding()));
@@ -123,7 +123,7 @@ public class ResolveOperationTypeService {
                         }
                     }
                 } else { //Same Building.
-                    if (start.getBuildingObject().isBuildingWheelChairAccessible()) {
+                    if (start.getBuildingObject().isWheelChairAccessible()) {
                         if (startLevel != 0 || destLevel != 0) {
                             if (start.getBuildingObject().hasElevators()) {
                                 response.setStatus(Status.OK);
