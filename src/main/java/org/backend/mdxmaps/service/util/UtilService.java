@@ -8,6 +8,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import org.backend.mdxmaps.model.LatLng;
 import org.backend.mdxmaps.model.Routing;
+import org.backend.mdxmaps.model.Vertex;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -49,6 +50,15 @@ public final class UtilService {
 
     public static double calculateOutsideRouteDistance(ArrayList<ArrayList<ArrayList<LatLng>>> route) {
         return route.stream().mapToDouble(UtilService::calculateSingleRouteDistance).sum();
+    }
+
+    public static double calculateRouteDistance(ArrayList<LatLng> route) {
+        return IntStream.range(0, route.size() - 1)
+                .mapToDouble(i -> calculateDistance(route.get(i).latitude,
+                        route.get(i).longitude,
+                        route.get(i + 1).latitude,
+                        route.get(i + 1).longitude))
+                .sum();
     }
 
     public static double calculateSingleRouteDistance(ArrayList<ArrayList<LatLng>> route) {
@@ -114,5 +124,10 @@ public final class UtilService {
         //AVERAGE_RADIUS_OF_EARTH = 6371km
         return (double) (Math.round(6371000 * c));
 
+    }
+
+    public static double calculateDistance(Vertex start, Vertex destination) {
+        return calculateDistance(start.getLatLng().latitude, start.getLatLng().longitude,
+                destination.getLatLng().latitude, destination.getLatLng().longitude);
     }
 }

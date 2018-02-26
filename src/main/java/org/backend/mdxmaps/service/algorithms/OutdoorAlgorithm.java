@@ -84,12 +84,12 @@ public class OutdoorAlgorithm {
 
         }
         CAQ.clear();
-        if (!validRoutes.isEmpty()) {
-            System.out.println("Start: " + startConnector + " Dest: " + destinationConnector);
-            System.out.println("Number of routes: " + validRoutes.size());
-            System.out.println("Time in ms: " + (Instant.now().toEpochMilli() - startTime));
-            System.out.println();
-        }
+//        if (!validRoutes.isEmpty()) {
+//            System.out.println("Start: " + startConnector + " Dest: " + destinationConnector);
+//            System.out.println("Number of routes: " + validRoutes.size());
+//            System.out.println("Time in ms: " + (Instant.now().toEpochMilli() - startTime));
+//            System.out.println();
+//        }
         return validRoutes;
     }
 
@@ -112,29 +112,23 @@ public class OutdoorAlgorithm {
                 }
 
                 for (int k = 0; k < allAdjacents.size(); k++) {
-                    if (calculateDistanceFromLine(allAdjacents.get(k).getLatLng(), startPoint, destinationPoint) > acceptedDistanceFromLine) {
-                        if (CAQ.size() == visited.size()) {
-                            visited.get(CAQ.size() - 1).add(allAdjacents.get(k).getName());
-                        } else {
-                            visited.add(new ArrayList<>());
-                            visited.get(CAQ.size() - 1).add(allAdjacents.get(k).getName());
-                        }
+
+                    if (CAQ.size() == visited.size()) {
+                        visited.get(CAQ.size() - 1).add(allAdjacents.get(k).getName());
                     } else {
-                        if (CAQ.size() == visited.size()) {
-                            visited.get(CAQ.size() - 1).add(allAdjacents.get(k).getName());
-                        } else {
-                            visited.add(new ArrayList<>());
-                            visited.get(CAQ.size() - 1).add(allAdjacents.get(k).getName());
-                        }
+                        visited.add(new ArrayList<>());
+                        visited.get(CAQ.size() - 1).add(allAdjacents.get(k).getName());
+                    }
+
+                    if (calculateDistanceFromLine(allAdjacents.get(k).getLatLng(), startPoint, destinationPoint) <= acceptedDistanceFromLine) {
                         CAQ.add(allAdjacents.get(k).getName());
                         return "restart";
                     }
                 }
 
-                //If it gets here, that means all the adjacents didn't meet the acceptedDistanceFromLine condition
-                if (startConnector.equals(currentAlpha)) {
+                if (startConnector.equals(currentAlpha)) { //We're at destination
                     return "done";
-                } else {
+                } else { //None of  the adjacents meet the acceptedDistanceFromLine condition
                     return "drop";
                 }
 
@@ -269,7 +263,7 @@ public class OutdoorAlgorithm {
 
         double halfP = (d0 + d1 + d3) * 0.5;
 
-        double area = Math.sqrt(halfP * (halfP - d0) * (halfP - d1) * (halfP - d3));
+        double area = Math.sqrt(Math.abs(halfP * (halfP - d0) * (halfP - d1) * (halfP - d3)));
         return (2 * area) / calculateDistance(startPoint.latitude, startPoint.longitude,
                 destinationPoint.latitude, destinationPoint.longitude);
     }
