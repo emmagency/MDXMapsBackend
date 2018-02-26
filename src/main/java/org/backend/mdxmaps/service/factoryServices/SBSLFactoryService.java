@@ -56,10 +56,9 @@ public class SBSLFactoryService implements OperationFactory {
         Multimap<Double, ArrayList<LatLng>> SLOroutes = performSingleLevelSLO(start, destination, mot);
         if (SLOroutes == null) {
             return ResponseService.create(ResponseService.Status.ERROR, mot == DISABLED ?
-                    String.format("Sorry, there are no available wheelchair routes from %s to %s", start, destination)
-                    : "Something went wrong, couldn't find a route. Please tell us about this issue.");
+                    String.format("Sorry, there are no available wheelchair routes from %s to %s", start.getName(), destination.getName())
+                    : String.format("Something went wrong, couldn't find an internal route in %s. Please tell us about this issue.", start.getBuilding().getValue()));
         }
-        //int maxRoutes = 0;
 
         ArrayList<Route> routes = new ArrayList<>();
 

@@ -67,7 +67,8 @@ public class DifferentBuildingFactoryService implements OperationFactory {
 
         if (calculatedRoutes == null) {
             return ResponseService.create(ResponseService.Status.ERROR,
-                    "Something went wrong, couldn't find a route. Please tell us about this issue.");
+                    String.format("Something went wrong, couldn't find a complete route between %s & %s. Please tell us about this issue.",
+                            start.getBuilding().getValue(), destination.getBuilding().getValue()));
         }
 
         double bestRouteDistance = min(calculatedRoutes.keySet());

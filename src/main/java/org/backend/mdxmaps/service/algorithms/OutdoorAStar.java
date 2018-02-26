@@ -15,8 +15,9 @@ import java.util.PriorityQueue;
  */
 public class OutdoorAStar {
 
-    public static LinkedList<Vertex> getOutsideRoute(String start, String goal, boolean disabled, List<Vertex> vertices) {
+    public static LinkedList<Vertex> calculateOutsideRoute(String start, String goal, boolean disabled) {
         PriorityQueue<Vertex> queue = new PriorityQueue<>(11, Comparator.comparingInt(a -> a.getF().intValue()));
+        List<Vertex> vertices = Vertex.getOutsideVertices();
         List<Vertex> closedList = new ArrayList<>();
 
         Vertex startVertex = getVertexFromName(start, vertices);
@@ -48,17 +49,12 @@ public class OutdoorAStar {
                     continue; //Neighbor has already been evaluated
                 }
 
-                /*Hold off on discovering new node because PriorityQueue class doesn't reorder itself
-                  if we add it now and have to update the neighbor attributes later down.
-                  */
-
-
                 double tempG = current.getG() + UtilService.calculateDistance(current, neighbor);
                 if (tempG >= neighbor.getG()) {
                     if (!queue.contains(neighbor)) {
                         queue.offer(neighbor); //Discover new node
                     }
-                    continue; //There is already a better path from current to this neighbor, skip.
+                    continue; //There is already a better path to this neighbor, skip.
                 }
 
                 neighbor.setFrom(current.getName());
@@ -67,6 +63,10 @@ public class OutdoorAStar {
 
                 if (!queue.contains(neighbor)) {
                     queue.offer(neighbor); //Discover new node
+                } else {
+                    //Neighbor was previously learnt from a different vertex.
+                    queue.remove(neighbor);
+                    queue.offer(neighbor);
                 }
 
             }

@@ -65,7 +65,7 @@ public class SBDLFactoryService implements OperationFactory {
         if (SBDLRoutes == null) {
             return ResponseService.create(ResponseService.Status.ERROR, mot == DISABLED ?
                     "No available wheelchair routes." :
-                    "Something went wrong, couldn't find a route. Please tell us about this issue.");
+                    "Something went wrong, couldn't find an internal route in" + start.getBuilding().getValue() + ".Please tell us about this issue.");
         }
 
         direction = start.getLevel() > destination.getLevel() ? "down" : "up";

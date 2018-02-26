@@ -4,16 +4,17 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import org.backend.mdxmaps.model.LatLng;
 import org.backend.mdxmaps.model.Routing;
+import org.backend.mdxmaps.model.Vertex;
 import org.backend.mdxmaps.model.enums.MOT;
-import org.backend.mdxmaps.service.algorithms.OutdoorAlgorithm;
-import org.backend.mdxmaps.service.util.UtilService;
+import org.backend.mdxmaps.service.algorithms.OutdoorAStar;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.min;
-import static java.util.stream.Collectors.toList;
-import static org.backend.mdxmaps.model.Routing.getOutsideConnectors;
+import static org.backend.mdxmaps.model.Vertex.getOutsideVertices;
 import static org.backend.mdxmaps.model.enums.MOT.DISABLED;
 import static org.backend.mdxmaps.model.enums.MOT.NULL;
 import static org.backend.mdxmaps.model.enums.ObjectType.DOOR;
@@ -22,10 +23,7 @@ import static org.backend.mdxmaps.service.routeCalculators.SingleLevelSLOCalcula
 import static org.backend.mdxmaps.service.util.RoutingObjectsGetterUtilService.filterConnectorObjectsByType;
 import static org.backend.mdxmaps.service.util.RoutingObjectsGetterUtilService.getConnectors;
 import static org.backend.mdxmaps.service.util.RoutingObjectsGetterUtilService.removeNonDisabledObjects;
-import static org.backend.mdxmaps.service.util.UtilService.calculateMultipleRoutesDistanceAndSort;
 import static org.backend.mdxmaps.service.util.UtilService.calculateOutsideRouteDistance;
-import static org.backend.mdxmaps.service.util.UtilService.transformValidRoutesStringToObjects;
-import static org.backend.mdxmaps.service.util.UtilService.validRouteObjectsToLatLngTransformer;
 
 /**
  * Created by Emmanuel Keboh on 22/01/2017.
@@ -82,12 +80,12 @@ public class DifferentBuildingCalculator {
 
         Multimap<Double, ArrayList<ArrayList<ArrayList<LatLng>>>> finalRoutes = MultimapBuilder.treeKeys().linkedListValues().build();
 
-        ArrayList<Routing> outsideConnectors = getOutsideConnectors();
+        ArrayList<Vertex> outsideVertices = getOutsideVertices();
 
         //Calculate outside route from each door at start building to each door at destination building
         startIndoorRoutesPerDoor.keySet().forEach(startDoor ->
                 destinationIndoorRoutesPerDoor.keySet().forEach(destinationDoor -> {
-                    ArrayList<LatLng> outsideRoute = calculateOutsideRoute(startDoor, destinationDoor, outsideConnectors, disabled);
+                    ArrayList<LatLng> outsideRoute = calculateOutsideRoute(startDoor, destinationDoor, disabled);
                     if (outsideRoute != null) {
                         ArrayList<ArrayList<ArrayList<LatLng>>> currentRoute = new ArrayList<>();
                         currentRoute.add(((List<ArrayList<ArrayList<LatLng>>>) startIndoorRoutesPerDoor.get(startDoor)).get(0));//StartBuilding Route
@@ -119,23 +117,19 @@ public class DifferentBuildingCalculator {
     }
 
     //Filters for the best outside route
-    private static ArrayList<LatLng> calculateOutsideRoute(Routing startDoor, Routing destinationDoor, ArrayList<Routing> outsideConnectors,
+    private static ArrayList<LatLng> calculateOutsideRoute(Routing startDoor, Routing destinationDoor,
                                                            boolean disabled) {
-        ArrayList<ArrayList<String>> outsideRoutesString =
-                new OutdoorAlgorithm().sameLevelOp(startDoor.getAdjacentConnectors()[1], destinationDoor.getAdjacentConnectors()[1], outsideConnectors,
-                        disabled);
+        LinkedList<Vertex> outsideRouteVertices = OutdoorAStar.calculateOutsideRoute(startDoor.getAdjacentConnectors()[1],
+                destinationDoor.getAdjacentConnectors()[1], disabled);
 
-        if (outsideRoutesString.isEmpty()) return null;
+        if (outsideRouteVertices.isEmpty()) return null;
 
-        ArrayList<ArrayList<Routing>> outsideRoutesObjects = transformValidRoutesStringToObjects(outsideRoutesString, outsideConnectors);
+        ArrayList<LatLng> outsideRouteLatLng = (ArrayList<LatLng>) outsideRouteVertices.stream()
+                .map(Vertex::getLatLng)
+                .collect(Collectors.toList());
+        outsideRouteLatLng.add(0, startDoor.getLatLng());
+        outsideRouteLatLng.add(destinationDoor.getLatLng());
 
-        outsideRoutesObjects = UtilService.plugInStartAndEndObjects(startDoor, destinationDoor, outsideRoutesObjects);
-
-        ArrayList<ArrayList<LatLng>> outsideRoutesLatLng = (ArrayList<ArrayList<LatLng>>) outsideRoutesObjects.parallelStream()
-                .map(validRouteObjectsToLatLngTransformer())
-                .collect(toList());
-
-        Multimap<Double, ArrayList<LatLng>> sortedRoutes = calculateMultipleRoutesDistanceAndSort(outsideRoutesLatLng);
-        return ((List<ArrayList<LatLng>>) sortedRoutes.get(min(sortedRoutes.keySet()))).get(0);
+        return outsideRouteLatLng;
     }
 }

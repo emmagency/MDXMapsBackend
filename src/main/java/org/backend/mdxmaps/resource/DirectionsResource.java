@@ -66,6 +66,8 @@ public class DirectionsResource implements ServletContextListener {
                 return Response.ok(service.submit(new DirectionsService(start, end, mot, true, solrRoomsUrl)).get()).build();
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
+                return Response.ok(ResponseService.create(ERROR,
+                        "Error with url parameters!")).build();
             }
         }
 
@@ -106,8 +108,8 @@ public class DirectionsResource implements ServletContextListener {
     public ArrayList<TestDirections> aStarDirections(@QueryParam("s") String start, @QueryParam("d") String destination,
                                                      @QueryParam("m") String mode) {
         if (start != null && destination != null) {
-            LinkedList<Vertex> outsideRoute = OutdoorAStar.getOutsideRoute(start, destination, mode.equalsIgnoreCase(MOT.DISABLED.toString()),
-                    Vertex.getOutsideVertices());
+            LinkedList<Vertex> outsideRoute = OutdoorAStar.calculateOutsideRoute(start, destination,
+                    mode.equalsIgnoreCase(MOT.DISABLED.toString()));
             ArrayList<LatLng> routeLatLng = (ArrayList<LatLng>) outsideRoute.stream()
                     .map(Vertex::getLatLng)
                     .collect(Collectors.toList());
