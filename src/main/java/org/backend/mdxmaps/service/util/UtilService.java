@@ -11,6 +11,7 @@ import org.backend.mdxmaps.model.Routing;
 import org.backend.mdxmaps.model.Vertex;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -130,4 +131,23 @@ public final class UtilService {
         return calculateDistance(start.getLatLng().latitude, start.getLatLng().longitude,
                 destination.getLatLng().latitude, destination.getLatLng().longitude);
     }
+
+    public static List<Vertex> getClone(List<Vertex> vertices) {
+        List<Vertex> clone = new ArrayList<>();
+        for (Vertex v : vertices) {
+            clone.add(v.clone());
+        }
+        return clone;
+    }
+
+    public static void removeNonDisabledVertices(List<Vertex> vertices) {
+        for (int i = 0; i < vertices.size(); i++) {
+            if (!vertices.get(i).isWheelChairAccessible()) {
+                vertices.remove(i);
+                i--;
+            }
+        }
+    }
+
+
 }

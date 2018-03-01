@@ -156,4 +156,9 @@ public class Vertex {
     public String toString() {
         return name + ": " + getF();
     }
+
+
+    public Vertex clone() {
+        return new Vertex(name, latLng, neighbors, isWheelChairAccessible);
+    }
 }

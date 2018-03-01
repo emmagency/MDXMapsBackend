@@ -15,7 +15,7 @@ import java.util.PriorityQueue;
  */
 public class AStarAlgorithm {
 
-    public static LinkedList<Vertex> calculateOutsideRoute(String start, String goal, boolean disabled, List<Vertex> vertices) {
+    public static LinkedList<Vertex> getAStarShortestPath(String start, String goal, List<Vertex> vertices) {
         PriorityQueue<Vertex> queue = new PriorityQueue<>(11, Comparator.comparingDouble(Vertex::getF));
         List<Vertex> closedList = new ArrayList<>();
 
@@ -39,9 +39,6 @@ public class AStarAlgorithm {
             closedList.add(current);
 
             List<Vertex> neighbors = getNeighbours(current, vertices);
-            if (disabled) {
-                removeNonDisabledVertices(neighbors);
-            }
 
             for (Vertex neighbor : neighbors) {
                 if (neighbor != null) {
@@ -88,15 +85,6 @@ public class AStarAlgorithm {
             neighborList.add(getVertexFromName(name, vertices));
         }
         return neighborList;
-    }
-
-    private static void removeNonDisabledVertices(List<Vertex> vertices) {
-        for (int i = 0; i < vertices.size(); i++) {
-            if (!vertices.get(i).isWheelChairAccessible()) {
-                vertices.remove(i);
-                i--;
-            }
-        }
     }
 
     private static LinkedList<Vertex> reconstructPath(Vertex currentVertex, List<Vertex> closedList) {

@@ -6,27 +6,28 @@ import org.backend.mdxmaps.service.util.UtilService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.stream.IntStream;
+
+import static org.backend.mdxmaps.service.util.UtilService.getClone;
 
 /**
  * Created by Emmanuel Keboh on 27/02/2018.
  */
 public class KPathAlgorithm {
 
-    public static ArrayList<ArrayList<Vertex>> calculateKSPs(ArrayList<Vertex> sp, int K, String goal, boolean disabled) {
+    public static ArrayList<ArrayList<Vertex>> calculateKSPs(ArrayList<Vertex> sp, int numberOfKRoutes, String goal, List<Vertex> vertices) {
 
         ArrayList<ArrayList<Vertex>> A = new ArrayList<>();
         A.add(sp);
 
         PriorityQueue<ArrayList<Vertex>> B = new PriorityQueue<>(11, Comparator.comparingDouble(KPathAlgorithm::calculateKSPDistance));
 
-        for (int k = 1; k <= K; k++) {
+        for (int k = 1; k <= numberOfKRoutes; k++) {
             int a = 0;
             for (int i = 0; i < A.get(k - 1).size() - 1; i++) {
-                List<Vertex> graph = new LinkedList<>(Vertex.getOutsideVertices());
+                List<Vertex> graph = getClone(vertices);
                 Vertex spurNode = A.get(k - 1).get(i);
                 List<Vertex> rootPath = new ArrayList<>(A.get(k - 1).subList(0, i));
 
@@ -41,7 +42,7 @@ public class KPathAlgorithm {
                 removeNodes(spurNode, new ArrayList<>(rootPath), graph);
 
                 List<Vertex> spurPath =
-                        AStarAlgorithm.calculateOutsideRoute(spurNode.getName(), goal, disabled, graph);
+                        AStarAlgorithm.getAStarShortestPath(spurNode.getName(), goal, graph);
 
                 if (spurPath != null) {
                     rootPath.addAll(spurPath);
@@ -60,6 +61,7 @@ public class KPathAlgorithm {
 
         }
 
+        //ToDo Get other k routes from B if at the end of iteration, not enough routes exists in A to match the number of numberOfKRoutes routes requested.
         return A;
     }
 

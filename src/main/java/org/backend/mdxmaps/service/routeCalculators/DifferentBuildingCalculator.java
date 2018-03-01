@@ -7,6 +7,7 @@ import org.backend.mdxmaps.model.Routing;
 import org.backend.mdxmaps.model.Vertex;
 import org.backend.mdxmaps.model.enums.MOT;
 import org.backend.mdxmaps.service.algorithms.AStarAlgorithm;
+import org.backend.mdxmaps.service.util.UtilService;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -119,8 +120,13 @@ public class DifferentBuildingCalculator {
     //Filters for the best outside route
     private static ArrayList<LatLng> calculateOutsideRoute(Routing startDoor, Routing destinationDoor,
                                                            boolean disabled) {
-        LinkedList<Vertex> outsideRouteVertices = AStarAlgorithm.calculateOutsideRoute(startDoor.getAdjacentConnectors()[1],
-                destinationDoor.getAdjacentConnectors()[1], disabled, Vertex.getOutsideVertices());
+        List<Vertex> vertices = Vertex.getOutsideVertices();
+        if (disabled) {
+            UtilService.removeNonDisabledVertices(vertices);
+        }
+
+        LinkedList<Vertex> outsideRouteVertices = AStarAlgorithm.getAStarShortestPath(startDoor.getAdjacentConnectors()[1],
+                destinationDoor.getAdjacentConnectors()[1], vertices);
 
         if (outsideRouteVertices.isEmpty()) return null;
 

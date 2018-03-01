@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,20 +18,28 @@ import java.util.stream.Collectors;
 public class AStarAlgorithmTest {
     @Test
     public void getOutsideRoute() throws Exception {
-        String start = "Z1";
-        String end = "J1";
-        int k = 7;
+        String start = "K";
+        String end = "E";
+        int k = 3;
         boolean disabled = false;
-        LinkedList<Vertex> route = AStarAlgorithm.calculateOutsideRoute(start, end, disabled, Vertex.getOutsideVertices());
 
-        ArrayList<ArrayList<Vertex>> arrayLists = KPathAlgorithm.calculateKSPs(new ArrayList<>(route), k, end, disabled);
-        //System.out.println(arrayLists.size());
+        List<Vertex> vertices = Vertex.getOutsideVertices();
 
-        for (ArrayList<Vertex> v : arrayLists) {
-            ArrayList<LatLng> routeLatLng = (ArrayList<LatLng>) v.stream()
-                    .map(Vertex::getLatLng)
-                    .collect(Collectors.toList());
-            System.out.println("A Star: " + UtilService.calculateRouteDistance(routeLatLng));
+        if (disabled) {
+            UtilService.removeNonDisabledVertices(vertices);
+        }
+
+        ArrayList<ArrayList<Vertex>> allPaths = RoutingAlgorithm.getPaths(start, end, vertices, k);
+
+        if (allPaths != null) {
+            for (ArrayList<Vertex> path : allPaths) {
+                ArrayList<LatLng> routeLatLng = (ArrayList<LatLng>) path.stream()
+                        .map(Vertex::getLatLng)
+                        .collect(Collectors.toList());
+                System.out.println("A Star: " + UtilService.calculateRouteDistance(routeLatLng));
+            }
+        } else {
+            System.out.println("A star returned null");
         }
 
         System.out.println();
@@ -56,8 +63,7 @@ public class AStarAlgorithmTest {
         Vertex c = new Vertex("C", new LatLng(3, 2), null, true);
         Vertex d = new Vertex("D", new LatLng(5, 4), null, false);
         List<Vertex> list = new ArrayList<>(Arrays.asList(a, b, c, d));
-
-        System.out.println(list.subList(0, 5));
     }
+
 
 }

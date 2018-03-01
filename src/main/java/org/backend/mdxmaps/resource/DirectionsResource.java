@@ -8,9 +8,8 @@ import org.backend.mdxmaps.model.enums.MOT;
 import org.backend.mdxmaps.model.responseObjects.directions.TestDirections;
 import org.backend.mdxmaps.service.DirectionsService;
 import org.backend.mdxmaps.service.ResponseService;
-import org.backend.mdxmaps.service.algorithms.AStarAlgorithm;
-import org.backend.mdxmaps.service.algorithms.KPathAlgorithm;
 import org.backend.mdxmaps.service.algorithms.OutdoorAlgorithm;
+import org.backend.mdxmaps.service.algorithms.RoutingAlgorithm;
 import org.backend.mdxmaps.service.filters.Binders;
 import org.backend.mdxmaps.service.util.UtilService;
 
@@ -27,7 +26,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -117,29 +115,28 @@ public class DirectionsResource implements ServletContextListener {
         if (start != null && destination != null) {
 
             boolean disabled = mode.equalsIgnoreCase(MOT.DISABLED.toString());
-            LinkedList<Vertex> shortestPath = AStarAlgorithm.calculateOutsideRoute(start, destination,
-                    disabled, Vertex.getOutsideVertices());
 
-            ArrayList<ArrayList<Vertex>> allPaths = KPathAlgorithm.calculateKSPs(new ArrayList<>(shortestPath), numberOfRoutes > 0 ? numberOfRoutes - 1 : 3,
-                    destination, disabled);
+            List<Vertex> vertices = Vertex.getOutsideVertices();
 
-            return allPaths.stream()
-                    .map(path ->
-                            new TestDirections(IntStream.range(0, path.size() - 1)
-                                    .mapToDouble(i -> UtilService.calculateDistance(path.get(i), path.get(i + 1)))
-                                    .sum(),
-                                    (ArrayList<LatLng>) path.stream()
-                                            .map(Vertex::getLatLng)
-                                            .collect(Collectors.toList())))
-                    .collect(toList());
+            if (disabled) {
+                UtilService.removeNonDisabledVertices(vertices);
+            }
 
-//            ArrayList<LatLng> routeLatLng = (ArrayList<LatLng>) shortestPath.stream()
-//                    .map(Vertex::getLatLng)
-//                    .collect(Collectors.toList());
-//            TestDirections result = new TestDirections(UtilService.calculateRouteDistance(routeLatLng), routeLatLng);
-//            return new ArrayList<>(Collections.singletonList(result));
+            ArrayList<ArrayList<Vertex>> allPaths = RoutingAlgorithm.getPaths(start, destination, vertices, numberOfRoutes > 0 ? numberOfRoutes - 1 : 3);
+
+            if (allPaths != null) {
+                return allPaths.stream()
+                        .map(path ->
+                                new TestDirections(IntStream.range(0, path.size() - 1)
+                                        .mapToDouble(i -> UtilService.calculateDistance(path.get(i), path.get(i + 1)))
+                                        .sum(),
+                                        (ArrayList<LatLng>) path.stream()
+                                                .map(Vertex::getLatLng)
+                                                .collect(Collectors.toList())))
+                        .collect(toList());
+            }
+
         }
-
         return new ArrayList<>();
     }
 
