@@ -13,11 +13,10 @@ import java.util.PriorityQueue;
 /**
  * Created by Emmanuel Keboh on 25/02/2018.
  */
-public class OutdoorAStar {
+public class AStarAlgorithm {
 
-    public static LinkedList<Vertex> calculateOutsideRoute(String start, String goal, boolean disabled) {
-        PriorityQueue<Vertex> queue = new PriorityQueue<>(11, Comparator.comparingInt(a -> a.getF().intValue()));
-        List<Vertex> vertices = Vertex.getOutsideVertices();
+    public static LinkedList<Vertex> calculateOutsideRoute(String start, String goal, boolean disabled, List<Vertex> vertices) {
+        PriorityQueue<Vertex> queue = new PriorityQueue<>(11, Comparator.comparingDouble(Vertex::getF));
         List<Vertex> closedList = new ArrayList<>();
 
         Vertex startVertex = getVertexFromName(start, vertices);
@@ -45,34 +44,36 @@ public class OutdoorAStar {
             }
 
             for (Vertex neighbor : neighbors) {
-                if (closedList.contains(neighbor)) {
-                    continue; //Neighbor has already been evaluated
-                }
+                if (neighbor != null) {
+                    if (closedList.contains(neighbor)) {
+                        continue; //Neighbor has already been evaluated
+                    }
 
-                double tempG = current.getG() + UtilService.calculateDistance(current, neighbor);
-                if (tempG >= neighbor.getG()) {
+                    double tempG = current.getG() + UtilService.calculateDistance(current, neighbor);
+                    if (tempG >= neighbor.getG()) {
+                        if (!queue.contains(neighbor)) {
+                            queue.offer(neighbor); //Discover new node
+                        }
+                        continue; //There is already a better path to this neighbor, skip.
+                    }
+
+                    neighbor.setFrom(current.getName());
+                    neighbor.setG(tempG);
+                    neighbor.setH(UtilService.calculateDistance(neighbor, goalVertex));
+
                     if (!queue.contains(neighbor)) {
                         queue.offer(neighbor); //Discover new node
+                    } else {
+                        //Neighbor was previously learnt from a different vertex.
+                        queue.remove(neighbor);
+                        queue.offer(neighbor);
                     }
-                    continue; //There is already a better path to this neighbor, skip.
-                }
-
-                neighbor.setFrom(current.getName());
-                neighbor.setG(tempG);
-                neighbor.setH(UtilService.calculateDistance(neighbor, goalVertex));
-
-                if (!queue.contains(neighbor)) {
-                    queue.offer(neighbor); //Discover new node
-                } else {
-                    //Neighbor was previously learnt from a different vertex.
-                    queue.remove(neighbor);
-                    queue.offer(neighbor);
                 }
 
             }
         }
 
-        return new LinkedList<>();
+        return null;
     }
 
     private static Vertex getVertexFromName(String name, List<Vertex> vertices) {

@@ -58,6 +58,10 @@ public class Vertex {
         return name;
     }
 
+    public void setNeighbors(String[] neighbors) {
+        this.neighbors = neighbors;
+    }
+
     public String[] getNeighbors() {
         return neighbors;
     }
@@ -89,7 +93,7 @@ public class Vertex {
         list.add(new Vertex("W", new LatLng(51.589479, -0.230074), new String[]{"T", "E1", "A9"}, true));
         list.add(new Vertex("X", new LatLng(51.589761, -0.230020), new String[]{"A16", "Y"}, true));
         list.add(new Vertex("Y", new LatLng(51.589967, -0.229947), new String[]{"X", "Z", "B1"}, true));
-        list.add(new Vertex("Z", new LatLng(51.590174, -0.229934), new String[]{"M", "Y", "D1", "A1"}, false));
+        list.add(new Vertex("Z", new LatLng(51.590184, -0.229870), new String[]{"M", "Y", "D1", "A1"}, false));
         list.add(new Vertex("A1", new LatLng(51.590377, -0.229911), new String[]{"Z", "F1", "O1"}, true));
         list.add(new Vertex("B1", new LatLng(51.589979, -0.230105), new String[]{"Y", "C1"}, false));
         list.add(new Vertex("C1", new LatLng(51.589993, -0.230266), new String[]{"D1", "A14", "B1"}, true));

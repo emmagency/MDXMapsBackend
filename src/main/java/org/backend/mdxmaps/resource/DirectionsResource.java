@@ -8,7 +8,8 @@ import org.backend.mdxmaps.model.enums.MOT;
 import org.backend.mdxmaps.model.responseObjects.directions.TestDirections;
 import org.backend.mdxmaps.service.DirectionsService;
 import org.backend.mdxmaps.service.ResponseService;
-import org.backend.mdxmaps.service.algorithms.OutdoorAStar;
+import org.backend.mdxmaps.service.algorithms.AStarAlgorithm;
+import org.backend.mdxmaps.service.algorithms.KPathAlgorithm;
 import org.backend.mdxmaps.service.algorithms.OutdoorAlgorithm;
 import org.backend.mdxmaps.service.filters.Binders;
 import org.backend.mdxmaps.service.util.UtilService;
@@ -26,13 +27,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
 import static org.backend.mdxmaps.model.enums.Constants.SOLR_ROOMS_URL;
@@ -78,8 +80,8 @@ public class DirectionsResource implements ServletContextListener {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/legacy")
-    public ArrayList<TestDirections> legacyDirections(@QueryParam("s") String start, @QueryParam("d") String destination,
-                                                      @QueryParam("m") String mode) {
+    public List<TestDirections> legacyDirections(@QueryParam("s") String start, @QueryParam("d") String destination,
+                                                 @QueryParam("m") String mode, @QueryParam("n") int numberOfRoutes) {
         if (start != null && destination != null) {
             ArrayList<Routing> outsideConnectors = Routing.getOutsideConnectors();
             ArrayList<ArrayList<String>> result = new OutdoorAlgorithm().sameLevelOp(start, destination, outsideConnectors,
@@ -96,7 +98,12 @@ public class DirectionsResource implements ServletContextListener {
 
             sortedRoutes.keySet().forEach(distance -> sortedRoutes.get(distance).
                     forEach(latlng -> response.add(new TestDirections(distance, latlng))));
-            return response;
+
+            if (numberOfRoutes < response.size()) {
+                return response.subList(0, numberOfRoutes);
+            } else {
+                return response;
+            }
         }
 
         return new ArrayList<>();
@@ -104,17 +111,33 @@ public class DirectionsResource implements ServletContextListener {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/astar")
-    public ArrayList<TestDirections> aStarDirections(@QueryParam("s") String start, @QueryParam("d") String destination,
-                                                     @QueryParam("m") String mode) {
+    @Path("/aStar")
+    public List<TestDirections> aStarDirections(@QueryParam("s") String start, @QueryParam("d") String destination,
+                                                @QueryParam("m") String mode, @QueryParam("n") int numberOfRoutes) {
         if (start != null && destination != null) {
-            LinkedList<Vertex> outsideRoute = OutdoorAStar.calculateOutsideRoute(start, destination,
-                    mode.equalsIgnoreCase(MOT.DISABLED.toString()));
-            ArrayList<LatLng> routeLatLng = (ArrayList<LatLng>) outsideRoute.stream()
-                    .map(Vertex::getLatLng)
-                    .collect(Collectors.toList());
-            TestDirections result = new TestDirections(UtilService.calculateRouteDistance(routeLatLng), routeLatLng);
-            return new ArrayList<>(Collections.singletonList(result));
+
+            boolean disabled = mode.equalsIgnoreCase(MOT.DISABLED.toString());
+            LinkedList<Vertex> shortestPath = AStarAlgorithm.calculateOutsideRoute(start, destination,
+                    disabled, Vertex.getOutsideVertices());
+
+            ArrayList<ArrayList<Vertex>> allPaths = KPathAlgorithm.calculateKSPs(new ArrayList<>(shortestPath), numberOfRoutes > 0 ? numberOfRoutes - 1 : 3,
+                    destination, disabled);
+
+            return allPaths.stream()
+                    .map(path ->
+                            new TestDirections(IntStream.range(0, path.size() - 1)
+                                    .mapToDouble(i -> UtilService.calculateDistance(path.get(i), path.get(i + 1)))
+                                    .sum(),
+                                    (ArrayList<LatLng>) path.stream()
+                                            .map(Vertex::getLatLng)
+                                            .collect(Collectors.toList())))
+                    .collect(toList());
+
+//            ArrayList<LatLng> routeLatLng = (ArrayList<LatLng>) shortestPath.stream()
+//                    .map(Vertex::getLatLng)
+//                    .collect(Collectors.toList());
+//            TestDirections result = new TestDirections(UtilService.calculateRouteDistance(routeLatLng), routeLatLng);
+//            return new ArrayList<>(Collections.singletonList(result));
         }
 
         return new ArrayList<>();
