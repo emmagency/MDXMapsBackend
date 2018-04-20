@@ -65,6 +65,9 @@ public class Campus {
         this.description = description;
     }
 
+    /**
+     * Get name bihhhhh
+     */
     public String getName() {
         return name;
     }
@@ -83,6 +86,10 @@ public class Campus {
 
     public Building getBuilding() {
         return building;
+    }
+
+    public String getBuildingStringValue() {
+        return buildingStringValue;
     }
 
     public String getDescription() {

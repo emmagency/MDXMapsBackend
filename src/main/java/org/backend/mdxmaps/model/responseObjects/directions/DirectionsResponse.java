@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Created by Emmanuel Keboh on 09/01/2017.
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class MainDirectionsResponse {
+public class DirectionsResponse {
 
     private Status status;
     private String message;
@@ -18,10 +18,10 @@ public class MainDirectionsResponse {
 
     private ArrayList<Route> routes;
 
-    public MainDirectionsResponse() {
+    public DirectionsResponse() {
     }
 
-    private MainDirectionsResponse(Status status, DirectionsRequestParams directionsRequestParams, ArrayList<Route> routes) {
+    private DirectionsResponse(Status status, DirectionsRequestParams directionsRequestParams, ArrayList<Route> routes) {
         this.status = status;
         this.directionsRequestParams = directionsRequestParams;
         this.routes = routes;
@@ -52,7 +52,7 @@ public class MainDirectionsResponse {
         return directionsRequestParams;
     }
 
-    public static MainDirectionsResponse create(Status status, DirectionsRequestParams directionsRequestParams, ArrayList<Route> routes) {
-        return new MainDirectionsResponse(status, directionsRequestParams, routes);
+    public static DirectionsResponse create(Status status, DirectionsRequestParams directionsRequestParams, ArrayList<Route> routes) {
+        return new DirectionsResponse(status, directionsRequestParams, routes);
     }
 }

@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.min;
-import static org.backend.mdxmaps.model.Vertex.getOutsideVertices;
 import static org.backend.mdxmaps.model.enums.MOT.DISABLED;
 import static org.backend.mdxmaps.model.enums.MOT.NULL;
 import static org.backend.mdxmaps.model.enums.ObjectType.DOOR;
@@ -81,8 +80,6 @@ public class DifferentBuildingCalculator {
 
         Multimap<Double, ArrayList<ArrayList<ArrayList<LatLng>>>> finalRoutes = MultimapBuilder.treeKeys().linkedListValues().build();
 
-        ArrayList<Vertex> outsideVertices = getOutsideVertices();
-
         //Calculate outside route from each door at start building to each door at destination building
         startIndoorRoutesPerDoor.keySet().forEach(startDoor ->
                 destinationIndoorRoutesPerDoor.keySet().forEach(destinationDoor -> {
@@ -128,7 +125,7 @@ public class DifferentBuildingCalculator {
         LinkedList<Vertex> outsideRouteVertices = AStarAlgorithm.getAStarShortestPath(startDoor.getAdjacentConnectors()[1],
                 destinationDoor.getAdjacentConnectors()[1], vertices);
 
-        if (outsideRouteVertices.isEmpty()) return null;
+        if (outsideRouteVertices == null || outsideRouteVertices.isEmpty()) return null;
 
         ArrayList<LatLng> outsideRouteLatLng = (ArrayList<LatLng>) outsideRouteVertices.stream()
                 .map(Vertex::getLatLng)

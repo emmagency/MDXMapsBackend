@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Emmanuel keboh on 13/07/2017.
  */
-public class MainSearchResponse {
+public final class MainSearchResponse {
 
     private List<Campus> campus;
     private List<Nearby> nearby;

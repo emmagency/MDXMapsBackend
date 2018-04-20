@@ -6,7 +6,7 @@ import org.backend.mdxmaps.model.LatLng;
 import org.backend.mdxmaps.model.OperationFactory;
 import org.backend.mdxmaps.model.Routing;
 import org.backend.mdxmaps.model.enums.MOT;
-import org.backend.mdxmaps.model.responseObjects.directions.MainDirectionsResponse;
+import org.backend.mdxmaps.model.responseObjects.directions.DirectionsResponse;
 import org.backend.mdxmaps.model.responseObjects.directions.Route;
 import org.backend.mdxmaps.model.responseObjects.directions.Step;
 import org.backend.mdxmaps.service.ResponseService;
@@ -23,7 +23,7 @@ import static org.backend.mdxmaps.model.responseObjects.directions.Step.createSt
 import static org.backend.mdxmaps.service.IconResolverService.resolveDifferentBuildingIcons;
 import static org.backend.mdxmaps.service.ResponseService.Status.OK;
 import static org.backend.mdxmaps.service.routeCalculators.DifferentBuildingCalculator.performDifferentBuildingCalculation;
-import static org.backend.mdxmaps.service.util.TravelTimeCalc.getTravelTime;
+import static org.backend.mdxmaps.service.util.TravelTimeCalculator.getTravelTime;
 
 /**
  * Created by Emmanuel Keboh on 18/12/2016.
@@ -76,20 +76,25 @@ public class DifferentBuildingFactoryService implements OperationFactory {
                 ((List<ArrayList<ArrayList<ArrayList<LatLng>>>>) calculatedRoutes.get(bestRouteDistance)).get(0);
 
         String startDir = "";
+        int numberOfFlights = 0;
         if (isStartED) {
             startDir = start.getLevel() > 0 ? "down" : "up";
+            numberOfFlights = numberOfFlights + Math.abs(start.getLevel());
         }
         String destDir = "";
         if (isDestED) {
             destDir = destination.getLevel() > 0 ? "up" : "down";
+            numberOfFlights = numberOfFlights + Math.abs(destination.getLevel());
         }
 
         iconsList = resolveDifferentBuildingIcons(disabled, startEDMethod, destEDMethod, isStartED, isDestED, startDir, destDir);
 
-        ArrayList<Route> routes = new ArrayList<>();
-        routes.add(createRoute(bestRouteDistance, getTravelTime(bestRouteDistance, disabled ? DISABLED : NULL), getSteps(bestRoute)));
+        int travelTime = getTravelTime(bestRouteDistance, disabled ? DISABLED : isStartED ? startEDMethod : isDestED ? destEDMethod : NULL, numberOfFlights);
 
-        return ResponseService.create(OK, MainDirectionsResponse.create(OK,
+        ArrayList<Route> routes = new ArrayList<>();
+        routes.add(createRoute(bestRouteDistance, travelTime, getSteps(bestRoute)));
+
+        return ResponseService.create(OK, DirectionsResponse.create(OK,
                 DirectionsRequestParams.create(start.getName(), destination.getName(), null), routes));
     }
 
@@ -104,7 +109,7 @@ public class DifferentBuildingFactoryService implements OperationFactory {
             steps.add(createStep(String.format("Go %s %d %s", start.getLevel() > 0 ? "down" : "up", Math.abs(start.getLevel()),
                     Math.abs(start.getLevel()) > 1 ? "levels" : "level"), null, iconsList.get(1),
                     Collections.singletonList(route.get(0).get(0).get(route.get(0).get(0).size() - 1))));
-            steps.add(createStep(String.format("%s to the door and exit from %s", movementMethod, start.getBuilding()),
+            steps.add(createStep(String.format("%s to the door and exit from %s", movementMethod, start.getBuilding().getValue()),
                     Routing.getGmapIntForGroundFloor(start.getBuilding()), iconsList.get(2), route.get(0).get(1)));
             for (int i = 0; i < 3; i++) {
                 iconsList.remove(0);
@@ -116,13 +121,13 @@ public class DifferentBuildingFactoryService implements OperationFactory {
         }
 
         //Outside Step
-        steps.add(createStep(String.format("%s to %s", movementMethod, destination.getBuilding()), null,
+        steps.add(createStep(String.format("%s to %s", movementMethod, destination.getBuilding().getValue()), null,
                 iconsList.get(0), route.get(1).get(0)));
         iconsList.remove(0);
 
         //Destination steps
         if (isDestED) {
-            steps.add(createStep(String.format("Enter %s and %s to the %s", destination.getBuilding(), movementMethod, destEDMethod.toString().toLowerCase()),
+            steps.add(createStep(String.format("Enter %s and %s to the %s", destination.getBuilding().getValue(), movementMethod.toLowerCase(), destEDMethod.toString().toLowerCase()),
                     Routing.getGmapIntForGroundFloor(destination.getBuilding()), iconsList.get(0), route.get(2).get(0)));
             steps.add(createStep(String.format("Go %s %d %s", destination.getLevel() > 0 ? "up" : "down", Math.abs(destination.getLevel()),
                     Math.abs(destination.getLevel()) > 1 ? "levels" : "level"), null, iconsList.get(1),
@@ -130,7 +135,7 @@ public class DifferentBuildingFactoryService implements OperationFactory {
             steps.add(createStep(String.format("%s to %s", movementMethod, destination.getName()), destination.getGMapLevel(),
                     iconsList.get(2), route.get(2).get(1)));
         } else {
-            steps.add(createStep(String.format("Enter %s and %s to %s", destination.getBuilding(), movementMethod, destination.getName()),
+            steps.add(createStep(String.format("Enter %s and %s to %s", destination.getBuilding().getValue(), movementMethod, destination.getName()),
                     destination.getGMapLevel(), iconsList.get(0), route.get(2).get(0)));
         }
 

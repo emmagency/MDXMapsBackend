@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Emmanuel Keboh on 13/07/2017.
  */
-public class NearbySearchResponse {
+public final class NearbySearchResponse {
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String errorMessage;

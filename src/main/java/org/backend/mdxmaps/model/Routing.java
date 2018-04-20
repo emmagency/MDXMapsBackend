@@ -922,7 +922,7 @@ public class Routing implements Comparable<Routing> {
         list.add(new Routing("A6", BASIC_CONNECTOR, new LatLng(51.590508, -0.230537), new String[]{"A8", "A5"}, true));
         list.add(new Routing("A7", BASIC_CONNECTOR, new LatLng(51.590537, -0.230941), new String[]{"A8"}, true));
         list.add(new Routing("A8", BASIC_CONNECTOR, new LatLng(51.590508, -0.230666), new String[]{"A6", "A7"}, true));
-        list.add(new Routing("A9", BASIC_CONNECTOR, new LatLng(51.589402, -0.230089), new String[]{"W", "J1", "A11"}, true));
+        list.add(new Routing("A9", BASIC_CONNECTOR, new LatLng(51.589365, -0.230148), new String[]{"W", "J1", "A11"}, true));
         list.add(new Routing("A10", BASIC_CONNECTOR, new LatLng(51.588977, -0.230572), new String[]{"L1", "J1"}, true));
         list.add(new Routing("A11", BASIC_CONNECTOR, new LatLng(51.589368, -0.229769), new String[]{"T", "V", "A9"}, true));
         list.add(new Routing("A12", BASIC_CONNECTOR, new LatLng(51.589093, -0.230278), new String[]{"J1", "V"}, true));

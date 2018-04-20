@@ -6,7 +6,7 @@ import org.backend.mdxmaps.model.LatLng;
 import org.backend.mdxmaps.model.OperationFactory;
 import org.backend.mdxmaps.model.Routing;
 import org.backend.mdxmaps.model.enums.MOT;
-import org.backend.mdxmaps.model.responseObjects.directions.MainDirectionsResponse;
+import org.backend.mdxmaps.model.responseObjects.directions.DirectionsResponse;
 import org.backend.mdxmaps.model.responseObjects.directions.Route;
 import org.backend.mdxmaps.model.responseObjects.directions.Step;
 import org.backend.mdxmaps.service.ResponseService;
@@ -21,7 +21,7 @@ import static org.backend.mdxmaps.service.IconResolverService.WALK;
 import static org.backend.mdxmaps.service.IconResolverService.WHEELCHAIR;
 import static org.backend.mdxmaps.service.ResponseService.Status.OK;
 import static org.backend.mdxmaps.service.routeCalculators.SingleLevelSLOCalculator.performSingleLevelSLO;
-import static org.backend.mdxmaps.service.util.TravelTimeCalc.getTravelTime;
+import static org.backend.mdxmaps.service.util.TravelTimeCalculator.getTravelTime;
 
 /**
  * Created by Emmanuel Keboh on 18/12/2016.
@@ -67,10 +67,10 @@ public class SBSLFactoryService implements OperationFactory {
                     List<ArrayList<LatLng>> keyValues = (List<ArrayList<LatLng>>) SLOroutes.get(distance);
 
                     routes.addAll(keyValues.parallelStream()
-                            .map(latLngs -> Route.createRoute(distance, getTravelTime(distance, mot), getSteps(latLngs)))
+                            .map(latLngs -> Route.createRoute(distance, getTravelTime(distance, mot, 0), getSteps(latLngs)))
                             .collect(toList()));
                 });
-        return ResponseService.create(OK, MainDirectionsResponse.create(OK,
+        return ResponseService.create(OK, DirectionsResponse.create(OK,
                 DirectionsRequestParams.create(start.getName(), destination.getName(), mot.toString()), routes));
     }
 

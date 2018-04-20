@@ -56,14 +56,14 @@ public class SearchResource implements ServletContextListener {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchAll(@QueryParam("q") String query, @QueryParam("rows") int rows) {
         return Response.ok(MainSearchResponse.create(querySolrForRooms(query, rows, false),
-                querySolrForNearbyDocs(query, false, rows), querySolrForTransport(query, rows))).build();
+                querySolrForNearby(query, false, rows), querySolrForTransport(query, rows))).build();
     }
 
     @GET
     @Path("campus")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchOnCampusData(@QueryParam("q") String query, @QueryParam("rows") int rows,
-                                       @QueryParam("isDirectionsAvailable") boolean isDirectionsAvailable) {
+                                       @QueryParam("directions") boolean isDirectionsAvailable) {
         return Response.ok(CampusSearchResponse.create(querySolrForRooms(query, rows, isDirectionsAvailable))).build();
     }
 
@@ -71,7 +71,7 @@ public class SearchResource implements ServletContextListener {
     @Path("nearby")
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchNearby(@QueryParam("q") String query, @QueryParam("t") boolean isListing, @QueryParam("rows") int rows) {
-        return Response.ok(NearbySearchResponse.create(querySolrForNearbyDocs(query, isListing, rows))).build();
+        return Response.ok(NearbySearchResponse.create(querySolrForNearby(query, isListing, rows))).build();
     }
 
     @GET
@@ -82,7 +82,7 @@ public class SearchResource implements ServletContextListener {
     }
 
     private List<Campus> querySolrForRooms(String query, int rows, boolean isDirectionsAvailable) {
-        if (query.length() > 1) {
+        if (query != null && query.length() > 1) {
             try {
                 return service.submit(new CampusSearchService(query, rows, isDirectionsAvailable,
                         (String) configuration.getProperty(SOLR_ROOMS_URL.getValue()))).get();
@@ -94,8 +94,8 @@ public class SearchResource implements ServletContextListener {
         return Collections.emptyList();
     }
 
-    private List<Nearby> querySolrForNearbyDocs(String query, boolean type, int rows) {
-        if (query.length() > 1) {
+    private List<Nearby> querySolrForNearby(String query, boolean type, int rows) {
+        if (query != null && query.length() > 1) {
             try {
                 return service.submit(new NearbySearchService(query, type, rows,
                         (String) configuration.getProperty(SOLR_NEARBY_URL.getValue()))).get();
@@ -108,7 +108,7 @@ public class SearchResource implements ServletContextListener {
     }
 
     private List<Transport> querySolrForTransport(String query, int rows) {
-        if (query.length() > 1) {
+        if (query != null && query.length() > 1) {
             try {
                 return service.submit(new TransportSearchService(query, false, rows,
                         (String) configuration.getProperty(SOLR_TRANSPORT_URL.getValue()))).get();

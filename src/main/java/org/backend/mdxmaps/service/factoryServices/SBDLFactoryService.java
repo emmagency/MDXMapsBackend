@@ -6,7 +6,7 @@ import org.backend.mdxmaps.model.LatLng;
 import org.backend.mdxmaps.model.OperationFactory;
 import org.backend.mdxmaps.model.Routing;
 import org.backend.mdxmaps.model.enums.MOT;
-import org.backend.mdxmaps.model.responseObjects.directions.MainDirectionsResponse;
+import org.backend.mdxmaps.model.responseObjects.directions.DirectionsResponse;
 import org.backend.mdxmaps.model.responseObjects.directions.Route;
 import org.backend.mdxmaps.model.responseObjects.directions.Step;
 import org.backend.mdxmaps.service.ResponseService;
@@ -20,7 +20,7 @@ import static org.backend.mdxmaps.model.enums.MOT.DISABLED;
 import static org.backend.mdxmaps.service.IconResolverService.resolveSBDLIcons;
 import static org.backend.mdxmaps.service.ResponseService.Status.OK;
 import static org.backend.mdxmaps.service.routeCalculators.MultiLevelSLOCalculator.performMultiLevelSLO;
-import static org.backend.mdxmaps.service.util.TravelTimeCalc.getTravelTime;
+import static org.backend.mdxmaps.service.util.TravelTimeCalculator.getTravelTime;
 
 /**
  * Created by Emmanuel Keboh on 18/12/2016.
@@ -83,11 +83,11 @@ public class SBDLFactoryService implements OperationFactory {
                     List<ArrayList<ArrayList<LatLng>>> keyValues = (List<ArrayList<ArrayList<LatLng>>>) SBDLRoutes.get(distance);
 
                     routes.addAll(keyValues.parallelStream()
-                            .map(route -> Route.createRoute(distance, getTravelTime(distance, mot), getSteps(route)))
+                            .map(route -> Route.createRoute(distance, getTravelTime(distance, mot, Math.abs(start.getLevel() - destination.getLevel())), getSteps(route)))
                             .collect(toList()));
                 });
 
-        return ResponseService.create(OK, MainDirectionsResponse.create(OK,
+        return ResponseService.create(OK, DirectionsResponse.create(OK,
                 DirectionsRequestParams.create(start.getName(), destination.getName(), mot.toString()), routes));
     }
 

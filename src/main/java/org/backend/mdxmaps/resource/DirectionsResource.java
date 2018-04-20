@@ -14,6 +14,7 @@ import org.backend.mdxmaps.service.filters.Binders;
 import org.backend.mdxmaps.service.util.UtilService;
 
 import javax.inject.Singleton;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
@@ -51,6 +52,9 @@ import static org.backend.mdxmaps.service.util.UtilService.validRouteObjectsToLa
 public class DirectionsResource implements ServletContextListener {
 
     private ExecutorService service = Executors.newCachedThreadPool();
+
+    @Context
+    private ServletContext servletContext;
 
     @Context
     private Configuration configuration;

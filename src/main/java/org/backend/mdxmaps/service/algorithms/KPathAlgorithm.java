@@ -25,7 +25,6 @@ public class KPathAlgorithm {
         PriorityQueue<ArrayList<Vertex>> B = new PriorityQueue<>(11, Comparator.comparingDouble(KPathAlgorithm::calculateKSPDistance));
 
         for (int k = 1; k <= numberOfKRoutes; k++) {
-            int a = 0;
             for (int i = 0; i < A.get(k - 1).size() - 1; i++) {
                 List<Vertex> graph = getClone(vertices);
                 Vertex spurNode = A.get(k - 1).get(i);

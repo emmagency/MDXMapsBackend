@@ -34,6 +34,8 @@ public class CustomRoomJSONSerializerForSolrIndexing extends StdSerializer<Campu
         jsonGenerator.writeStringField(NAME, campus.getName());
         if (campus.getBuilding() != null) {
             jsonGenerator.writeStringField(BUILDING, campus.getBuilding().getValue());
+        } else {
+            jsonGenerator.writeStringField(BUILDING, campus.getBuildingStringValue());
         }
         jsonGenerator.writeStringField(LEVEL, campus.getLevel());
         jsonGenerator.writeNumberField(GOOGLE_MAP_LEVEL, campus.getgMapLevel());

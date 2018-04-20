@@ -8,7 +8,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.backend.mdxmaps.model.OperationFactory;
 import org.backend.mdxmaps.model.Routing;
 import org.backend.mdxmaps.model.enums.MOT;
-import org.backend.mdxmaps.model.responseObjects.directions.MainDirectionsResponse;
+import org.backend.mdxmaps.model.responseObjects.directions.DirectionsResponse;
 
 import java.io.IOException;
 import java.util.concurrent.Callable;
@@ -55,6 +55,11 @@ public class DirectionsService implements Callable<Object> {
     @Override
     public Object call() throws Exception {
 
+        if (start.equalsIgnoreCase(destination)) {
+            return ResponseService.create(ERROR, "Start and Destination appears to be the same. " +
+                    "Apologies, I don't go around in circles.");
+        }
+
         if (consultSolr) {
             ResponseService solrStartCheckResponse = validateInput(start);
             if (solrStartCheckResponse.getStatus() == ERROR) {
@@ -76,11 +81,6 @@ public class DirectionsService implements Callable<Object> {
                     "Couldn't find '" + this.start + "' & '" + this.destination + ".' Please check your input and try again." :
                     start == null ? "Couldn't find '" + this.start + "'. Please check your input and try again."
                             : "Couldn't find '" + this.destination + "'. Please check your input and try again.");
-        }
-
-        if (start.getName().equals(destination.getName())) {
-            return ResponseService.create(ERROR, "Start and Destination appears to be the same. " +
-                    "Apologies, I don't go around in circles.");
         }
 
         MOT motEnum;
@@ -109,8 +109,8 @@ public class DirectionsService implements Callable<Object> {
         ResponseService result = ((OperationFactory) oPType.getEntity()).getRoute();
 
         if (oPType.getStatus() == INFO && result.getEntity() != null) {
-            ((MainDirectionsResponse) result.getEntity()).setStatus(INFO);
-            ((MainDirectionsResponse) result.getEntity()).setMessage(oPType.getMessage());
+            ((DirectionsResponse) result.getEntity()).setStatus(INFO);
+            ((DirectionsResponse) result.getEntity()).setMessage(oPType.getMessage());
         }
 
         return result.getEntity() != null ? result.getEntity() : result;

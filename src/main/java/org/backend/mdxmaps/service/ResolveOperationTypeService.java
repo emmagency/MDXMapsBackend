@@ -79,15 +79,15 @@ public class ResolveOperationTypeService {
 
                         if (!startCheck && !destCheck) {
                             response.setStatus(Status.ERROR);
-                            response.setMessage("There are no elevators in " + start.getBuilding() + " and " + destination.getBuilding());
+                            response.setMessage("There are no elevators in " + start.getBuilding().getValue() + " and " + destination.getBuilding().getValue());
 //                            throw new ResolveOperationTypeException(String.format("There are no elevators in %s and %s", start.getBuilding(), destination.getBuilding()));
                         } else if (startCheck && !destCheck) {
                             response.setStatus(Status.ERROR);
-                            response.setMessage("There are no elevators in " + destination.getBuilding() + " to get to " + destRoom);
+                            response.setMessage("There are no elevators in " + destination.getBuilding().getValue() + " to get to " + destRoom);
 //                            throw new ResolveOperationTypeException(String.format("There are no elevators in %s to get to %s", destination.getBuilding(), destRoom));
                         } else if (!startCheck) {
                             response.setStatus(Status.ERROR);
-                            response.setMessage("There are no elevators in " + start.getBuilding());
+                            response.setMessage("There are no elevators in " + start.getBuilding().getValue());
 //                            throw new ResolveOperationTypeException(String.format("There are no elevators in %s", start.getBuilding()));
                         } else {
                             if (!startED && !destED) {
@@ -110,15 +110,15 @@ public class ResolveOperationTypeService {
                         if (!destination.getBuildingObject().isWheelChairAccessible() &&
                                 !start.getBuildingObject().isWheelChairAccessible()) {
                             response.setStatus(Status.ERROR);
-                            response.setMessage("Both " + start.getBuilding() + " & " + destination.getBuilding() + " are not wheelchair accessible");
+                            response.setMessage("Both " + start.getBuilding().getValue() + " & " + destination.getBuilding().getValue() + " are not wheelchair accessible");
 //                            throw new ResolveOperationTypeException(String.format("Both %s & %s are not wheelchair accessible", start.getBuilding(), destination.getBuilding()));
                         } else if (!start.getBuildingObject().isWheelChairAccessible()) {
                             response.setStatus(Status.ERROR);
-                            response.setMessage(start.getBuilding() + " is not wheelchair accessible");
+                            response.setMessage(start.getBuilding().getValue() + " is not wheelchair accessible");
 //                            throw new ResolveOperationTypeException(String.format("%s is not wheelchair accessible", start.getBuilding()));
                         } else {
                             response.setStatus(Status.ERROR);
-                            response.setMessage(destination.getBuilding() + " is not wheelchair accessible");
+                            response.setMessage(destination.getBuilding().getValue() + " is not wheelchair accessible");
 //                            throw new ResolveOperationTypeException(String.format("%s is not wheelchair accessible", destination.getBuilding()));
                         }
                     }
@@ -131,7 +131,7 @@ public class ResolveOperationTypeService {
                             } else {
                                 //Building doesn't have elevators
                                 response.setStatus(Status.ERROR);
-                                response.setMessage("There are no elevators in " + start.getBuilding());
+                                response.setMessage("There are no elevators in " + start.getBuilding().getValue());
 //                                throw new ResolveOperationTypeException(String.format("There are no elevators in %s", start.getBuilding()));
                             }
                         } else {
@@ -141,7 +141,7 @@ public class ResolveOperationTypeService {
                     } else {
                         //Building isn't wheelchair accessible
                         response.setStatus(Status.ERROR);
-                        response.setMessage(start.getBuilding() + " is not wheelchair accessible");
+                        response.setMessage(start.getBuilding().getValue() + " is not wheelchair accessible");
 //                        throw new ResolveOperationTypeException(String.format("%s is not wheelchair accessible", start.getBuilding()));
                     }
                 }
@@ -154,7 +154,7 @@ public class ResolveOperationTypeService {
                     } else {
                         //No stairs, inform user app will use elevators
                         response.setStatus(Status.INFO);
-                        response.setMessage("No stairs in " + start.getBuilding() + ". App switched to elevators for this building");
+                        response.setMessage("No stairs in " + start.getBuilding().getValue() + ". App switched to elevators for this building");
                         mot = ELEVATORS;
                     }
                     response.setEntity(SBDLFactoryService.create(start, destination, mot));
@@ -169,7 +169,7 @@ public class ResolveOperationTypeService {
                             startED = true;
                             startEDMethod = ELEVATORS;
                             response.setStatus(Status.INFO);
-                            response.setMessage("No stairs in " + start.getBuilding() + ". App switched to elevators for this building");
+                            response.setMessage("No stairs in " + start.getBuilding().getValue() + ". App switched to elevators for this building");
                         }
                     } else {
                         startED = false;
@@ -187,10 +187,10 @@ public class ResolveOperationTypeService {
                             destEDMethod = ELEVATORS;
                             response.setStatus(Status.INFO);
                             if (response.getMessage() == null) {
-                                response.setMessage("No stairs in " + destination.getBuilding() + ". App switched to elevators for this building");
+                                response.setMessage("No stairs in " + destination.getBuilding().getValue() + ". App switched to elevators for this building");
                             } else {
-                                response.setMessage("No stairs in both buildings, app switched to elevators in " + start.getBuilding() +
-                                        " & " + destination.getBuilding());
+                                response.setMessage("No stairs in both buildings, app switched to elevators in " + start.getBuilding().getValue() +
+                                        " & " + destination.getBuilding().getValue());
                             }
                         }
                     } else {
@@ -210,7 +210,7 @@ public class ResolveOperationTypeService {
                         //No elevators
                         mot = STAIRS;
                         response.setStatus(Status.INFO);
-                        response.setMessage("No elevators in " + start.getBuilding() + ". App switched to stairs for this building");
+                        response.setMessage("No elevators in " + start.getBuilding().getValue() + ". App switched to stairs for this building");
                     }
                     response.setEntity(SBDLFactoryService.create(start, destination, mot));
                 } else { //Diff Buildings
@@ -224,7 +224,7 @@ public class ResolveOperationTypeService {
                             startED = true;
                             startEDMethod = STAIRS;
                             response.setStatus(Status.INFO);
-                            response.setMessage("No elevators in " + start.getBuilding() + ". App switched to stairs for this building");
+                            response.setMessage("No elevators in " + start.getBuilding().getValue() + ". App switched to stairs for this building");
                         }
                     } else {
                         startED = false;
@@ -242,10 +242,10 @@ public class ResolveOperationTypeService {
                             destEDMethod = STAIRS;
                             response.setStatus(Status.INFO);
                             if (response.getMessage() == null) {
-                                response.setMessage("No elevators in " + destination.getBuilding() + ". App switched to stairs for this building");
+                                response.setMessage("No elevators in " + destination.getBuilding().getValue() + ". App switched to stairs for this building");
                             } else {
-                                response.setMessage("No elevators in both buildings, app switched to stairs for " + start.getBuilding() +
-                                        " & " + destination.getBuilding());
+                                response.setMessage("No elevators in both buildings, app switched to stairs for " + start.getBuilding().getValue() +
+                                        " & " + destination.getBuilding().getValue());
                             }
                         }
                     } else {

@@ -1,6 +1,6 @@
 package IntegrationTests;
 
-import org.backend.mdxmaps.model.responseObjects.directions.MainDirectionsResponse;
+import org.backend.mdxmaps.model.responseObjects.directions.DirectionsResponse;
 import org.backend.mdxmaps.model.responseObjects.directions.Route;
 import org.backend.mdxmaps.service.DirectionsService;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class DirectionsServiceIntTest {
 
-    private MainDirectionsResponse response = null;
+    private DirectionsResponse response = null;
 
     private ArrayList<Double> distances = new ArrayList<>();
 
@@ -29,7 +29,7 @@ public class DirectionsServiceIntTest {
     public void CG03ToCG60() {
 
         try {
-            response = (MainDirectionsResponse) new DirectionsService("CG03", "CG60", null, false, "").call();
+            response = (DirectionsResponse) new DirectionsService("CG03", "CG60", null, false, "").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,7 +68,7 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToCG60Disabled() {
         try {
-            response = (MainDirectionsResponse) new DirectionsService("CG03", "CG60", "disabled", false, "").call();
+            response = (DirectionsResponse) new DirectionsService("CG03", "CG60", "disabled", false, "").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -91,7 +91,7 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToC110() {
         try {
-            response = (MainDirectionsResponse) new DirectionsService("CG03", "C110", null, false, "").call();
+            response = (DirectionsResponse) new DirectionsService("CG03", "C110", null, false, "").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,7 +119,7 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToC110Elevators() {
         try {
-            response = (MainDirectionsResponse) new DirectionsService("CG03", "C110", "elevators", false, "").call();
+            response = (DirectionsResponse) new DirectionsService("CG03", "C110", "elevators", false, "").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -142,7 +142,7 @@ public class DirectionsServiceIntTest {
     @Test
     public void CG03ToC115Disabled() {
         try {
-            response = (MainDirectionsResponse) new DirectionsService("CG03", "C115", "disabled", false, "").call();
+            response = (DirectionsResponse) new DirectionsService("CG03", "C115", "disabled", false, "").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -163,7 +163,7 @@ public class DirectionsServiceIntTest {
     @Test
     public void C115ToG210Stairs() {
         try {
-            response = (MainDirectionsResponse) new DirectionsService("C115", "G210", "stairs", false, "").call();
+            response = (DirectionsResponse) new DirectionsService("C115", "G210", "stairs", false, "").call();
         } catch (Exception e) {
             e.printStackTrace();
         }
