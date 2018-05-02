@@ -4,6 +4,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.request.QueryRequest;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.backend.mdxmaps.model.LatLng;
@@ -48,10 +49,13 @@ public class CampusSearchService implements Callable<List<Campus>> {
         SolrQuery solrQuery = new SolrQuery(isDirectionsAvailable ? constructQuery(query) : query);
         solrQuery.set("rows", rows > 0 ? rows : 5);
         solrQuery.setRequestHandler("/query");
+        QueryRequest request = new QueryRequest(solrQuery);
+        request.setBasicAuthCredentials("admin", "N6uCdnrW");
 
         QueryResponse response;
         try {
-            response = solrClient.query(solrQuery);
+            //response = solrClient.query(solrQuery);
+            response = request.process(solrClient);
         } catch (IOException | SolrServerException e) {
             e.printStackTrace();
             return null;

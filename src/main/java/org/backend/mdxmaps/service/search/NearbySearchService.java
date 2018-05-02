@@ -4,6 +4,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.request.QueryRequest;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.backend.mdxmaps.model.solr.Nearby;
@@ -40,13 +41,17 @@ public class NearbySearchService implements Callable<List<Nearby>> {
         SolrClient solrClient = new HttpSolrClient.Builder(solrNearbyUrl).build();
 
         SolrQuery solrQuery = new SolrQuery();
+        solrQuery.setRequestHandler("/query");
         solrQuery.setQuery(constructQuery(query, isListing, solrQuery));
         solrQuery.set("rows", rows > 0 ? rows : 5);
-        solrQuery.setRequestHandler("/query");
+
+        QueryRequest request = new QueryRequest(solrQuery);
+        request.setBasicAuthCredentials("admin", "N6uCdnrW");
 
         QueryResponse response;
         try {
-            response = solrClient.query(solrQuery);
+            //response = solrClient.query(solrQuery);
+            response = request.process(solrClient);
         } catch (IOException | SolrServerException e) {
             e.printStackTrace();
             return null;
@@ -58,6 +63,7 @@ public class NearbySearchService implements Callable<List<Nearby>> {
     private String constructQuery(String query, boolean isListing, SolrQuery solrQuery) {
         if (isListing) {
             solrQuery.set("q.op", "AND");
+            solrQuery.setRequestHandler("/select");
             return "{!child of=\"isParent:true\"}name:" + query;
         }
         return query;

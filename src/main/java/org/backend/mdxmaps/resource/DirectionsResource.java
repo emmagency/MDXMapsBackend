@@ -71,7 +71,7 @@ public class DirectionsResource implements ServletContextListener {
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
                 return Response.ok(ResponseService.create(ERROR,
-                        "Error with url parameters!")).build();
+                        "Something went wrong. Please tell us about this.")).build();
             }
         }
 

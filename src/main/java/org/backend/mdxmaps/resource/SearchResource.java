@@ -9,7 +9,6 @@ import org.backend.mdxmaps.model.solr.Nearby;
 import org.backend.mdxmaps.model.solr.Transport;
 import org.backend.mdxmaps.service.search.CampusSearchService;
 import org.backend.mdxmaps.service.search.NearbySearchService;
-import org.backend.mdxmaps.service.search.TransportSearchService;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
@@ -33,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 
 import static org.backend.mdxmaps.model.enums.Constants.SOLR_NEARBY_URL;
 import static org.backend.mdxmaps.model.enums.Constants.SOLR_ROOMS_URL;
-import static org.backend.mdxmaps.model.enums.Constants.SOLR_TRANSPORT_URL;
 
 /**
  * Created by Emmanuel Keboh on 06/03/2017.
@@ -108,15 +106,15 @@ public class SearchResource implements ServletContextListener {
     }
 
     private List<Transport> querySolrForTransport(String query, int rows) {
-        if (query != null && query.length() > 1) {
-            try {
-                return service.submit(new TransportSearchService(query, false, rows,
-                        (String) configuration.getProperty(SOLR_TRANSPORT_URL.getValue()))).get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
+//        if (query != null && query.length() > 1) {
+//            try {
+//                return service.submit(new TransportSearchService(query, false, rows,
+//                        (String) configuration.getProperty(SOLR_TRANSPORT_URL.getValue()))).get();
+//            } catch (InterruptedException | ExecutionException e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+//        }
         return Collections.emptyList();
     }
 

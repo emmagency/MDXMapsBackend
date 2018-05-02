@@ -4,6 +4,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.request.QueryRequest;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.backend.mdxmaps.model.OperationFactory;
 import org.backend.mdxmaps.model.Routing;
@@ -121,11 +122,14 @@ public class DirectionsService implements Callable<Object> {
         SolrClient solrClient = new HttpSolrClient.Builder(solrRoomsUrl).build();
         SolrQuery solrQuery = new SolrQuery(input);
         solrQuery.setRequestHandler("/query");
+        QueryRequest request = new QueryRequest(solrQuery);
+        request.setBasicAuthCredentials("admin", "N6uCdnrW");
+
 
         QueryResponse response;
 
         try {
-            response = solrClient.query(solrQuery);
+            response = request.process(solrClient);
         } catch (IOException | SolrServerException e) {
             e.printStackTrace();
             return ResponseService.create(ERROR, "Apologies, we've run into some problems. Please try again at a later time");
