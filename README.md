@@ -22,8 +22,8 @@ All endpoints respond only to HTTP GET Methods.
 **Nearby** | Carries out search queries against nearby locations ONLY.
 ------------ | -------------
 **URL** | `/search/nearby`
-**PARAMETERS** | 1. `q:` [string, integer, combination of both] - The actual search query. **(Required)** <br/> 2. `rows:` [integer] - Number of results to return. Default is five. (Optional) <br/> 3. `t:` [boolean] A value of **true** indicates the API should return all known locations of the specified value in the `q:` parameter. (Optional)
-**SAMPLE REQUESTS** | 1. `/search/nearby?q=co` - Returns all known nearby locations that match against *'co'* e.g *Costa, Costcutter, Co-Operative*  <br/> 2. `/search/nearby?q=Costcutter&t=true` - Returns all known Costcutter locations
+**PARAMETERS** | 1. `q:` [string, integer, combination of both] - The actual search query. **(Required)** <br/> <br/> 2. `rows:` [integer] - Number of results to return. Default is five. (Optional) <br/> <br/> 3. `t:` [boolean] A value of **true** indicates the API should return all known locations of the specified value in the `q:` parameter. (Optional)
+**SAMPLE REQUESTS** | 1. `/search/nearby?q=co` - Returns all known nearby locations that match against *'co'* e.g *Costa, Costcutter, Co-Operative*  <br/> <br/> 2. `/search/nearby?q=Costcutter&t=true` - Returns all known Costcutter locations
 
 
 
