@@ -37,7 +37,7 @@ All endpoints respond only to HTTP GET Methods.
 **URL** | `/directions`
 **PARAMETERS** | 1. `s:` [string] - Start location. **(Required)** <br/> <br/> 2. `d:` [string] - Destination location. **(Required)** <br/> <br/>  3. `m:` - Mode of travel. Possible values are **stairs, elevators,** and **disabled** (Optional)
 **SAMPLE REQUESTS** | 1. `/directions?s=cg03&d=gg17` - Provides directions from CG03 to GG17 <br/> <br/> 2. `/directions?s=wg41&d=w153&m=elevators` - Provides directions from WG41 to W153 using elevators.
-**COMMENTS** | If the `m` parameter isn't provided, the API automatically resolves whether or not it is required and defaults to **stairs** if it is required for the operation. The same applies if an invalid value is passed <br/> <br/> If the `m` parameter is set to **elevators**, the API will default to **stairs** for buildings that do not have an elevator. 
+**COMMENTS** | If the `m` parameter isn't provided, the API automatically resolves whether or not it is required and defaults to **stairs** if it is required for the operation (defaults tp **elevators** for differently-abled users). The same applies if an invalid value is passed <br/> <br/> If the `m` parameter is set to **elevators**, the API will default to **stairs** for buildings that do not have an elevator. 
 
 
 
